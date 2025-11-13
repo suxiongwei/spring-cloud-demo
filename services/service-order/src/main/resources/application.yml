@@ -1,0 +1,93 @@
+server:
+  port: 8000
+
+spring:
+  profiles:
+    active: dev
+    include: feign
+  application:
+    name: service-order
+  cloud:
+    nacos:
+      # 配置 Nacos 地址
+      server-addr: 127.0.0.1:8848
+      config:
+        namespace: ${spring.profiles.active:public}
+        import-check:
+          enabled: false
+    sentinel:
+      transport:
+        # Sentinel Dashboard 地址
+        dashboard: localhost:8080
+        # 与 Dashboard 通信的端口，默认 8719
+        port: 8719
+      # 使用 URL 作为入口资源名，便于链路限流（strategy=2）按路径区分
+      web-context-unify: false
+      # 取消 Sentinel 控制台懒加载，启动后立即连接
+      eager: true
+      datasource:
+        # 流控规则
+        flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            dataId: ${spring.application.name}-flow-rules
+            groupId: SENTINEL_GROUP
+            # 规则类型，flow 代表流控规则
+            rule-type: flow
+        # 热点参数限流规则
+        param-flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            dataId: ${spring.application.name}-param-flow-rules
+            groupId: SENTINEL_GROUP
+            rule-type: param-flow
+        # 熔断降级规则
+        degrade:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            dataId: ${spring.application.name}-degrade-rules
+            groupId: SENTINEL_GROUP
+            rule-type: degrade
+        # 系统规则
+        system:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            dataId: ${spring.application.name}-system-rules
+            groupId: SENTINEL_GROUP
+            rule-type: system
+        # 授权规则
+        authority:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            dataId: ${spring.application.name}-authority-rules
+            groupId: SENTINEL_GROUP
+            rule-type: authority
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=order
+      - nacos:database.yaml?group=order
+    activate:
+      on-profile: dev
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=order
+      - nacos:database.yaml?group=order
+      - nacos:haha.yaml?group=order
+    activate:
+      on-profile: test
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=order
+      - nacos:database.yaml?group=order
+      - nacos:hehe.yaml?group=order
+    activate:
+      on-profile: prod

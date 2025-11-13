@@ -1,0 +1,12 @@
+[
+  {
+    "resource": "authority-control",
+    "limitApp": "white_list",
+    "strategy": 0
+  },
+  {
+    "resource": "authority-control",
+    "limitApp": "black_list",
+    "strategy": 1
+  }
+]
