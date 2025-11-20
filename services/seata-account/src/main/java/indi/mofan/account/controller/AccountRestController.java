@@ -21,4 +21,11 @@ public class AccountRestController {
         accountService.debit(userId, money);
         return "account debit success";
     }
+
+    @GetMapping("/addBack")
+    public String addBack(@RequestParam("userId") String userId,
+                          @RequestParam("money") int money) {
+        accountService.addBack(userId, money);
+        return "account add back success";
+    }
 }

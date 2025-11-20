@@ -2,6 +2,8 @@ package indi.mofan.product.controller;
 
 
 import indi.mofan.product.bean.Product;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import indi.mofan.product.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
@@ -15,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2025/3/23 17:24
  */
 @RestController
+@Tag(name = "产品接口")
 // @RequestMapping("/api/product")
 public class ProductController {
     @Autowired
     private ProductService productService;
 
     @GetMapping("/product/{id}")
+    @Operation(summary = "根据ID查询产品")
     @SneakyThrows
     public Product getProduct(@PathVariable("id") Long id,
                               HttpServletRequest request) {

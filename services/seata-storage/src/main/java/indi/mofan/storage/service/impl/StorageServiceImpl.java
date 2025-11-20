@@ -20,4 +20,10 @@ public class StorageServiceImpl implements StorageService {
             throw new RuntimeException("库存不足");
         }
     }
+
+    @Override
+    @Transactional
+    public void addBack(String commodityCode, int count) {
+        storageTblMapper.addBack(commodityCode, count);
+    }
 }

@@ -25,7 +25,7 @@ spring:
 #              - indi.mofan.order.interceptor.XTokenRequestInterceptor
     sentinel:
       transport:
-        dashboard: localhost:8080
+        dashboard: localhost:8858
       eager: true
       # 支持流控模式的链路模式
       web-context-unify: false

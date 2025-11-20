@@ -17,4 +17,6 @@ public interface AccountTblMapper {
     int updateByPrimaryKey(AccountTbl record);
 
     void debit(String userId, int money);
+    
+    void addBack(String userId, int money);
 }

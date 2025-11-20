@@ -23,7 +23,6 @@ public class OnceTokenGatewayFilterFactory extends AbstractNameValueGatewayFilte
 
             String value = switch (config.getValue().toLowerCase()) {
                 case "uuid" -> UUID.randomUUID().toString();
-                case "jwt" -> "Test Token";
                 default -> "";
             };
 

@@ -11,14 +11,23 @@ spring:
     nacos:
       # 配置 Nacos 地址
       server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        enabled: true
+        username: nacos
+        password: nacos
       config:
-        namespace: ${spring.profiles.active:public}
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        username: nacos
+        password: nacos
         import-check:
-          enabled: false
+          enabled: true
     sentinel:
       transport:
         # Sentinel Dashboard 地址
-        dashboard: localhost:8080
+        dashboard: localhost:8858
         # 与 Dashboard 通信的端口，默认 8719
         port: 8719
       # 使用 URL 作为入口资源名，便于链路限流（strategy=2）按路径区分
@@ -30,38 +39,59 @@ spring:
         flow:
           nacos:
             server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-flow-rules
             groupId: SENTINEL_GROUP
+            data-type: json
             # 规则类型，flow 代表流控规则
             rule-type: flow
         # 热点参数限流规则
         param-flow:
           nacos:
             server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-param-flow-rules
             groupId: SENTINEL_GROUP
+            data-type: json
             rule-type: param-flow
         # 熔断降级规则
         degrade:
           nacos:
             server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-degrade-rules
             groupId: SENTINEL_GROUP
+            data-type: json
             rule-type: degrade
         # 系统规则
         system:
           nacos:
             server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-system-rules
             groupId: SENTINEL_GROUP
+            data-type: json
             rule-type: system
         # 授权规则
         authority:
           nacos:
             server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-authority-rules
             groupId: SENTINEL_GROUP
+            data-type: json
             rule-type: authority
+
 
 ---
 spring:

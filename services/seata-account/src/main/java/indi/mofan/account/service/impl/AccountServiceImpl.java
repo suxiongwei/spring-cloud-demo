@@ -18,4 +18,10 @@ public class AccountServiceImpl implements AccountService {
         // 扣减账户余额
         accountTblMapper.debit(userId, money);
     }
+
+    @Transactional
+    @Override
+    public void addBack(String userId, int money) {
+        accountTblMapper.addBack(userId, money);
+    }
 }

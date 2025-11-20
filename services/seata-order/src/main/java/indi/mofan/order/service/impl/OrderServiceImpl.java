@@ -19,7 +19,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderTbl create(String userId, String commodityCode, int orderCount) {
+    public OrderTbl create(String userId, String commodityCode, int orderCount, boolean fail) {
         // 1. 计算订单价格
         int orderMoney = calculate(commodityCode, orderCount);
         // 2. 扣减账户余额
@@ -34,8 +34,10 @@ public class OrderServiceImpl implements OrderService {
         // 4. 保存订单
         orderTblMapper.insert(orderTbl);
 
-        // 模拟异常
-        int i = 10 / 0;
+        // 可选失败触发
+        if (fail) {
+            throw new RuntimeException("模拟订单失败，触发全局回滚");
+        }
 
         return orderTbl;
     }

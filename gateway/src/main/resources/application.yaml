@@ -6,6 +6,76 @@ spring:
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        username: nacos
+        password: nacos
+      config:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        username: nacos
+        password: nacos
+    sentinel:
+      transport:
+        dashboard: localhost:8858
+        port: 8720
+      eager: true
+      datasource:
+        gw-flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
+            dataId: gateway-flow-rules
+            groupId: SENTINEL_GROUP
+            data-type: json
+            rule-type: gw-flow
+        gw-api-group:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
+            dataId: gateway-api-group-rules
+            groupId: SENTINEL_GROUP
+            data-type: json
+            rule-type: gw-api-group
 
 server:
   port: 80
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+---
+spring:
+  config:
+    import:
+      - nacos:gateway-common.yaml?group=gateway
+    activate:
+      on-profile: dev
+
+---
+spring:
+  config:
+    import:
+      - nacos:gateway-common.yaml?group=gateway
+    activate:
+      on-profile: test
+
+---
+spring:
+  config:
+    import:
+      - nacos:gateway-common.yaml?group=gateway
+    activate:
+      on-profile: prod

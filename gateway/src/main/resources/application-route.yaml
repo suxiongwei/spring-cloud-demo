@@ -41,6 +41,29 @@ spring:
             # 自定义过滤器
             - OnceToken=X-Response-Token, uuid
           order: 1
+        - id: limit-alias-qps
+          uri: lb://service-order
+          predicates:
+            - Path=/api/qps-limit
+          filters:
+            - RewritePath=/api/qps-limit, /rateLimit/qps
+          order: 3
+        - id: limit-alias-thread
+          uri: lb://service-order
+          predicates:
+            - Path=/api/thread-limit
+          filters:
+            - RewritePath=/api/thread-limit, /rateLimit/thread
+          order: 3
+        - id: limit-alias-hot
+          uri: lb://service-order
+          predicates:
+            - Path=/api/hot-param-limit
+          filters:
+            - RewritePath=/api/hot-param-limit, /hotspot/param
+            - AddRequestParameter=userId, 1001
+            - AddRequestParameter=productId, 2002
+          order: 3
         - id: product-route
           uri: lb://service-product
           # Shortcut Configuration
@@ -48,6 +71,13 @@ spring:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/product/?(?<segment>.*), /$\{segment}
+          order: 2
+        - id: business-route
+          uri: lb://seata-business
+          predicates:
+            - Path=/api/business/**
+          filters:
+            - RewritePath=/api/business/?(?<segment>.*), /$\{segment}
           order: 2
       default-filters:
         - AddResponseHeader=X-Response-Abc, 123

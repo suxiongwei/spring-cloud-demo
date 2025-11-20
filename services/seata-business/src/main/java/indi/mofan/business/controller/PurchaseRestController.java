@@ -22,4 +22,13 @@ public class PurchaseRestController {
         businessService.purchase(userId, commodityCode, orderCount);
         return "business purchase success";
     }
+
+    @GetMapping("/purchase/tcc")
+    public String purchaseTcc(@RequestParam("userId") String userId,
+                              @RequestParam("commodityCode") String commodityCode,
+                              @RequestParam("count") int orderCount,
+                              @RequestParam(value = "fail", required = false, defaultValue = "false") boolean fail) {
+        businessService.purchaseTcc(userId, commodityCode, orderCount, fail);
+        return "business purchase tcc success";
+    }
 }

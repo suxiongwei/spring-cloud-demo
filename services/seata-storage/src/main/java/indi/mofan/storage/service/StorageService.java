@@ -9,4 +9,5 @@ public interface StorageService {
      * @param count         数量
      */
     void deduct(String commodityCode, int count);
+    void addBack(String commodityCode, int count);
 }

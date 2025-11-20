@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author mofan
  * @date 2025/5/1 16:21
  */
-@FeignClient(value = "seata-storage")
+@FeignClient(contextId = "storageFeign", value = "seata-storage")
 public interface StorageFeignClient {
     /**
      * 扣减库存
@@ -17,4 +17,8 @@ public interface StorageFeignClient {
     @GetMapping("/deduct")
     String deduct(@RequestParam("commodityCode") String commodityCode,
                   @RequestParam("count") Integer count);
+
+    @GetMapping("/addBack")
+    String addBack(@RequestParam("commodityCode") String commodityCode,
+                   @RequestParam("count") Integer count);
 }

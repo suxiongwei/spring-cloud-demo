@@ -20,4 +20,11 @@ public class StorageRestController {
         storageService.deduct(commodityCode, count);
         return "storage deduct success";
     }
+
+    @GetMapping("/addBack")
+    public String addBack(@RequestParam("commodityCode") String commodityCode,
+                          @RequestParam("count") Integer count) {
+        storageService.addBack(commodityCode, count);
+        return "storage add back success";
+    }
 }

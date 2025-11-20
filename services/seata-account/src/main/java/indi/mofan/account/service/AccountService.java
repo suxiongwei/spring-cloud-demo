@@ -9,4 +9,5 @@ public interface AccountService {
      * @param money  扣减金额
      */
     void debit(String userId, int money);
+    void addBack(String userId, int money);
 }

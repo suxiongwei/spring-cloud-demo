@@ -20,8 +20,9 @@ public class OrderRestController {
     @GetMapping("/create")
     public String create(@RequestParam("userId") String userId,
                          @RequestParam("commodityCode") String commodityCode,
-                         @RequestParam("count") int orderCount) {
-        OrderTbl tbl = orderService.create(userId, commodityCode, orderCount);
+                         @RequestParam("count") int orderCount,
+                         @RequestParam(value = "fail", required = false, defaultValue = "false") boolean fail) {
+        OrderTbl tbl = orderService.create(userId, commodityCode, orderCount, fail);
         return "order create success = 订单id：[" + tbl.getId() + "]";
     }
 

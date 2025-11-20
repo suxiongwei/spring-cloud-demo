@@ -10,4 +10,5 @@ public interface BusinessService {
      * @param orderCount    购买数量
      */
     void purchase(String userId, String commodityCode, int orderCount);
+    void purchaseTcc(String userId, String commodityCode, int orderCount, boolean fail);
 }

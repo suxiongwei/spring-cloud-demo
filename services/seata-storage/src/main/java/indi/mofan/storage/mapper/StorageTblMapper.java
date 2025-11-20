@@ -17,4 +17,6 @@ public interface StorageTblMapper {
     int updateByPrimaryKey(StorageTbl record);
 
     void deduct(String commodityCode, int count);
+    
+    void addBack(String commodityCode, int count);
 }

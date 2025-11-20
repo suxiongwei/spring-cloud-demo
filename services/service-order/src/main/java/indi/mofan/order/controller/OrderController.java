@@ -17,12 +17,24 @@ import indi.mofan.order.properties.OrderProperties;
 import indi.mofan.order.service.CommonResourceService;
 import indi.mofan.order.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
+import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRule;
+import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRuleManager;
 
 /**
  * @author mofan
  * @date 2025/3/23 17:34
  */
 @Slf4j
+@Tag(name = "订单接口")
 // @RequestMapping("/api/order")
 @RestController
 public class OrderController {
@@ -37,6 +49,7 @@ public class OrderController {
     
 
     @GetMapping("/config")
+    @Operation(summary = "查看订单服务配置")
     public ApiResponse<String> config() {
         String msg = "order timeout: " + orderProperties.getTimeout()
             + " auto-confirm: " + orderProperties.getAutoConfirm()
@@ -45,6 +58,7 @@ public class OrderController {
     }
 
     @GetMapping("/create")
+    @Operation(summary = "创建订单")
     public ApiResponse<Order> createOrder(@RequestParam("userId") Long userId,
                              @RequestParam("productId") Long productId) {
         Order order = orderService.createOrder(productId, userId);
@@ -205,5 +219,41 @@ public class OrderController {
     @SentinelResource(value = "authority-control-black", blockHandler = "authorityBlockHandler")
     public ApiResponse<String> authorityControlBlack(@RequestParam(value = "userType", defaultValue = "normal") String userType) {
         return ApiResponse.success("黑名单控制测试，用户类型: " + userType);
+    }
+
+    @GetMapping("/sentinel/rules/flow")
+    public ApiResponse<List<FlowRule>> getFlowRules(@RequestParam(value = "resource", required = false) String resource) {
+        List<FlowRule> rules = FlowRuleManager.getRules();
+        if (resource != null && !resource.isEmpty()) {
+            rules = rules.stream().filter(r -> resource.equals(r.getResource())).toList();
+        }
+        return ApiResponse.success("flow rules", rules);
+    }
+
+    @GetMapping("/sentinel/rules/param-flow")
+    public ApiResponse<List<ParamFlowRule>> getParamFlowRules(@RequestParam(value = "resource", required = false) String resource) {
+        List<ParamFlowRule> rules = ParamFlowRuleManager.getRules();
+        if (resource != null && !resource.isEmpty()) {
+            rules = rules.stream().filter(r -> resource.equals(r.getResource())).toList();
+        }
+        return ApiResponse.success("param flow rules", rules);
+    }
+
+    @GetMapping("/sentinel/rules/degrade")
+    public ApiResponse<List<DegradeRule>> getDegradeRules(@RequestParam(value = "resource", required = false) String resource) {
+        List<DegradeRule> rules = DegradeRuleManager.getRules();
+        if (resource != null && !resource.isEmpty()) {
+            rules = rules.stream().filter(r -> resource.equals(r.getResource())).toList();
+        }
+        return ApiResponse.success("degrade rules", rules);
+    }
+
+    @GetMapping("/sentinel/rules/authority")
+    public ApiResponse<List<AuthorityRule>> getAuthorityRules(@RequestParam(value = "resource", required = false) String resource) {
+        List<AuthorityRule> rules = AuthorityRuleManager.getRules();
+        if (resource != null && !resource.isEmpty()) {
+            rules = rules.stream().filter(r -> resource.equals(r.getResource())).toList();
+        }
+        return ApiResponse.success("authority rules", rules);
     }
 }

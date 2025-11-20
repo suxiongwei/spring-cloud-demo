@@ -1,12 +1,51 @@
 spring:
   application:
     name: seata-business
+  config:
+    import:
+      - optional:nacos:common.yaml?group=seata
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        enabled: true
+        username: nacos
+        password: nacos
       config:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        username: nacos
+        password: nacos
         import-check:
-          enabled: false
+          enabled: true
 server:
   port: 21000
+seata:
+  enabled: true
+  application-id: seata-business
+  tx-service-group: default_tx_group
+  service:
+    vgroup-mapping:
+      default_tx_group: default
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      serverAddr: 127.0.0.1:8848
+      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+      group: SEATA_GROUP
+      cluster: default
+      username: nacos
+      password: nacos
+  config:
+    type: nacos
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+      group: SEATA_GROUP
+      dataId: seata-server.properties
+      username: nacos
+      password: nacos
 

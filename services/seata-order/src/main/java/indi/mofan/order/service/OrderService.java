@@ -10,5 +10,5 @@ public interface OrderService {
      * @param commodityCode 商品编码
      * @param orderCount    商品数量
      */
-    OrderTbl create(String userId, String commodityCode, int orderCount);
+    OrderTbl create(String userId, String commodityCode, int orderCount, boolean fail);
 }
