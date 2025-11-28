@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author mofan
  * @date 2025/5/1 16:24
  */
-@FeignClient(value = "seata-order")
+@FeignClient(value = "seata-order", fallback = indi.mofan.business.feign.fallback.OrderFeignFallback.class)
 public interface OrderFeignClient {
     /**
      * 创建订单

@@ -1,0 +1,86 @@
+server:
+  port: 8011
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: service-product-dubbo
+  cloud:
+    nacos:
+      # 配置 Nacos 地址
+      server-addr: 172.29.64.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        enabled: true
+        username: nacos
+        password: nacos
+      config:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        username: nacos
+        password: nacos
+        import-check:
+          enabled: true
+
+# Dubbo 配置
+dubbo:
+  application:
+    name: service-product-dubbo
+    # QOS 配置
+    qos-enable: true
+    qos-port: 22222
+  registry:
+    address: nacos://172.29.64.1:8848
+    username: nacos
+    password: nacos
+    parameters:
+      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+      prefer-ip-address: true
+  # 协议配置
+  protocol:
+    name: dubbo
+    port: 20881
+    host: 127.0.0.1
+  # 服务暴露配置
+  provider:
+    # 调用超时（窗口时间），单位：ms
+    timeout: 3000
+    # 失败重试次数
+    retries: 1
+    # 最大欢迎选抩数（failover模式）
+    loadbalance: random
+    # 需要管理的线程数
+    threads: 200
+    # 线程池队列次数（积压池）
+    queues: 0
+    # 集群模式：failover、failfast、failsafe、failback、forking，默认为failover
+    cluster: failover
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=product
+      - nacos:database.yaml?group=product
+    activate:
+      on-profile: dev
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=product
+      - nacos:database.yaml?group=product
+    activate:
+      on-profile: test
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=product
+      - nacos:database.yaml?group=product
+    activate:
+      on-profile: prod

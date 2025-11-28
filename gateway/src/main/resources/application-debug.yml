@@ -1,0 +1,6 @@
+logging:
+  level:
+    com.alibaba.cloud.nacos: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.loadbalancer: DEBUG
+    org.springframework.cloud.client.discovery: DEBUG

@@ -8,10 +8,12 @@
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="userId" column="user_id" jdbcType="VARCHAR"/>
             <result property="money" column="money" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,money
+        id,user_id,money,create_time,update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -27,10 +29,8 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="indi.mofan.account.bean.AccountTbl" useGeneratedKeys="true">
         insert into account_tbl
-        ( id,user_id,money
-        )
-        values (#{id,jdbcType=INTEGER},#{userId,jdbcType=VARCHAR},#{money,jdbcType=INTEGER}
-        )
+        ( id,user_id,money,create_time,update_time )
+        values (#{id,jdbcType=INTEGER},#{userId,jdbcType=VARCHAR},#{money,jdbcType=INTEGER},NOW(),NOW())
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="indi.mofan.account.bean.AccountTbl" useGeneratedKeys="true">
         insert into account_tbl
@@ -54,6 +54,7 @@
                 <if test="money != null">
                     money = #{money,jdbcType=INTEGER},
                 </if>
+                update_time = NOW(),
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
@@ -61,17 +62,18 @@
         update account_tbl
         set 
             user_id =  #{userId,jdbcType=VARCHAR},
-            money =  #{money,jdbcType=INTEGER}
+            money =  #{money,jdbcType=INTEGER},
+            update_time = NOW()
         where   id = #{id,jdbcType=INTEGER} 
     </update>
     <update id="debit">
         update account_tbl
-        set money = money - #{money,jdbcType=INTEGER}
+        set money = money - #{money,jdbcType=INTEGER}, update_time = NOW()
         where user_id = #{userId,jdbcType=VARCHAR}
     </update>
     <update id="addBack">
         update account_tbl
-        set money = money + #{money,jdbcType=INTEGER}
+        set money = money + #{money,jdbcType=INTEGER}, update_time = NOW()
         where user_id = #{userId,jdbcType=VARCHAR}
     </update>
 </mapper>

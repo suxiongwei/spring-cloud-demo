@@ -1,0 +1,87 @@
+server:
+  port: 8001
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: service-order-dubbo
+  cloud:
+    nacos:
+      # 配置 Nacos 地址
+      server-addr: 172.29.64.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        enabled: true
+        username: nacos
+        password: nacos
+      config:
+        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        username: nacos
+        password: nacos
+        import-check:
+          enabled: true
+
+# Dubbo 配置
+dubbo:
+  application:
+    name: service-order-dubbo
+    # QOS 配置
+    qos-enable: true
+    qos-port: 22223
+  # 注册中心配置
+  registry:
+    address: nacos://172.29.64.1:8848
+    username: nacos
+    password: nacos
+    parameters:
+      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+      prefer-ip-address: true
+  # 协议配置
+  protocol:
+    name: dubbo
+    port: 20880
+    host: 127.0.0.1
+  # 消費者配置
+  consumer:
+    # 调用超时（窗口时间），单位：ms
+    timeout: 3000
+    # 失败重试次数（不包括第一次调用）
+    retries: 1
+    # 不检查服务是否可用，决序启动时不会报错
+    check: false
+    # 负载均衡政策：random、roundrobin、leastactive，默认为random
+    loadbalance: random
+    # 集群模式：failover、failfast、failsafe、failback、forking
+    cluster: failover
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=order
+      - nacos:database.yaml?group=order
+    activate:
+      on-profile: dev
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=order
+      - nacos:database.yaml?group=order
+      - nacos:haha.yaml?group=order
+    activate:
+      on-profile: test
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.yaml?group=order
+      - nacos:database.yaml?group=order
+      - nacos:hehe.yaml?group=order
+    activate:
+      on-profile: prod

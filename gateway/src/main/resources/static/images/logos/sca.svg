@@ -1,0 +1,15 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="scaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#52C41A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#389e0d;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="80" fill="url(#scaGrad)"/>
+  <!-- Cloud shape -->
+  <path d="M 60 90 Q 60 75 75 75 Q 75 60 90 60 Q 105 60 105 75 Q 120 75 120 90 Q 120 105 105 105 L 75 105 Q 60 105 60 90 Z" 
+        fill="white" opacity="0.9"/>
+  <!-- Letter A -->
+  <path d="M 100 110 L 90 140 L 95 140 L 97 133 L 103 133 L 105 140 L 110 140 L 100 110 Z M 98 130 L 100 120 L 102 130 Z" 
+        fill="white"/>
+</svg>

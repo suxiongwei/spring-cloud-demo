@@ -35,7 +35,7 @@ Nacos 是 Dynamic Naming and Configuration Service 的首字母简称，一个�
      cloud:
        nacos:
          # 配置 Nacos 地址
-         server-addr: 127.0.0.1:8848
+         server-addr: 172.29.64.1:8848
    ```
 
 4. 启动微服务
@@ -1173,7 +1173,7 @@ service {
   #transaction service group mapping
   vgroupMapping.default_tx_group = "default"
   #only support when registry.type=file, please don't set multiple addresses
-  default.grouplist = "127.0.0.1:8091"
+  default.grouplist = "172.29.64.1:8091"
   #degrade, current not support
   enableDegrade = false
   #disable seata

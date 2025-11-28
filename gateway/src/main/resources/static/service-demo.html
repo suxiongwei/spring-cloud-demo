@@ -1,0 +1,2141 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spring Cloud DevConsole</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/styles/atom-one-light.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/highlight.min.js"></script>
+    <style>
+        :root {
+            /* Color Palette - Modern Light Theme */
+            --bg-canvas: #f8f9fb;
+            --bg-surface: #ffffff;
+            --bg-surface-hover: #f0f4ff;
+            --border-default: #e5e7eb;
+            --border-active: #6366f1;
+
+            --text-primary: #374151;
+            --text-secondary: #6b7280;
+            --text-inverse: #1f2937;
+
+            --accent-primary: #6366f1;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+
+            /* Category Theme Colors */
+            --color-control: #6366f1;
+            --color-control-light: #818cf8;
+            --color-governance: #10b981;
+            --color-governance-light: #34d399;
+            --color-communication: #f59e0b;
+            --color-communication-light: #fbbf24;
+            --color-gateway: #8b5cf6;
+            --color-gateway-light: #a78bfa;
+            --color-data: #06b6d4;
+            --color-data-light: #22d3ee;
+
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --gradient-control: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            --gradient-governance: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-communication: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --gradient-gateway: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            --gradient-data: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --gradient-bg: linear-gradient(180deg, #f8f9fb 0%, #f0f4ff 100%);
+
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+
+            /* Enhanced Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.15);
+            --shadow-colored-primary: 0 8px 24px rgba(99, 102, 241, 0.25);
+            --shadow-colored-success: 0 8px 24px rgba(16, 185, 129, 0.25);
+            --shadow-colored-warning: 0 8px 24px rgba(245, 158, 11, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-ui);
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .header {
+            height: 64px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-inverse);
+        }
+
+        .brand-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-inverse);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-subtitle {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(99, 102, 241, 0.08);
+            color: #4f46e5;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            font-family: var(--font-code);
+            font-weight: 500;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-inverse);
+            margin: 0;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border-default);
+        }
+
+        /* Hide any decorative elements */
+        .section-header::after,
+        section::after {
+            display: none !important;
+        }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            border-bottom: none;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 8px 16px;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide any decorative elements in tabs */
+        .tabs-nav::after {
+            display: none !important;
+        }
+
+        .tab-item {
+            padding: 10px 18px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            border-radius: var(--radius-md);
+            margin: 0;
+        }
+
+        .tab-item::after,
+        .tab-item::before {
+            display: none !important;
+        }
+
+        .tab-item:hover {
+            color: var(--text-inverse);
+            background: rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .tab-item.active {
+            color: #ffffff;
+            background: var(--gradient-primary);
+            border-color: transparent;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Panorama Grid */
+        .panorama-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .panorama-section {
+            display: none;
+        }
+
+        .panorama-section.active {
+            display: block;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .service-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .service-card:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .service-card:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--accent-primary);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: var(--shadow-colored-primary);
+        }
+
+        .service-card.active {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2), var(--shadow-md);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(99, 102, 241, 0.01) 100%);
+        }
+
+        .service-card.active::after {
+            content: '●';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            color: var(--accent-success);
+            font-size: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(99, 102, 241, 0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--text-inverse);
+            margin-bottom: 2px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .category-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-inverse);
+            margin: 24px 0 16px 0;
+            padding-left: 12px;
+            border-left: 4px solid var(--accent-primary);
+            letter-spacing: 0.3px;
+        }
+
+        /* Console Layout */
+        .console-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            min-height: 500px;
+        }
+
+        .panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-inverse);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* Controls */
+        .control-group {
+            margin-bottom: 24px;
+        }
+
+        .control-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-default);
+            opacity: 0.5;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .input {
+            background: #ffffff;
+            border: 2px solid var(--border-default);
+            color: var(--text-inverse);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 13px;
+            width: 100px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            background: #ffffff;
+            color: var(--text-inverse);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-danger {
+            color: var(--accent-danger);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: var(--accent-danger);
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        /* Terminal View */
+        .terminal {
+            background: #f9fafb;
+            font-family: var(--font-code);
+            font-size: 13px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-header {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .dot:hover {
+            transform: scale(1.2);
+        }
+
+        .dot-red {
+            background: #ff5f56;
+            box-shadow: 0 0 8px rgba(255, 95, 86, 0.5);
+        }
+
+        .dot-yellow {
+            background: #ffbd2e;
+            box-shadow: 0 0 8px rgba(255, 189, 46, 0.5);
+        }
+
+        .dot-green {
+            background: #27c93f;
+            box-shadow: 0 0 8px rgba(39, 201, 63, 0.5);
+        }
+
+        .terminal-title {
+            margin-left: 12px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .terminal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            color: var(--text-primary);
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(209, 213, 219, 0.3);
+            padding-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .log-entry:nth-child(even) {
+            background: rgba(99, 102, 241, 0.02);
+            margin-left: -16px;
+            margin-right: -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-entry:hover {
+            background: rgba(99, 102, 241, 0.05);
+            margin-left: -16px;
+            margin-right: -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .log-time {
+            color: var(--text-secondary);
+            min-width: 80px;
+        }
+
+        .log-type {
+            color: var(--accent-primary);
+            font-weight: 600;
+            min-width: 80px;
+        }
+
+        .log-status {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .log-status.success {
+            color: var(--accent-success);
+            animation: bounce 0.5s ease;
+        }
+
+        .log-status.error {
+            color: var(--accent-danger);
+            animation: bounce 0.5s ease;
+        }
+
+        .log-content {
+            flex: 1;
+            word-break: break-all;
+            cursor: pointer;
+        }
+
+        .log-content:hover {
+            color: var(--text-inverse);
+        }
+
+        .log-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-left: 8px;
+            background: rgba(99, 102, 241, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            width: 800px;
+            max-width: 90vw;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-xl);
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+        }
+
+        .modal-body {
+            padding: 0;
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+        }
+
+        .code-block {
+            background: #ffffff;
+            color: #2c3e50;
+            padding: 24px;
+            margin: 0;
+            overflow: auto;
+            font-family: var(--font-code);
+            font-size: 13px;
+            width: 100%;
+            border: 1px solid var(--border-default);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            font-family: var(--font-code);
+            font-size: 13px;
+        }
+
+        /* Custom JSON Syntax Highlighting */
+        .json-key {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .json-string {
+            color: #27ae60;
+        }
+
+        .json-number {
+            color: #d68910;
+            font-weight: 600;
+        }
+
+        .json-boolean {
+            color: #8e44ad;
+            font-weight: 700;
+        }
+
+        .json-null {
+            color: #c0392b;
+            font-weight: 700;
+        }
+
+
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* API Info Panel */
+        .api-info-panel {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 20px;
+            font-family: var(--font-code);
+            font-size: 12px;
+        }
+
+        .api-endpoint {
+            color: var(--accent-primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .api-params {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding-left: 12px;
+        }
+
+        .api-description {
+            color: var(--text-primary);
+            padding-left: 12px;
+            line-height: 1.6;
+        }
+
+        /* Concept Cards */
+        .concept-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--accent-success);
+        }
+
+        .concept-title {
+            font-weight: 600;
+            color: var(--text-inverse);
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .concept-content {
+            color: var(--text-primary);
+            font-size: 13px;
+            line-height: 1.8;
+            font-family: var(--font-code);
+        }
+
+        .concept-content li {
+            margin-bottom: 6px;
+        }
+
+        /* Process Flow */
+        .process-flow {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .flow-title {
+            font-weight: 600;
+            color: var(--text-inverse);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .flow-diagram {
+            font-family: var(--font-code);
+            font-size: 12px;
+            color: var(--text-primary);
+            line-height: 2;
+            overflow-x: auto;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .comparison-table th {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-primary);
+            border-bottom: 2px solid var(--accent-primary);
+        }
+
+        .comparison-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-default);
+            color: var(--text-primary);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        /* Test Description */
+        .test-description {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--accent-warning);
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        /* Call Chain Display */
+        .call-chain {
+            background: #f9fafb;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+            font-family: var(--font-code);
+            font-size: 12px;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .call-chain-title {
+            font-weight: 600;
+            color: var(--text-inverse);
+            margin-bottom: 12px;
+        }
+
+        .chain-item {
+            padding: 8px 0;
+            border-left: 2px solid transparent;
+            padding-left: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chain-item.success {
+            border-left-color: var(--accent-success);
+            color: var(--accent-success);
+        }
+
+        .chain-item.error {
+            border-left-color: var(--accent-danger);
+            color: var(--accent-danger);
+        }
+
+        /* Best Practices */
+        .best-practices {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-top: 32px;
+        }
+
+        .best-practices-title {
+            font-weight: 600;
+            color: var(--text-inverse);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .practice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            color: var(--text-primary);
+            font-size: 13px;
+            line-height: 1.6;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .practice-item:last-child {
+            border-bottom: none;
+        }
+
+        .practice-icon {
+            flex-shrink: 0;
+            color: var(--accent-success);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Config Info */
+        .config-panel {
+            background: #f9fafb;
+            border: 1px dashed var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 12px;
+            font-family: var(--font-code);
+            font-size: 12px;
+            color: var(--text-primary);
+        }
+
+        .config-item {
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .config-label {
+            color: var(--accent-primary);
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .config-value {
+            color: var(--text-secondary);
+        }
+
+        /* Statistics */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: var(--radius-md);
+            font-size: 12px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: var(--bg-surface);
+            border-radius: 4px;
+            border: 1px solid var(--border-default);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="brand">
+                <span class="brand-title">Spring Cloud</span>
+                <span class="brand-subtitle">开发者控制台</span>
+            </div>
+            <div class="status-badge">
+                ENV: DEVELOPMENT
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- 1. Microservice Panorama -->
+            <section>
+                <div class="section-header">
+                    <h2 class="section-title">微服务全景图</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="tabs-nav">
+                    <button class="tab-item" @click="activePanoramaTab = 'control'"
+                        :class="{ active: activePanoramaTab === 'control' }">控制面</button>
+                    <button class="tab-item" @click="activePanoramaTab = 'governance'"
+                        :class="{ active: activePanoramaTab === 'governance' }">治理面</button>
+                    <button class="tab-item" @click="activePanoramaTab = 'communication'"
+                        :class="{ active: activePanoramaTab === 'communication' }">通信层</button>
+                    <button class="tab-item" @click="activePanoramaTab = 'gateway'"
+                        :class="{ active: activePanoramaTab === 'gateway' }">网关与调度</button>
+                    <button class="tab-item" @click="activePanoramaTab = 'data'"
+                        :class="{ active: activePanoramaTab === 'data' }">数据与运维</button>
+                </div>
+
+                <div>
+                    <!-- Control Plane Section -->
+                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'control' }">
+                        <h3 class="category-title">控制面 - 服务注册与配置管理</h3>
+                        <div class="panorama-grid">
+                            <!-- Nacos -->
+                            <div class="service-card" :class="{ active: activeComponent === 'nacos' }"
+                                @click="selectComponent('nacos')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/nacos.png" alt="Nacos"></div>
+                                    <div>
+                                        <div class="card-title">Nacos</div>
+                                        <div class="card-subtitle">注册配置中心</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">动态服务发现、配置管理和服务管理平台,构建云原生应用的基石。</div>
+                            </div>
+                            <!-- OpenSergo -->
+                            <div class="service-card" :class="{ active: activeComponent === 'opensergo' }"
+                                @click="selectComponent('opensergo')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/opensergo.png" alt="OpenSergo"></div>
+                                    <div>
+                                        <div class="card-title">OpenSergo</div>
+                                        <div class="card-subtitle">治理标准</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">开放通用的微服务治理标准,覆盖流量治理、服务容错等。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Governance Plane Section -->
+                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'governance' }">
+                        <h3 class="category-title">治理面 - 流量控制与容错保护</h3>
+                        <div class="panorama-grid">
+                            <!-- Sentinel -->
+                            <div class="service-card" :class="{ active: activeComponent === 'sentinel' }"
+                                @click="selectComponent('sentinel')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/sentinel.png" alt="Sentinel"></div>
+                                    <div>
+                                        <div class="card-title">Sentinel</div>
+                                        <div class="card-subtitle">流量防卫兵</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">面向分布式服务架构的流量控制组件,提供熔断降级、系统负载保护。</div>
+                            </div>
+                            <!-- ChaosBlade -->
+                            <div class="service-card" :class="{ active: activeComponent === 'chaosblade' }"
+                                @click="selectComponent('chaosblade')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/ChaosBlade.png" alt="ChaosBlade">
+                                    </div>
+                                    <div>
+                                        <div class="card-title">ChaosBlade</div>
+                                        <div class="card-subtitle">混沌工程</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">故障注入、混沌实验、系统韧性验证工具。</div>
+                            </div>
+                            <!-- AppActive -->
+                            <div class="service-card" :class="{ active: activeComponent === 'appactive' }"
+                                @click="selectComponent('appactive')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/appactive.svg" alt="AppActive"></div>
+                                    <div>
+                                        <div class="card-title">AppActive</div>
+                                        <div class="card-subtitle">多活容灾</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">应用多活架构、异地多活、容灾切换解决方案。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication Layer Section -->
+                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'communication' }">
+                        <h3 class="category-title">通信层 - 同步与异步通信</h3>
+                        <div class="panorama-grid">
+                            <!-- Dubbo -->
+                            <div class="service-card" :class="{ active: activeComponent === 'dubbo' }"
+                                @click="selectComponent('dubbo')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/dubbo.png" alt="Dubbo"></div>
+                                    <div>
+                                        <div class="card-title">Dubbo</div>
+                                        <div class="card-subtitle">RPC 框架</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">高性能、轻量级的开源 Java RPC 框架,提供面向接口的远程方法调用。</div>
+                            </div>
+                            <!-- Spring Cloud -->
+                            <div class="service-card" :class="{ active: activeComponent === 'sca' }"
+                                @click="selectComponent('sca')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/sca.svg" alt="SCA"></div>
+                                    <div>
+                                        <div class="card-title">Spring Cloud</div>
+                                        <div class="card-subtitle">微服务标准</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">整合 OpenFeign、LoadBalancer 等标准组件,提供一站式解决方案。</div>
+                            </div>
+                            <!-- RocketMQ -->
+                            <div class="service-card" :class="{ active: activeComponent === 'rocketmq' }"
+                                @click="selectComponent('rocketmq')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/rocketmq.svg" alt="RocketMQ"></div>
+                                    <div>
+                                        <div class="card-title">RocketMQ</div>
+                                        <div class="card-subtitle">消息队列</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">异步消息通信、削峰填谷、事件驱动、流式处理。</div>
+                            </div>
+                            <!-- Seata -->
+                            <div class="service-card" :class="{ active: activeComponent === 'seata' }"
+                                @click="selectComponent('seata')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/seata.png" alt="Seata"></div>
+                                    <div>
+                                        <div class="card-title">Seata</div>
+                                        <div class="card-subtitle">分布式事务</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">致力于提供高性能和简单易用的分布式事务服务,支持 AT、TCC、SAGA 等模式。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gateway & Scheduling Section -->
+                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'gateway' }">
+                        <h3 class="category-title">网关与调度 - 流量入口与任务管理</h3>
+                        <div class="panorama-grid">
+                            <!-- Higress -->
+                            <div class="service-card" :class="{ active: activeComponent === 'higress' }"
+                                @click="selectComponent('higress')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/Higress.png" alt="Higress"></div>
+                                    <div>
+                                        <div class="card-title">Higress</div>
+                                        <div class="card-subtitle">云原生网关</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">基于 Envoy 的云原生网关,实现了流量网关、微服务网关、安全网关三合一。</div>
+                            </div>
+                            <!-- SchedulerX -->
+                            <div class="service-card" :class="{ active: activeComponent === 'schedulerx' }"
+                                @click="selectComponent('schedulerx')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/schedulerx.svg" alt="SchedulerX">
+                                    </div>
+                                    <div>
+                                        <div class="card-title">SchedulerX</div>
+                                        <div class="card-subtitle">任务调度</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">分布式任务调度、定时任务、工作流调度、分布式计算。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data & Ops Section -->
+                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'data' }">
+                        <h3 class="category-title">数据与运维 - 容器与可观测性</h3>
+                        <div class="panorama-grid">
+                            <!-- Kubernetes -->
+                            <div class="service-card" :class="{ active: activeComponent === 'k8s' }"
+                                @click="selectComponent('k8s')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/k8s.svg" alt="K8s"></div>
+                                    <div>
+                                        <div class="card-title">Kubernetes</div>
+                                        <div class="card-subtitle">容器编排</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">自动化容器的部署、扩展和管理,云原生应用的基础设施。</div>
+                            </div>
+                            <!-- OpenTelemetry -->
+                            <div class="service-card" :class="{ active: activeComponent === 'opentelemetry' }"
+                                @click="selectComponent('opentelemetry')">
+                                <div class="card-header">
+                                    <div class="card-icon"><img src="images/logos/opentelemetry.svg" alt="OTel"></div>
+                                    <div>
+                                        <div class="card-title">OpenTelemetry</div>
+                                        <div class="card-subtitle">可观测性</div>
+                                    </div>
+                                </div>
+                                <div class="card-desc">云原生可观测性标准,提供 Trace、Metric、Log 的统一采集。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Console & Terminal -->
+            <section class="console-layout" v-if="activeComponent && componentData[activeComponent]">
+                <!-- Left: Control Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <span>⚡</span>
+                            <span>{{ componentData[activeComponent].title }} 控制台</span>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <a :href="componentData[activeComponent].github" target="_blank"
+                                class="btn btn-sm">GitHub</a>
+                            <a :href="componentData[activeComponent].website" target="_blank"
+                                class="btn btn-sm">Docs</a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <!-- API Info Panel -->
+                        <div class="api-info-panel" v-if="activeComponent">
+                            <div class="api-endpoint">{{ getApiInfo().method }} {{ getApiInfo().path }}</div>
+                            <div class="api-params" v-if="getApiInfo().params">参数：{{ getApiInfo().params }}</div>
+                            <div class="api-description">{{ getApiInfo().description }}</div>
+                        </div>
+
+                        <!-- Concept Card -->
+                        <div class="concept-card" v-if="getConcept()">
+                            <div class="concept-title">{{ getConcept().title }}</div>
+                            <div class="concept-content" v-html="getConcept().content"></div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label">快速操作</div>
+                            <button class="btn btn-primary" style="width:100%; justify-content:center;"
+                                @click="testAll()">
+                                <span>▶</span> 运行所有测试用例
+                            </button>
+                        </div>
+
+                        <!-- Sentinel Controls -->
+                        <div v-if="activeComponent === 'sentinel'">
+                            <div class="control-group">
+                                <div class="control-label">流量控制 (QPS)</div>
+                                <div class="test-description">🔹 向服务发送 N 个并发请求，观察 Sentinel
+                                    是否正确限流。QPS限流基于滑动时间窗口算法，超过阈值的请求会被直接拒绝。</div>
+                                <div class="input-row">
+                                    <input class="input" type="number" min="1" v-model.number="qpsTimes"
+                                        placeholder="次数">
+                                    <button class="btn" @click="trigger('qps', qpsTimes)">发送请求</button>
+                                </div>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">限流阈值:</span>
+                                        <span class="config-value">1000 QPS</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">当前状态:</span>
+                                        <span class="config-value">✓ 正常运行</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">并发控制 (Thread)</div>
+                                <div class="test-description">🔹 通过线程隔离限制最多同时执行的线程数。当线程数达到阈值，新请求进入等待队列。</div>
+                                <div class="input-row">
+                                    <input class="input" type="number" min="1" v-model.number="threadTimes"
+                                        placeholder="线程数">
+                                    <button class="btn" @click="testThread()">并发测试</button>
+                                </div>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">线程数限制:</span>
+                                        <span class="config-value">200</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">队列大小:</span>
+                                        <span class="config-value">100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">热点参数限流</div>
+                                <div class="test-description">🔹 对特定的参数值（如用户ID）单独限流。常用于防护热点数据被恶意访问。</div>
+                                <div class="input-row">
+                                    <input class="input" v-model="hotUserId" placeholder="User ID">
+                                    <button class="btn" @click="trigger('hot', hotTimes)">热点测试</button>
+                                </div>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">参数字段:</span>
+                                        <span class="config-value">userId</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">热点阈值:</span>
+                                        <span class="config-value">100 QPS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nacos Controls -->
+                        <div v-if="activeComponent === 'nacos'">
+                            <div class="process-flow">
+                                <div class="flow-title">🔄 服务注册与发现流程</div>
+                                <div class="flow-diagram">1. 微服务启动时自动注册到 Nacos
+                                    2. Nacos 保存服务元数据（IP、端口、权重等）
+                                    3. 其他服务主动发现可用服务并实时监控上线/下线事件
+                                    4. 实现应用间的动态负载均衡</div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">服务发现</div>
+                                <div class="test-description">🔹 查询当前 Nacos 注册中帮绑的所有实例，验证服务发现功能是否正常。</div>
+                                <button class="btn" style="width:100%" @click="testNacosServices()">获取服务列表</button>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">配置管理</div>
+                                <div class="test-description">🔹 加载 Nacos 中预定群组的动态配置，支持应用一体改改需改。</div>
+                                <button class="btn" style="width:100%" @click="testNacosConfig()">读取动态配置</button>
+                            </div>
+                        </div>
+
+                        <!-- Dubbo Controls -->
+                        <div v-if="activeComponent === 'dubbo'">
+                            <div class="control-group">
+                                <div class="control-label">RPC 调用</div>
+                                <div class="test-description">🔹 使用 Dubbo 进行远程整整本地数据序列化/反序列化，港口超有易首。相比 HTTP 性能提儵20倍以上。
+                                </div>
+                                <div class="input-row">
+                                    <input class="input" type="number" v-model.number="dubboProductId" placeholder="ID">
+                                    <button class="btn" @click="testDubboSync()">同步调用</button>
+                                </div>
+                                <div class="input-row">
+                                    <button class="btn" style="flex:1" @click="testDubboBatch()">批量调用</button>
+                                    <button class="btn" style="flex:1" @click="testDubboListAll()">查询所有</button>
+                                </div>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">RPC 协议:</span>
+                                        <span class="config-value">Dubbo 3.2.11</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">传输协议:</span>
+                                        <span class="config-value">TCP (Netty)、HTTP/2</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">序列化:</span>
+                                        <span class="config-value">Hessian2 (䮤量小)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">协议性能对比</div>
+                                <div class="test-description">🔹 比较 Feign 和 Dubbo 两种 RPC 协议的性能实际差既。每整拫否会自动计算性能指标。</div>
+                                <div class="input-row">
+                                    <input class="input" type="number" v-model.number="compareTimes" placeholder="次数">
+                                    <button class="btn" @click="testFeignVsDubbo()">Feign vs Dubbo</button>
+                                </div>
+                                <div id="comparison-result" v-if="comparisonData.length > 0" style="margin-top: 12px;">
+                                    <table class="comparison-table">
+                                        <thead>
+                                            <tr>
+                                                <th>协议</th>
+                                                <th>平均响应時间</th>
+                                                <th>最少响应</th>
+                                                <th>最大响应</th>
+                                                <th>成功率</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="item in comparisonData" :key="item.protocol">
+                                                <td>{{ item.protocol }}</td>
+                                                <td>{{ item.avgRt }}ms</td>
+                                                <td>{{ item.minRt }}ms</td>
+                                                <td>{{ item.maxRt }}ms</td>
+                                                <td>{{ item.successRate }}%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seata Controls -->
+                        <div v-if="activeComponent === 'seata'">
+                            <div class="process-flow">
+                                <div class="flow-title">🔄 Seata TCC 分布式事务1务流程</div>
+                                <div class="flow-diagram">1. Try: 业务2服务预保留资源（锁元 锁账户）
+                                    2. Confirm: 全部服务预保成功后，事务提交，真正执行业务
+                                    3. Cancel: 法业务稁发失败，恢复所有法字级字段不物理量</div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">TCC 事务模式</div>
+                                <div class="test-description">🔹 TCC 保证强一致性，但需业业服务实现 Try/Confirm/Cancel
+                                    三个接口。适合对一致性要求高的业务场景。</div>
+                                <div class="input-row">
+                                    <input class="input" v-model="tccCommodityCode" placeholder="商品编码">
+                                    <input class="input" type="number" v-model.number="tccCount" placeholder="数量"
+                                        style="width:60px">
+                                </div>
+                                <div class="input-row">
+                                    <button class="btn btn-primary" style="flex:1"
+                                        @click="call(endpoint('tcc-ok'),'tcc-ok')">提交事务</button>
+                                    <button class="btn btn-danger" style="flex:1"
+                                        @click="call(endpoint('tcc-fail'),'tcc-fail')">回滚事务</button>
+                                </div>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">事务模式:</span>
+                                        <span class="config-value">TCC (强一致)</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">参与治理方式:</span>
+                                        <span class="config-value">Seata Server</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">超时设置:</span>
+                                        <span class="config-value">300s</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Higress Controls -->
+                        <div v-if="activeComponent === 'higress'">
+                            <div class="process-flow">
+                                <div class="flow-title">🔄 网关与鉴权流程</div>
+                                <div class="flow-diagram">1. 来自请求 → Higress 网关
+                                    2. 执行路由规则 (鉴权、限流)
+                                    3. 传递后端业务服务
+                                    4. 返回应答给客户端</div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">网关路由</div>
+                                <div class="test-description">🔹 检查网关路由规则配置，验证路由是否正常工作。包含传递模式、负载均衡等配置。</div>
+                                <button class="btn" style="width:100%; margin-bottom:8px;"
+                                    @click="testGatewayRouting()">检查路由规则</button>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">网关类型:</span>
+                                        <span class="config-value">Higress (Envoy 基础)</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">路由模式:</span>
+                                        <span class="config-value">加权轮询、Random</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">安全鉴权</div>
+                                <div class="test-description">🔹 测试鉴权一行，模拟认可的请求与不认可的请求。验证模型是否正常工作。</div>
+                                <div class="input-row">
+                                    <button class="btn btn-primary" style="flex:1"
+                                        @click="call(endpoint('gateway-auth-pass'),'gateway-auth')">鉴权通过</button>
+                                    <button class="btn btn-danger" style="flex:1"
+                                        @click="call(endpoint('gateway-auth-fail'),'gateway-auth')">鉴权拒绝</button>
+                                </div>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">身份验证:</span>
+                                        <span class="config-value">JWT Token</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">鉴权方式:</span>
+                                        <span class="config-value">Header Authorization</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SCA Controls -->
+                        <div v-if="activeComponent === 'sca'">
+                            <div class="process-flow">
+                                <div class="flow-title">🔄 Spring Cloud Alibaba 业务中事流程</div>
+                                <div class="flow-diagram">1. OpenFeign 声明式调用远程 API
+                                    2. LoadBalancer 需算最优实例谢擒是循难
+                                    3. Nacos 提供服务发现与负载均衡
+                                    4. 支持超时控制与降级保护</div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">OpenFeign REST 调用</div>
+                                <div class="test-description">🔹 OpenFeign 提供了声明式的 REST API 调用方式，自动复用正常连接与负载均衡。</div>
+                                <div class="input-row">
+                                    <input class="input" type="number" v-model.number="feignProductId" placeholder="ID">
+                                    <button class="btn" @click="testFeign()">REST 调用</button>
+                                </div>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">协议:</span>
+                                        <span class="config-value">HTTP/REST</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">超时:</span>
+                                        <span class="config-value">5s 读取, 1s 连接</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">降级:</span>
+                                        <span class="config-value">Fallback 准備</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">LoadBalancer 负载均衡</div>
+                                <div class="test-description">🔹 LoadBalancer 攜丢车为客户端负载均衡器，支持并发超时、第一个権重优先等释放。</div>
+                                <button class="btn" style="width:100%" @click="testLoadBalance()">测试负载均衡策略</button>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">方案:</span>
+                                        <span class="config-value">RoundRobin 第一个権重</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">会段保持:</span>
+                                        <span class="config-value">30s</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OpenTelemetry Controls -->
+                        <div v-if="activeComponent === 'opentelemetry'">
+                            <div class="process-flow">
+                                <div class="flow-title">🔄 可観测性库流程</div>
+                                <div class="flow-diagram">1. 应用自轫折中 Trace/Metric/Log
+                                    2. OpenTelemetry SDK 收集数据
+                                    3. 传递到可観测性后端
+                                    4. 可観测平台业务化展示与分析</div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label">分布式互追 Trace</div>
+                                <div class="test-description">🔹 生成模拟的应用链路数据，展示路迷液中的各个谢拒的执行流程、时间消耗、业务参数等。</div>
+                                <button class="btn" style="width:100%" @click="testTracing()">生成模拟链路数据</button>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">Trace 采样率:</span>
+                                        <span class="config-value">100% (demo 模式)</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">Trace 最大事件:</span>
+                                        <span class="config-value">1024</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">后端接口:</span>
+                                        <span class="config-value">Jaeger/Skywalking</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right: Terminal Output -->
+                <div class="panel" style="border:none; box-shadow:var(--shadow-lg);">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-dots">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="terminal-title">user@dev-console:~/logs</div>
+                            <div style="flex:1"></div>
+                            <button class="btn btn-sm" @click="reset"
+                                style="background:transparent; border:none; color:var(--text-secondary);">
+                                🗑️ Clear
+                            </button>
+                        </div>
+                        <div class="terminal-body" id="terminal-body">
+                            <div v-if="history.length === 0"
+                                style="color:var(--text-secondary); padding:20px; text-align:center;">
+                                // Waiting for commands...<br>
+                                // Click buttons on the left to execute tests.
+                            </div>
+                            <div class="log-entry" v-for="item in history" :key="item.id">
+                                <div class="log-time">[{{ item.time }}]</div>
+                                <div class="log-type">{{ item.type }}</div>
+                                <div class="log-status" :class="item.status === '成功' ? 'success' : 'error'">
+                                    {{ item.status === '成功' ? '✔' : '✘' }}
+                                </div>
+                                <div class="log-content" @click="viewDetail(item)">
+                                    {{ item.msg }}
+                                    <span class="log-meta">{{ item.rt }}ms</span>
+                                    <span class="log-meta">HTTP {{ item.code }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Best Practices & Statistics -->
+            <div>
+                <div class="stats-summary">
+                    <div class="stat-item">
+                        <span class="stat-label">总请求数:</span>
+                        <span class="stat-value">{{ history.length }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">成功率:</span>
+                        <span class="stat-value">{{ successRate }}%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">平均响应时间:</span>
+                        <span class="stat-value">{{ avgResponseTime }}ms</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">测试覆盖:</span>
+                        <span class="stat-value">{{ testedComponents }}/13</span>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <div class="best-practices-title">📚 微服务最佳实践</div>
+                    <div class="practice-item">
+                        <span class="practice-icon">✅</span>
+                        <span>
+                            <strong>流量防护</strong>：在网关和服务层使用 Sentinel 进行流量控制，防止级联故障。建议配置 QPS 限流、线程隔离、熔断降级等多个维度的防护。
+                        </span>
+                    </div>
+                    <div class="practice-item">
+                        <span class="practice-icon">✅</span>
+                        <span>
+                            <strong>服务通信</strong>：同步调用使用 OpenFeign + LoadBalancer，异步调用使用消息队列。Dubbo 适合内部高性能调用，REST
+                            适合跨域/外部调用。
+                        </span>
+                    </div>
+                    <div class="practice-item">
+                        <span class="practice-icon">✅</span>
+                        <span>
+                            <strong>分布式事务</strong>：强一致性业务使用 Seata TCC 模式，最终一致性业务使用本地消息表或 SAGA 模式。
+                        </span>
+                    </div>
+                    <div class="practice-item">
+                        <span class="practice-icon">✅</span>
+                        <span>
+                            <strong>配置管理</strong>：敏感配置和环境相关配置通过 Nacos 集中管理，支持应用热更新。避免硬编码和手动修改。
+                        </span>
+                    </div>
+                    <div class="practice-item">
+                        <span class="practice-icon">✅</span>
+                        <span>
+                            <strong>可观测性</strong>：使用 OpenTelemetry 统一采集 Trace、Metric、Log，提升故障排查效率。在链路上加上业务标记便于问题追踪。
+                        </span>
+                    </div>
+                    <div class="practice-item">
+                        <span class="practice-icon">✅</span>
+                        <span>
+                            <strong>网关安全</strong>：所有流量通过网关，在网关层做统一的鉴权、限流、日志记录。使用黑白名单和 JWT Token 控制访问权限。
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Detail Modal -->
+        <div class="modal-overlay" v-if="showDetailModal" @click.self="showDetailModal=false">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 style="margin:0; font-size:16px;">Response Details</h3>
+                    <button class="btn btn-sm" @click="showDetailModal=false">Close</button>
+                </div>
+                <div class="modal-body">
+                    <pre class="code-block" id="json-display"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, reactive } = Vue
+
+        const app = createApp({
+            data() {
+                return {
+                    activePanoramaTab: 'control',
+                    activeComponent: 'sentinel',
+                    componentData: {
+                        sentinel: { title: 'Sentinel', github: 'https://github.com/alibaba/Sentinel', website: 'https://sentinelguard.io' },
+                        nacos: { title: 'Nacos', github: 'https://github.com/alibaba/nacos', website: 'https://nacos.io' },
+                        dubbo: { title: 'Dubbo', github: 'https://github.com/apache/dubbo', website: 'https://dubbo.apache.org' },
+                        seata: { title: 'Seata', github: 'https://github.com/seata/seata', website: 'https://seata.io' },
+                        higress: { title: 'Higress', github: 'https://github.com/alibaba/higress', website: 'https://higress.io' },
+                        sca: { title: 'Spring Cloud', github: 'https://github.com/alibaba/spring-cloud-alibaba', website: 'https://spring.io/projects/spring-cloud-alibaba' },
+                        opensergo: { title: 'OpenSergo', github: 'https://github.com/opensergo/opensergo-specification', website: 'https://opensergo.io' },
+                        chaosblade: { title: 'ChaosBlade', github: 'https://github.com/chaosblade-io/chaosblade', website: 'https://chaosblade.io' },
+                        appactive: { title: 'AppActive', github: 'https://github.com/alibaba/AppActive', website: 'https://doc.appactive.io' },
+                        rocketmq: { title: 'RocketMQ', github: 'https://github.com/apache/rocketmq', website: 'https://rocketmq.apache.org' },
+                        schedulerx: { title: 'SchedulerX', github: 'https://github.com/alibaba/SchedulerX', website: 'https://www.aliyun.com/aliware/schedulerx' },
+                        k8s: { title: 'Kubernetes', github: 'https://github.com/kubernetes/kubernetes', website: 'https://kubernetes.io' },
+                        opentelemetry: { title: 'OpenTelemetry', github: 'https://github.com/open-telemetry', website: 'https://opentelemetry.io' }
+                    },
+
+                    // Test Parameters
+                    qpsTimes: 10,
+                    threadTimes: 5,
+                    hotUserId: 'user-001',
+                    hotTimes: 10,
+                    degradeConcurrent: 5,
+                    tccCommodityCode: 'P0001',
+                    tccCount: 2,
+                    feignProductId: 1,
+                    dubboProductId: 1,
+                    compareTimes: 5,
+
+                    // System
+                    history: [],
+                    showDetailModal: false,
+                    detailView: '',
+                    comparisonData: [],
+                    successRate: 0,
+                    avgResponseTime: 0,
+                    testedComponents: 0
+                }
+            },
+            methods: {
+                selectComponent(id) {
+                    this.activeComponent = id
+                },
+                formatTime(date) {
+                    return date.toLocaleTimeString('zh-CN', { hour12: false }) + '.' +
+                        date.getMilliseconds().toString().padStart(3, '0')
+                },
+                endpoint(t) {
+                    const map = {
+                        'qps': '/api/order/demo/flow-control',
+                        'thread': '/api/order/demo/flow-control',
+                        'hot': '/api/order/demo/hot-param',
+                        'degrade': '/api/order/demo/degrade',
+                        'tcc-ok': '/api/order/seata/tcc/commit',
+                        'tcc-fail': '/api/order/seata/tcc/rollback',
+                        'feign': `/api/order/feign/product/${this.feignProductId}`,
+                        'dubbo-sync': `/api/order/dubbo/call-sync?productId=${this.dubboProductId}`,
+                        'dubbo-batch': '/api/order/dubbo/call-batch',
+                        'dubbo-list-all': '/api/order/dubbo/list-all',
+                        'compare-feign': `/api/order/feign/product/1`,
+                        'compare-dubbo': `/api/order/dubbo/call-sync?productId=1`,
+                        'nacos-services': '/api/order/demo/nacos/services',
+                        'nacos-config': '/api/order/demo/nacos-config',
+                        'load-balance': '/api/order/demo/load-balance',
+                        'tracing': '/api/order/demo/tracing',
+                        'gateway-routing': '/api/order/demo/gateway-routing',
+                        'gateway-auth-pass': '/api/order/config?auth-test=pass',
+                        'gateway-auth-fail': '/api/order/config?auth-test=reject',
+                        'async': '/api/order/demo/async-parallel'
+                    }
+                    return map[t] || '/'
+                },
+                async trigger(t, times = 1) {
+                    const url = this.endpoint(t)
+                    const tasks = []
+                    for (let i = 0; i < times; i++) {
+                        tasks.push(this.call(url, t))
+                    }
+                    await Promise.all(tasks)
+                },
+                async testThread() {
+                    const url = this.endpoint('thread')
+                    const promises = []
+                    for (let i = 0; i < this.threadTimes; i++) {
+                        promises.push(this.call(url, 'thread'))
+                        // Small delay to simulate concurrent ramp-up
+                        if (i < this.threadTimes - 1) await new Promise(r => setTimeout(r, 10))
+                    }
+                    await Promise.all(promises)
+                },
+                async testDegrade() {
+                    const url = this.endpoint('degrade')
+                    const tasks = []
+                    for (let i = 0; i < 5; i++) {
+                        for (let j = 0; j < this.degradeConcurrent; j++) {
+                            tasks.push(this.call(url, 'degrade'))
+                        }
+                    }
+                    await Promise.all(tasks)
+                },
+                async testNacosServices() { await this.call(this.endpoint('nacos-services'), 'nacos-services') },
+                async testNacosConfig() { await this.call(this.endpoint('nacos-config'), 'nacos-config') },
+                async testDubboSync() { await this.call(this.endpoint('dubbo-sync'), 'dubbo-sync') },
+                async testDubboBatch() { await this.call(this.endpoint('dubbo-batch'), 'dubbo-batch') },
+                async testDubboListAll() { await this.call(this.endpoint('dubbo-list-all'), 'dubbo-list-all') },
+                async testFeign() { await this.call(this.endpoint('feign'), 'feign') },
+                async testLoadBalance() { await this.call(this.endpoint('load-balance'), 'load-balance') },
+                async testAsync() { await this.call(this.endpoint('async'), 'async') },
+                async testTracing() { await this.call(this.endpoint('tracing'), 'tracing') },
+                async testGatewayRouting() { await this.call(this.endpoint('gateway-routing'), 'gateway-routing') },
+                async testFeignVsDubbo() {
+                    const urlF = this.endpoint('compare-feign')
+                    const urlD = this.endpoint('compare-dubbo')
+                    for (let i = 0; i < this.compareTimes; i++) {
+                        await Promise.all([
+                            this.call(urlF, 'compare-feign'),
+                            this.call(urlD, 'compare-dubbo')
+                        ])
+                    }
+                },
+                async call(url, type) {
+                    try {
+                        const s = performance.now()
+                        const res = await axios.get(url)
+                        const payload = res.data
+                        const ok = payload && typeof payload === 'object' && 'code' in payload ? (payload.code === 200) : (res.status === 200)
+                        const t = this.formatTime(new Date())
+                        const rt = Math.round(performance.now() - s)
+
+                        const item = {
+                            id: Date.now() + Math.random(),
+                            time: t,
+                            type: type,
+                            status: ok ? '成功' : '失败',
+                            code: ok ? 200 : (payload.code || res.status),
+                            msg: ok ? (payload.msg || 'OK') : (payload.msg || res.statusText),
+                            data: payload.data || payload,
+                            rt
+                        }
+
+                        this.history.unshift(item)
+                        if (this.history.length > 100) this.history.pop()
+                    } catch (e) {
+                        const t = this.formatTime(new Date())
+                        this.history.unshift({
+                            id: Date.now() + Math.random(),
+                            time: t,
+                            type,
+                            status: '失败',
+                            code: e.response ? e.response.status : 0,
+                            msg: e.message,
+                            rt: 0
+                        })
+                    }
+                    this.updateStatistics()
+                },
+                viewDetail(item) {
+                    this.detailView = JSON.stringify(item, null, 2)
+                    this.showDetailModal = true
+                    this.$nextTick(() => {
+                        this.highlightCode()
+                    })
+                },
+                highlightCode() {
+                    const display = document.getElementById('json-display')
+                    if (display && this.detailView) {
+                        display.innerHTML = this.syntaxHighlightJSON(this.detailView)
+                    }
+                },
+                syntaxHighlightJSON(json) {
+                    if (typeof json !== 'string') {
+                        json = JSON.stringify(json, undefined, 2)
+                    }
+                    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    return json.replace(/(["'])(?:(?=(\\?)\2).)*?\1|\b(true|false|null)\b|\b-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+\-]?\d+)?\b/g, function (match) {
+                        var cls = 'number'
+                        if (/^"/.test(match)) {
+                            if (/:$/.test(match)) {
+                                cls = 'key'
+                            } else {
+                                cls = 'string'
+                            }
+                        } else if (/true|false/.test(match)) {
+                            cls = 'boolean'
+                        } else if (/null/.test(match)) {
+                            cls = 'null'
+                        }
+                        return '<span class="json-' + cls + '">' + match + '</span>'
+                    })
+                },
+                reset() {
+                    this.history = []
+                    this.updateStatistics()
+                },
+                getApiInfo() {
+                    const apis = {
+                        sentinel: { method: 'GET', path: '/api/order/demo/flow-control', params: 'qps', description: '测试 Sentinel 的 QPS 限流规则，限制每秒最多 1000 个请求' },
+                        nacos: { method: 'GET', path: '/api/order/demo/nacos/services', params: '', description: '查询 Nacos 中注册的所有服务实例' },
+                        dubbo: { method: 'GET', path: '/api/order/dubbo/call-sync?productId=1', params: 'productId', description: '使用 Dubbo 协议远程调用 Product 服务' },
+                        seata: { method: 'POST', path: '/api/order/seata/tcc/commit', params: 'commodity, count', description: '执行 Seata TCC 分布式事务，涉及库存和账户的一致性保证' },
+                        higress: { method: 'GET', path: '/api/order/demo/gateway-routing', params: '', description: '验证网关路由规则配置是否生效' },
+                        sca: { method: 'GET', path: '/api/order/feign/product/1', params: 'productId', description: '使用 OpenFeign + LoadBalancer 调用 Product 服务' },
+                        opentelemetry: { method: 'GET', path: '/api/order/demo/tracing', params: '', description: '生成模拟的应用链路数据用于可观测性演示' }
+                    }
+                    return apis[this.activeComponent] || { method: 'GET', path: '/api/order/demo', params: '', description: '微服务 API 演示' }
+                },
+                getConcept() {
+                    const concepts = {
+                        sentinel: {
+                            title: '💡 Sentinel 限流原理',
+                            content: `
+                                <ul style="margin:0; padding-left:20px;">
+                                    <li>基于滑动时间窗口算法，精确计算流量</li>
+                                    <li><strong>QPS 限流</strong>：限制单位时间内的请求数，超出直接拒绝</li>
+                                    <li><strong>线程隔离</strong>：限制并发执行线程数，等待队列缓冲请求</li>
+                                    <li><strong>熔断降级</strong>：异常率过高时自动断路，避免级联故障</li>
+                                    <li><strong>热点参数限流</strong>：对特定参数值单独限流，防护热点数据</li>
+                                </ul>
+                            `
+                        },
+                        nacos: {
+                            title: '💡 Nacos 服务治理',
+                            content: `
+                                <ul style="margin:0; padding-left:20px;">
+                                    <li>基于 Raft 算法保证数据一致性</li>
+                                    <li><strong>服务注册</strong>：应用启动自动注册到 Nacos，上报实例信息</li>
+                                    <li><strong>服务发现</strong>：消费者从 Nacos 拉取可用实例并订阅变化</li>
+                                    <li><strong>配置管理</strong>：支持热更新，无需重启应用即可生效</li>
+                                    <li><strong>健康检查</strong>：定期检测实例健康状态，故障时自动下线</li>
+                                </ul>
+                            `
+                        },
+                        dubbo: {
+                            title: '💡 Dubbo RPC 调用',
+                            content: `
+                                <ul style="margin:0; padding-left:20px;">
+                                    <li>基于 Hessian2 序列化，性能比 JSON 高 20+ 倍</li>
+                                    <li><strong>协议</strong>：使用 TCP 长连接，支持 Netty 传输</li>
+                                    <li><strong>负载均衡</strong>：支持轮询、加权轮询、随机等策略</li>
+                                    <li><strong>容错机制</strong>：Failover、Failfast、Failsafe 等自动降级</li>
+                                    <li><strong>适用场景</strong>：内部高性能、低延迟的服务调用</li>
+                                </ul>
+                            `
+                        },
+                        seata: {
+                            title: '💡 Seata 分布式事务',
+                            content: `
+                                <ul style="margin:0; padding-left:20px;">
+                                    <li><strong>TCC 模式</strong>：强一致性，适合支付等核心业务</li>
+                                    <li>Try：各参与方预留资源（锁库存、冻结账户）</li>
+                                    <li>Confirm：全部预留成功后，执行真正业务逻辑</li>
+                                    <li>Cancel：任何环节失败时回滚，恢复资源</li>
+                                    <li><strong>其他模式</strong>：AT（自动解析 SQL）、SAGA（事件驱动）</li>
+                                </ul>
+                            `
+                        },
+                        higress: {
+                            title: '💡 Higress 网关',
+                            content: `
+                                <ul style="margin:0; padding-left:20px;">
+                                    <li>基于 Envoy 代理的云原生网关</li>
+                                    <li><strong>流量入口</strong>：所有外部请求必须通过网关</li>
+                                    <li><strong>统一鉴权</strong>：在网关层验证 JWT Token 或其他凭证</li>
+                                    <li><strong>限流保护</strong>：网关层限流，保护后端服务</li>
+                                    <li><strong>黑白名单</strong>：支持 IP、User-Agent 等维度的访问控制</li>
+                                </ul>
+                            `
+                        },
+                        sca: {
+                            title: '💡 Spring Cloud Alibaba',
+                            content: `
+                                <ul style="margin:0; padding-left:20px;">
+                                    <li><strong>OpenFeign</strong>：声明式 REST 调用，自动负载均衡和容错</li>
+                                    <li><strong>LoadBalancer</strong>：客户端负载均衡，支持加权轮询</li>
+                                    <li><strong>Sentinel</strong>：熔断限流，保护调用端</li>
+                                    <li><strong>超时控制</strong>：支持读超时、连接超时分别配置</li>
+                                    <li><strong>Fallback 机制</strong>：调用失败时返回备用方案</li>
+                                </ul>
+                            `
+                        },
+                        opentelemetry: {
+                            title: '💡 OpenTelemetry 可观测性',
+                            content: `
+                                <ul style="margin:0; padding-left:20px;">
+                                    <li>统一采集 Trace、Metric、Log 三大支柱数据</li>
+                                    <li><strong>Trace（链路）</strong>：追踪请求在分布式系统中的完整路径</li>
+                                    <li><strong>Metric（指标）</strong>：系统性能数据（CPU、内存、QPS 等）</li>
+                                    <li><strong>Log（日志）</strong>：应用运行日志，支持结构化存储</li>
+                                    <li><strong>后端接口</strong>：支持导出到 Jaeger、Skywalking 等平台</li>
+                                </ul>
+                            `
+                        }
+                    }
+                    return concepts[this.activeComponent] || {}
+                },
+                updateStatistics() {
+                    const total = this.history.length
+                    const success = this.history.filter(h => h.status === '成功').length
+                    this.successRate = total > 0 ? Math.round((success / total) * 100) : 0
+                    const rtList = this.history.filter(h => h.rt > 0).map(h => h.rt)
+                    this.avgResponseTime = rtList.length > 0 ? Math.round(rtList.reduce((a, b) => a + b, 0) / rtList.length) : 0
+                    const testedSet = new Set(this.history.map(h => h.type))
+                    this.testedComponents = testedSet.size
+                },
+                async testAll() {
+                    const comp = this.activeComponent
+                    const tests = {
+                        sentinel: ['testQps', 'testThread', 'testHotspot', 'testDegrade'],
+                        nacos: ['testNacosServices', 'testNacosConfig'],
+                        dubbo: ['testDubboSync', 'testDubboBatch', 'testDubboListAll'],
+                        seata: ['testTccOk', 'testTccFail'],
+                        sca: ['testFeignVsDubbo', 'testLoadBalance', 'testAsync'],
+                        higress: ['testGatewayRouting'],
+                        opentelemetry: ['testTracing']
+                    }
+                    const compTests = tests[comp] || []
+
+                    for (const testName of compTests) {
+                        if (typeof this[testName] === 'function') {
+                            try { await this[testName]() } catch (e) { console.error(testName, e) }
+                        } else if (testName === 'testQps') {
+                            await this.trigger('qps', this.qpsTimes)
+                        } else if (testName === 'testHotspot') {
+                            await this.trigger('hot', this.hotTimes)
+                        } else if (testName === 'testTccOk') {
+                            await this.call(this.endpoint('tcc-ok'), 'tcc-ok')
+                        } else if (testName === 'testTccFail') {
+                            await this.call(this.endpoint('tcc-fail'), 'tcc-fail')
+                        }
+                    }
+                }
+            }
+        })
+        app.mount('#app')
+    </script>
+</body>
+
+</html>

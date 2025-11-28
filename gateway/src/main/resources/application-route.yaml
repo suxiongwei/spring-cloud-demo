@@ -79,5 +79,19 @@ spring:
           filters:
             - RewritePath=/api/business/?(?<segment>.*), /$\{segment}
           order: 2
+        - id: order-dubbo-route
+          uri: lb://service-order-dubbo
+          predicates:
+            - Path=/api/order/dubbo/**
+          filters:
+            - RewritePath=/api/order/dubbo/?(?<segment>.*), /$\{segment}
+          order: 0
+        - id: product-dubbo-route
+          uri: lb://service-product-dubbo
+          predicates:
+            - Path=/api/product/dubbo/**
+          filters:
+            - RewritePath=/api/product/dubbo/?(?<segment>.*), /$\{segment}
+          order: 0
       default-filters:
         - AddResponseHeader=X-Response-Abc, 123

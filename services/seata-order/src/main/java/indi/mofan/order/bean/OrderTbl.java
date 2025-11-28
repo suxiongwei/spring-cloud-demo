@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,4 +22,8 @@ public class OrderTbl implements Serializable {
     private Integer count;
 
     private Integer money;
+
+    private LocalDateTime createTime;
+
+    private LocalDateTime updateTime;
 }

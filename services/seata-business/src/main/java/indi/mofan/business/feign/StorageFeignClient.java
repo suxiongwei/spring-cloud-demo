@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author mofan
  * @date 2025/5/1 16:21
  */
-@FeignClient(contextId = "storageFeign", value = "seata-storage")
+@FeignClient(contextId = "storageFeign", value = "seata-storage", fallback = indi.mofan.business.feign.fallback.StorageFeignFallback.class)
 public interface StorageFeignClient {
     /**
      * 扣减库存

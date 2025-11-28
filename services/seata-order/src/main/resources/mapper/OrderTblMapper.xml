@@ -10,11 +10,13 @@
             <result property="commodityCode" column="commodity_code" jdbcType="VARCHAR"/>
             <result property="count" column="count" jdbcType="INTEGER"/>
             <result property="money" column="money" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,user_id,commodity_code,
-        count,money
+        count,money,create_time,update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -31,10 +33,9 @@
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="indi.mofan.order.bean.OrderTbl"
             useGeneratedKeys="true">
         insert into order_tbl
-        ( id,user_id,commodity_code
-        ,count,money)
-        values (#{id,jdbcType=INTEGER},#{userId,jdbcType=VARCHAR},#{commodityCode,jdbcType=VARCHAR}
-        ,#{count,jdbcType=INTEGER},#{money,jdbcType=INTEGER})
+        ( id,user_id,commodity_code,count,money,create_time,update_time)
+        values (#{id,jdbcType=INTEGER},#{userId,jdbcType=VARCHAR},#{commodityCode,jdbcType=VARCHAR},
+        #{count,jdbcType=INTEGER},#{money,jdbcType=INTEGER},NOW(),NOW())
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="indi.mofan.order.bean.OrderTbl" useGeneratedKeys="true">
         insert into order_tbl
@@ -68,6 +69,7 @@
                 <if test="money != null">
                     money = #{money,jdbcType=INTEGER},
                 </if>
+                update_time = NOW(),
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
@@ -77,7 +79,8 @@
             user_id =  #{userId,jdbcType=VARCHAR},
             commodity_code =  #{commodityCode,jdbcType=VARCHAR},
             count =  #{count,jdbcType=INTEGER},
-            money =  #{money,jdbcType=INTEGER}
+            money =  #{money,jdbcType=INTEGER},
+            update_time = NOW()
         where   id = #{id,jdbcType=INTEGER} 
     </update>
 </mapper>

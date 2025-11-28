@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,4 +20,7 @@ public class AccountTbl implements Serializable {
 
     private Integer money;
 
+    private LocalDateTime createTime;
+
+    private LocalDateTime updateTime;
 }

@@ -3,56 +3,25 @@ spring:
     name: seata-order
   config:
     import:
-      - optional:nacos:common.yaml?group=seata
+      - optional:nacos:common.yaml?group=SEATA_GROUP
   datasource:
-    url: jdbc:mysql://localhost:3306/order_db?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/order_db?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
     password: MyP@ssw0rd123!
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: 172.29.64.1:8848
       username: nacos
       password: nacos
       discovery:
         namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-        enabled: true
-        username: nacos
-        password: nacos
       config:
         namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-        username: nacos
-        password: nacos
-        import-check:
-          enabled: true
 
 server:
   port: 22000
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 seata:
-  enabled: true
   application-id: seata-order
-  tx-service-group: default_tx_group
-  service:
-    vgroup-mapping:
-      default_tx_group: default
-  registry:
-    type: nacos
-    nacos:
-      application: seata-server
-      serverAddr: 127.0.0.1:8848
-      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-      group: SEATA_GROUP
-      cluster: default
-      username: nacos
-      password: nacos
-  config:
-    type: nacos
-    nacos:
-      serverAddr: 127.0.0.1:8848
-      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-      group: SEATA_GROUP
-      dataId: seata-server.properties
-      username: nacos
-      password: nacos

@@ -1,9 +1,11 @@
 package indi.mofan.product.bean;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -12,7 +14,9 @@ import java.math.BigDecimal;
  */
 @Getter
 @Setter
-public class Product {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product implements Serializable {
     private Long id;
     private BigDecimal price;
     private String productName;

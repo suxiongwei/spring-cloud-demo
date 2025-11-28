@@ -10,7 +10,7 @@ spring:
   cloud:
     nacos:
       # 配置 Nacos 地址
-      server-addr: 127.0.0.1:8848
+      server-addr: 172.29.64.1:8848
       username: nacos
       password: nacos
       discovery:
@@ -38,7 +38,7 @@ spring:
         # 流控规则
         flow:
           nacos:
-            server-addr: ${spring.cloud.nacos.server-addr}
+            server-addr: 172.29.64.1:8848
             namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
@@ -50,7 +50,7 @@ spring:
         # 热点参数限流规则
         param-flow:
           nacos:
-            server-addr: ${spring.cloud.nacos.server-addr}
+            server-addr: 172.29.64.1:8848
             namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
@@ -61,7 +61,7 @@ spring:
         # 熔断降级规则
         degrade:
           nacos:
-            server-addr: ${spring.cloud.nacos.server-addr}
+            server-addr: 172.29.64.1:8848
             namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
@@ -72,7 +72,7 @@ spring:
         # 系统规则
         system:
           nacos:
-            server-addr: ${spring.cloud.nacos.server-addr}
+            server-addr: 172.29.64.1:8848
             namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
@@ -83,7 +83,7 @@ spring:
         # 授权规则
         authority:
           nacos:
-            server-addr: ${spring.cloud.nacos.server-addr}
+            server-addr: 172.29.64.1:8848
             namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}

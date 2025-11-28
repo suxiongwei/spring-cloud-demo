@@ -5,17 +5,21 @@ spring:
     name: gateway
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: 172.29.64.1:8848
       username: nacos
       password: nacos
       discovery:
         namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        group: DEFAULT_GROUP
         username: nacos
         password: nacos
       config:
         namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
         username: nacos
         password: nacos
+    loadbalancer:
+      nacos:
+        enabled: true
     sentinel:
       transport:
         dashboard: localhost:8858
@@ -24,7 +28,7 @@ spring:
       datasource:
         gw-flow:
           nacos:
-            server-addr: ${spring.cloud.nacos.server-addr}
+            server-addr: 172.29.64.1:8848
             namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
@@ -34,7 +38,7 @@ spring:
             rule-type: gw-flow
         gw-api-group:
           nacos:
-            server-addr: ${spring.cloud.nacos.server-addr}
+            server-addr: 172.29.64.1:8848
             namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
@@ -46,6 +50,12 @@ spring:
 server:
   port: 80
 
+logging:
+  level:
+    com.alibaba.cloud.nacos: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.loadbalancer: DEBUG
+
 management:
   endpoint:
     health:
@@ -54,7 +64,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "*"
 
 ---
 spring:

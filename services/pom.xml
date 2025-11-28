@@ -12,7 +12,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>service-product</module>
+        <module>service-product-dubbo</module>
         <module>service-order</module>
+        <module>service-order-dubbo</module>
         <module>seata-account</module>
         <module>seata-business</module>
         <module>seata-order</module>

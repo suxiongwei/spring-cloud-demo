@@ -8,10 +8,12 @@
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="commodityCode" column="commodity_code" jdbcType="VARCHAR"/>
             <result property="count" column="count" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,commodity_code,count
+        id,commodity_code,count,create_time,update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -27,10 +29,8 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="indi.mofan.storage.bean.StorageTbl" useGeneratedKeys="true">
         insert into storage_tbl
-        ( id,commodity_code,count
-        )
-        values (#{id,jdbcType=INTEGER},#{commodityCode,jdbcType=VARCHAR},#{count,jdbcType=INTEGER}
-        )
+        ( id,commodity_code,count,create_time,update_time )
+        values (#{id,jdbcType=INTEGER},#{commodityCode,jdbcType=VARCHAR},#{count,jdbcType=INTEGER},NOW(),NOW())
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="indi.mofan.storage.bean.StorageTbl" useGeneratedKeys="true">
         insert into storage_tbl
@@ -54,6 +54,7 @@
                 <if test="count != null">
                     count = #{count,jdbcType=INTEGER},
                 </if>
+                update_time = NOW(),
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
@@ -61,17 +62,18 @@
         update storage_tbl
         set 
             commodity_code =  #{commodityCode,jdbcType=VARCHAR},
-            count =  #{count,jdbcType=INTEGER}
+            count =  #{count,jdbcType=INTEGER},
+            update_time = NOW()
         where   id = #{id,jdbcType=INTEGER} 
     </update>
     <update id="deduct">
         update storage_tbl
-        set count = count - #{count,jdbcType=INTEGER}
+        set count = count - #{count,jdbcType=INTEGER}, update_time = NOW()
         where commodity_code = #{commodityCode,jdbcType=VARCHAR}
     </update>
     <update id="addBack">
         update storage_tbl
-        set count = count + #{count,jdbcType=INTEGER}
+        set count = count + #{count,jdbcType=INTEGER}, update_time = NOW()
         where commodity_code = #{commodityCode,jdbcType=VARCHAR}
     </update>
 </mapper>

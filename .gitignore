@@ -31,3 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Logs ###
+logs/
+*.log
+
+### Docker ###
+.env.local
+docker-compose.override.yml
+
+### Spring Cloud Demo ###
+.DS_Store
+*.swp
+*.swo
+*~
