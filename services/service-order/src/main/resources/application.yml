@@ -99,6 +99,7 @@ spring:
     import:
       - nacos:common.yaml?group=order
       - nacos:database.yaml?group=order
+      - nacos:haha.yaml?group=ORDER_GROUP
     activate:
       on-profile: dev
 

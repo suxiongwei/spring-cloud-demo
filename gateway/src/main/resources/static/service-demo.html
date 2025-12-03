@@ -1,4 +1,4 @@
-﻿<!doctype html>
+﻿﻿<!doctype html>
 <html lang="zh-CN">
 
 <head>
@@ -548,6 +548,65 @@
         }
 
         .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-dark {
+            background: #374151;
+            /* 深灰色 */
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(55, 65, 81, 0.3);
+        }
+
+        .btn-dark:hover {
+            background: #1f2937;
+            /* 更深的灰色 */
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(55, 65, 81, 0.4);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-dark:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-success {
+            background: var(--gradient-success);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            background: var(--gradient-success);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-success:active {
             transform: translateY(0) scale(0.98);
         }
 
@@ -1135,7 +1194,7 @@
                 <div>
                     <!-- Control Plane Section -->
                     <div class="panorama-section" :class="{ active: activePanoramaTab === 'control' }">
-                        <h3 class="category-title">控制面 - 服务注册与配置管理</h3>
+                        <h3 class="category-title">控制面</h3>
                         <div class="panorama-grid">
                             <!-- Nacos -->
                             <div class="service-card" :class="{ active: activeComponent === 'nacos' }"
@@ -1144,10 +1203,10 @@
                                     <div class="card-icon"><img src="images/logos/nacos.png" alt="Nacos"></div>
                                     <div>
                                         <div class="card-title">Nacos</div>
-                                        <div class="card-subtitle">注册配置中心</div>
+                                        <div class="card-subtitle">配置管理、服务发现、服务管理</div>
                                     </div>
                                 </div>
-                                <div class="card-desc">动态服务发现、配置管理和服务管理平台,构建云原生应用的基石。</div>
+                                <div class="card-desc">⼀个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台</div>
                             </div>
                             <!-- OpenSergo -->
                             <div class="service-card" :class="{ active: activeComponent === 'opensergo' }"
@@ -1345,23 +1404,9 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <!-- API Info Panel -->
-                        <div class="api-info-panel" v-if="activeComponent">
-                            <div class="api-endpoint">{{ getApiInfo().method }} {{ getApiInfo().path }}</div>
-                            <div class="api-params" v-if="getApiInfo().params">参数：{{ getApiInfo().params }}</div>
-                            <div class="api-description">{{ getApiInfo().description }}</div>
-                        </div>
-
-                        <!-- Concept Card -->
-                        <div class="concept-card" v-if="getConcept()">
-                            <div class="concept-title">{{ getConcept().title }}</div>
-                            <div class="concept-content" v-html="getConcept().content"></div>
-                        </div>
-
                         <div class="control-group">
                             <div class="control-label">快速操作</div>
-                            <button class="btn btn-primary" style="width:100%; justify-content:center;"
-                                @click="testAll()">
+                            <button class="btn btn-primary" style="width:100%; justify-content:center;" @click="testAll()">
                                 <span>▶</span> 运行所有测试用例
                             </button>
                         </div>
@@ -1375,7 +1420,7 @@
                                 <div class="input-row">
                                     <input class="input" type="number" min="1" v-model.number="qpsTimes"
                                         placeholder="次数">
-                                    <button class="btn" @click="trigger('qps', qpsTimes)">发送请求</button>
+                                    <button class="btn btn-primary" @click="trigger('qps', qpsTimes)">发送请求</button>
                                 </div>
                                 <div class="config-panel">
                                     <div class="config-item">
@@ -1394,7 +1439,7 @@
                                 <div class="input-row">
                                     <input class="input" type="number" min="1" v-model.number="threadTimes"
                                         placeholder="线程数">
-                                    <button class="btn" @click="testThread()">并发测试</button>
+                                    <button class="btn btn-primary" @click="testThread()">并发测试</button>
                                 </div>
                                 <div class="config-panel">
                                     <div class="config-item">
@@ -1412,7 +1457,7 @@
                                 <div class="test-description">🔹 对特定的参数值（如用户ID）单独限流。常用于防护热点数据被恶意访问。</div>
                                 <div class="input-row">
                                     <input class="input" v-model="hotUserId" placeholder="User ID">
-                                    <button class="btn" @click="trigger('hot', hotTimes)">热点测试</button>
+                                    <button class="btn btn-primary" @click="trigger('hot', hotTimes)">热点测试</button>
                                 </div>
                                 <div class="config-panel">
                                     <div class="config-item">
@@ -1429,22 +1474,38 @@
 
                         <!-- Nacos Controls -->
                         <div v-if="activeComponent === 'nacos'">
-                            <div class="process-flow">
-                                <div class="flow-title">🔄 服务注册与发现流程</div>
-                                <div class="flow-diagram">1. 微服务启动时自动注册到 Nacos
-                                    2. Nacos 保存服务元数据（IP、端口、权重等）
-                                    3. 其他服务主动发现可用服务并实时监控上线/下线事件
-                                    4. 实现应用间的动态负载均衡</div>
-                            </div>
                             <div class="control-group">
                                 <div class="control-label">服务发现</div>
-                                <div class="test-description">🔹 查询当前 Nacos 注册中帮绑的所有实例，验证服务发现功能是否正常。</div>
-                                <button class="btn" style="width:100%" @click="testNacosServices()">获取服务列表</button>
+                                <div class="test-description">🔹 查询当前 Nacos 注册中的所有实例，验证服务发现功能是否正常。</div>
+                                <div class="config-panel"
+                                    style="margin-bottom: 12px; background: rgba(99, 102, 241, 0.05);">
+                                    <div class="config-item"
+                                        style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value"
+                                            style="font-family: var(--font-code); color: var(--accent-primary); font-weight: 600; word-break: break-all; width: 100%;">GET
+                                            /api/order/demo/nacos/services</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width:100%" @click="testNacosServices()">
+                                    <span>▶</span>获取服务列表</button>
                             </div>
                             <div class="control-group">
                                 <div class="control-label">配置管理</div>
-                                <div class="test-description">🔹 加载 Nacos 中预定群组的动态配置，支持应用一体改改需改。</div>
-                                <button class="btn" style="width:100%" @click="testNacosConfig()">读取动态配置</button>
+                                <div class="test-description">🔹 加载 Nacos 的配置，动态刷新。</div>
+                                <div class="config-panel"
+                                    style="margin-bottom: 12px; background: rgba(99, 102, 241, 0.05);">
+                                    <div class="config-item"
+                                        style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value"
+                                            style="font-family: var(--font-code); color: var(--accent-primary); font-weight: 600; word-break: break-all; width: 100%;">GET
+                                            /api/order/demo/nacos/nacos-config</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width:100%" @click="testNacosConfig()">
+                                    <span>▶</span>读取动态配置
+                                </button>
                             </div>
                         </div>
 
@@ -1456,11 +1517,13 @@
                                 </div>
                                 <div class="input-row">
                                     <input class="input" type="number" v-model.number="dubboProductId" placeholder="ID">
-                                    <button class="btn" @click="testDubboSync()">同步调用</button>
+                                    <button class="btn btn-primary" @click="testDubboSync()">同步调用</button>
                                 </div>
                                 <div class="input-row">
-                                    <button class="btn" style="flex:1" @click="testDubboBatch()">批量调用</button>
-                                    <button class="btn" style="flex:1" @click="testDubboListAll()">查询所有</button>
+                                    <button class="btn btn-primary" style="flex:1"
+                                        @click="testDubboBatch()">批量调用</button>
+                                    <button class="btn btn-primary" style="flex:1"
+                                        @click="testDubboListAll()">查询所有</button>
                                 </div>
                                 <div class="config-panel">
                                     <div class="config-item">
@@ -1482,7 +1545,7 @@
                                 <div class="test-description">🔹 比较 Feign 和 Dubbo 两种 RPC 协议的性能实际差既。每整拫否会自动计算性能指标。</div>
                                 <div class="input-row">
                                     <input class="input" type="number" v-model.number="compareTimes" placeholder="次数">
-                                    <button class="btn" @click="testFeignVsDubbo()">Feign vs Dubbo</button>
+                                    <button class="btn btn-primary" @click="testFeignVsDubbo()">Feign vs Dubbo</button>
                                 </div>
                                 <div id="comparison-result" v-if="comparisonData.length > 0" style="margin-top: 12px;">
                                     <table class="comparison-table">
@@ -1561,7 +1624,7 @@
                             <div class="control-group">
                                 <div class="control-label">网关路由</div>
                                 <div class="test-description">🔹 检查网关路由规则配置，验证路由是否正常工作。包含传递模式、负载均衡等配置。</div>
-                                <button class="btn" style="width:100%; margin-bottom:8px;"
+                                <button class="btn btn-primary" style="width:100%; margin-bottom:8px;"
                                     @click="testGatewayRouting()">检查路由规则</button>
                                 <div class="config-panel">
                                     <div class="config-item">
@@ -1598,21 +1661,24 @@
 
                         <!-- SCA Controls -->
                         <div v-if="activeComponent === 'sca'">
-                            <div class="process-flow">
-                                <div class="flow-title">🔄 Spring Cloud Alibaba 业务中事流程</div>
-                                <div class="flow-diagram">1. OpenFeign 声明式调用远程 API
-                                    2. LoadBalancer 需算最优实例谢擒是循难
-                                    3. Nacos 提供服务发现与负载均衡
-                                    4. 支持超时控制与降级保护</div>
-                            </div>
                             <div class="control-group">
                                 <div class="control-label">OpenFeign REST 调用</div>
                                 <div class="test-description">🔹 OpenFeign 提供了声明式的 REST API 调用方式，自动复用正常连接与负载均衡。</div>
+                                <div class="config-panel" style="margin-bottom: 12px; background: rgba(99, 102, 241, 0.05);">
+                                    <div class="config-item" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value" style="font-family: var(--font-code); color: var(--accent-primary); font-weight: 600; word-break: break-all; width: 100%;">GET /api/order/demo/feign/call</span>
+                                    </div>
+                                </div>
                                 <div class="input-row">
                                     <input class="input" type="number" v-model.number="feignProductId" placeholder="ID">
-                                    <button class="btn" @click="testFeign()">REST 调用</button>
+                                    <button class="btn btn-primary" @click="testFeign()">REST 调用</button>
                                 </div>
                                 <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">参数含义:</span>
+                                        <span class="config-value">productId: 商品ID</span>
+                                    </div>
                                     <div class="config-item">
                                         <span class="config-label">协议:</span>
                                         <span class="config-value">HTTP/REST</span>
@@ -1629,16 +1695,28 @@
                             </div>
                             <div class="control-group">
                                 <div class="control-label">LoadBalancer 负载均衡</div>
-                                <div class="test-description">🔹 LoadBalancer 攜丢车为客户端负载均衡器，支持并发超时、第一个権重优先等释放。</div>
-                                <button class="btn" style="width:100%" @click="testLoadBalance()">测试负载均衡策略</button>
+                                <div class="test-description">
+                                    🔹 Spring Cloud LoadBalancer 是一个轻量级、响应式友好的客户端负载均衡器，用于在调用远程服务时，从服务注册中心（如
+                                    Eureka、Nacos、Consul）获取可用实例列表，并根据策略选择一个实例进行请求
+                                </div>
+                                <div class="config-panel" style="margin-bottom: 12px; background: rgba(99, 102, 241, 0.05);">
+                                    <div class="config-item" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value" style="font-family: var(--font-code); color: var(--accent-primary); font-weight: 600; word-break: break-all; width: 100%;">GET /api/order/demo/load-balance</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width:100%"
+                                    @click="testLoadBalance()">测试负载均衡策略</button>
                                 <div class="config-panel">
                                     <div class="config-item">
                                         <span class="config-label">方案:</span>
-                                        <span class="config-value">RoundRobin 第一个権重</span>
+                                        <span class="config-value">默认轮询（Round Robin）</span>
                                     </div>
                                     <div class="config-item">
-                                        <span class="config-label">会段保持:</span>
-                                        <span class="config-value">30s</span>
+                                        <span class="config-label">如何启用:</span>
+                                        <span class="config-value">
+                                            在pom中配置spring-cloud-starter-loadbalancer
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -1656,7 +1734,8 @@
                             <div class="control-group">
                                 <div class="control-label">分布式互追 Trace</div>
                                 <div class="test-description">🔹 生成模拟的应用链路数据，展示路迷液中的各个谢拒的执行流程、时间消耗、业务参数等。</div>
-                                <button class="btn" style="width:100%" @click="testTracing()">生成模拟链路数据</button>
+                                <button class="btn btn-primary" style="width:100%"
+                                    @click="testTracing()">生成模拟链路数据</button>
                                 <div class="config-panel">
                                     <div class="config-item">
                                         <span class="config-label">Trace 采样率:</span>
@@ -1801,7 +1880,7 @@
             data() {
                 return {
                     activePanoramaTab: 'control',
-                    activeComponent: 'sentinel',
+                    activeComponent: 'nacos',
                     componentData: {
                         sentinel: { title: 'Sentinel', github: 'https://github.com/alibaba/Sentinel', website: 'https://sentinelguard.io' },
                         nacos: { title: 'Nacos', github: 'https://github.com/alibaba/nacos', website: 'https://nacos.io' },
@@ -1856,7 +1935,7 @@
                         'degrade': '/api/order/demo/degrade',
                         'tcc-ok': '/api/order/seata/tcc/commit',
                         'tcc-fail': '/api/order/seata/tcc/rollback',
-                        'feign': `/api/order/feign/product/${this.feignProductId}`,
+                        'feign': `/api/order/demo/feign/call?productId=${this.feignProductId}`,
                         'dubbo-sync': `/api/order/dubbo/call-sync?productId=${this.dubboProductId}`,
                         'dubbo-batch': '/api/order/dubbo/call-batch',
                         'dubbo-list-all': '/api/order/dubbo/list-all',

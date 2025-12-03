@@ -15,6 +15,7 @@ import indi.mofan.order.common.BlockDetailFormatter;
 import indi.mofan.order.bean.Order;
 import indi.mofan.order.common.ApiResponse;
 import indi.mofan.order.common.ResultCode;
+import indi.mofan.order.properties.CkProperties;
 import indi.mofan.order.properties.OrderProperties;
 import indi.mofan.order.service.CommonResourceService;
 import indi.mofan.order.service.OrderService;
@@ -25,6 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
 import java.util.HashMap;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
@@ -49,6 +51,8 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private OrderProperties orderProperties;
+    @Autowired
+    private CkProperties ckProperties;
     @Autowired
     private CommonResourceService commonResourceService;
     @Autowired
@@ -321,6 +325,8 @@ public class OrderController {
 
     /**
      * 3. 负载均衡策略演示
+     * 使用spring-cloud-starter-loadbalancer来实现，需要在pom中进行配置
+     * 
      */
     @GetMapping("/demo/load-balance")
     @Operation(summary = "负载均衡策略演示")
@@ -328,8 +334,16 @@ public class OrderController {
         Map<String, Object> result = new HashMap<>();
         List<ServiceInstance> instances = discoveryClient.getInstances("service-product");
         result.put("service-product 实例数", instances.size());
-        result.put("当前使用的轮询策略", "Round Robin (轮询)");
         result.put("实例列表", instances.stream().map(inst -> inst.getHost() + ":" + inst.getPort()).toList());
+
+        // 模拟5次调用，展示负载均衡效果
+        List<String> loadBalanceResults = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Product product = productFeignClient.getProductById(1L);
+            loadBalanceResults.add("第" + i + "次调用 -> " + product.getPort());
+        }
+        result.put("实际调用结果(5次)", loadBalanceResults);
+
         result.put("说明", "Spring Cloud 默认使用轮询策略，多次调用会依次分配到不同实例");
         return ApiResponse.success("负载均衡策略获取成功", result);
     }
@@ -390,11 +404,10 @@ public class OrderController {
     @Operation(summary = "Nacos 配置动态更新演示")
     public ApiResponse<Object> nacosConfigDemo() {
         Map<String, Object> result = new HashMap<>();
-        result.put("当前超时配置", orderProperties.getTimeout());
-        result.put("当前自动确认", orderProperties.getAutoConfirm());
-        result.put("当前数据库URL", orderProperties.getDbUrl());
-        result.put("说明", "这些配置来自 Nacos，修改 Nacos 配置后，应用会自动刷新（无需重启）");
-        result.put("配置位置", "Nacos -> 配置管理 -> 配置列表 -> SENTINEL_GROUP -> service-order.yaml");
+        result.put("connectTimeout", ckProperties.getConnectTimeout());
+        result.put("readTimeout", ckProperties.getReadTimeout());
+        result.put("说明", "这些配置来自 Nacos (common.yaml)，修改后应用会自动刷新");
+        result.put("注意", "请确保在 Nacos 中 hh.yaml 的 Group 为 'ORDER_GROUP'，而不是 'SENTINEL_GROUP'");
         result.put("@RefreshScope", "标记在配置类上，实现配置的动态刷新");
 
         return ApiResponse.success("Nacos配置读取成功", result);
