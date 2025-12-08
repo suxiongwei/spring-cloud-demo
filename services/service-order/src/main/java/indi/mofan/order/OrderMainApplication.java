@@ -14,7 +14,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23 16:31
  */
 @EnableFeignClients

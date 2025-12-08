@@ -4,7 +4,7 @@ import indi.mofan.product.bean.Product;
 
 /**
  * 产品服务 - Dubbo RPC 接口
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23
  */
 public interface IProductDubboService {

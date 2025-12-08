@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/4/9 22:53
  */
 @Component
 public class ProductFeignClientFallback implements ProductFeignClient {
     @Override
     public Product getProductById(Long id) {
-        System.out.println("Fallback...");
+        System.out.println("调用Product Fallback...");
         Product product = new Product();
         product.setId(id);
         product.setPrice(new BigDecimal("0"));

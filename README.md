@@ -929,7 +929,7 @@ spring:
 
 ```java
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/4/29 22:49
  */
 @Component
@@ -1036,7 +1036,7 @@ spring:
 
 ```java
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/5/1 13:49
  */
 @Slf4j
@@ -1072,7 +1072,7 @@ public class RtGlobalFilter implements GlobalFilter, Ordered {
 
 ```java
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/5/1 14:24
  */
 @Component

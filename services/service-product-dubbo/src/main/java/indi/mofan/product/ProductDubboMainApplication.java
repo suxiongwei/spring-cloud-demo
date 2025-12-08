@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * 产品服务 - Dubbo 版本
  * 
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23
  */
 @EnableDubbo

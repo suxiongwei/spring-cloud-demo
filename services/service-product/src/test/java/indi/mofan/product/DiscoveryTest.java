@@ -13,7 +13,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import java.util.List;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23 16:51
  */
 @SpringBootTest

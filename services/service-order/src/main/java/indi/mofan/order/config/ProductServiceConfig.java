@@ -1,6 +1,5 @@
 package indi.mofan.order.config;
 
-
 import feign.Logger;
 import feign.Retryer;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -9,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23 17:58
  */
 @Configuration
@@ -26,8 +25,8 @@ public class ProductServiceConfig {
         return Logger.Level.FULL;
     }
 
-    // @Bean
+    @Bean
     public Retryer retryer() {
-        return new Retryer.Default();
+        return new Retryer.Default(100, 1000, 3);
     }
 }

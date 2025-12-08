@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 /**
  * 发送远程调用的客户端
  *
- * @author mofan
+ * @author xiongweisu
  * @date 2025/4/7 22:08
  */
 @FeignClient(value = "service-product", /* path = "/api/product", */ fallback = ProductFeignClientFallback.class)

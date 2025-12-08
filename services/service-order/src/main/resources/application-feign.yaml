@@ -19,10 +19,10 @@ spring:
             # 连接超时，3000 毫秒
             connect-timeout: 3000
             # 读取超时，5000 毫秒
-            read-timeout: 5000
+            read-timeout: 4000
 #            该请求拦截器仅对当前客户端有效
-#            request-interceptors:
-#              - indi.mofan.order.interceptor.XTokenRequestInterceptor
+            request-interceptors:
+              - indi.mofan.order.interceptor.XTokenRequestInterceptor
     sentinel:
       transport:
         dashboard: localhost:8858

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/5/1 16:24
  */
 @FeignClient(value = "seata-order", fallback = indi.mofan.business.feign.fallback.OrderFeignFallback.class)

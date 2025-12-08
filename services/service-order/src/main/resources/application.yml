@@ -97,7 +97,7 @@ spring:
 spring:
   config:
     import:
-      - nacos:common.yaml?group=order
+      - nacos:common.yaml?group=SEATA_GROUP
       - nacos:database.yaml?group=order
       - nacos:haha.yaml?group=ORDER_GROUP
     activate:
@@ -107,7 +107,7 @@ spring:
 spring:
   config:
     import:
-      - nacos:common.yaml?group=order
+      - nacos:common.yaml?group=SEATA_GROUP
       - nacos:database.yaml?group=order
       - nacos:haha.yaml?group=order
     activate:
@@ -117,7 +117,7 @@ spring:
 spring:
   config:
     import:
-      - nacos:common.yaml?group=order
+      - nacos:common.yaml?group=SEATA_GROUP
       - nacos:database.yaml?group=order
       - nacos:hehe.yaml?group=order
     activate:

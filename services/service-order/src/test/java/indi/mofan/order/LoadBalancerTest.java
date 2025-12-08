@@ -11,7 +11,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import java.util.List;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23 18:12
  */
 @SpringBootTest

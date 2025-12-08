@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 产品服务 - Dubbo 消費者
  * 涉用Dubbo原生的超时、重试、讅转等機制呉不使用Sentinel
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23
  */
 @Slf4j

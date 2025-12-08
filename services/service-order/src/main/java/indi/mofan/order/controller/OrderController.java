@@ -4,6 +4,7 @@ import indi.mofan.product.bean.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,7 @@ import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRule;
 import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRuleManager;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23 17:34
  */
 @Slf4j
@@ -59,6 +60,8 @@ public class OrderController {
     private DiscoveryClient discoveryClient;
     @Autowired
     private ProductFeignClient productFeignClient;
+    @Autowired
+    private Environment environment;
 
     @GetMapping("/config")
     @Operation(summary = "查看订单服务配置")
@@ -275,25 +278,6 @@ public class OrderController {
         return ApiResponse.success("authority rules", rules);
     }
 
-    // ======================== 以下是新增的演示功能接口 ========================
-
-    /**
-     * 1. OpenFeign 服务间调用演示
-     */
-    @GetMapping("/demo/feign/call")
-    @Operation(summary = "OpenFeign 服务间调用演示")
-    public ApiResponse<Product> feignCallDemo(@RequestParam("productId") Long productId) {
-        try {
-            long start = System.currentTimeMillis();
-            Product product = productFeignClient.getProductById(productId);
-            long elapsed = System.currentTimeMillis() - start;
-            return ApiResponse.success("OpenFeign调用成功", product);
-        } catch (Exception e) {
-            log.error("OpenFeign 调用失败", e);
-            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "服务调用失败: " + e.getMessage());
-        }
-    }
-
     /**
      * 2. Nacos 服务注册与发现演示
      */
@@ -323,30 +307,30 @@ public class OrderController {
         return ApiResponse.success("Nacos服务发现成功", result);
     }
 
-    /**
-     * 3. 负载均衡策略演示
-     * 使用spring-cloud-starter-loadbalancer来实现，需要在pom中进行配置
-     * 
-     */
-    @GetMapping("/demo/load-balance")
-    @Operation(summary = "负载均衡策略演示")
-    public ApiResponse<Object> loadBalanceDemo() {
-        Map<String, Object> result = new HashMap<>();
-        List<ServiceInstance> instances = discoveryClient.getInstances("service-product");
-        result.put("service-product 实例数", instances.size());
-        result.put("实例列表", instances.stream().map(inst -> inst.getHost() + ":" + inst.getPort()).toList());
-
-        // 模拟5次调用，展示负载均衡效果
-        List<String> loadBalanceResults = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
-            Product product = productFeignClient.getProductById(1L);
-            loadBalanceResults.add("第" + i + "次调用 -> " + product.getPort());
-        }
-        result.put("实际调用结果(5次)", loadBalanceResults);
-
-        result.put("说明", "Spring Cloud 默认使用轮询策略，多次调用会依次分配到不同实例");
-        return ApiResponse.success("负载均衡策略获取成功", result);
-    }
+//    /**
+//     * 3. 负载均衡策略演示
+//     * 使用spring-cloud-starter-loadbalancer来实现，需要在pom中进行配置
+//     *
+//     */
+//    @GetMapping("/demo/load-balance")
+//    @Operation(summary = "负载均衡策略演示")
+//    public ApiResponse<Object> loadBalanceDemo() {
+//        Map<String, Object> result = new HashMap<>();
+//        List<ServiceInstance> instances = discoveryClient.getInstances("service-product");
+//        result.put("service-product 实例数", instances.size());
+//        result.put("实例列表", instances.stream().map(inst -> inst.getHost() + ":" + inst.getPort()).toList());
+//
+//        // 模拟5次调用，展示负载均衡效果
+//        List<String> loadBalanceResults = new ArrayList<>();
+//        for (int i = 1; i <= 5; i++) {
+//            Product product = productFeignClient.getProductById(1L);
+//            loadBalanceResults.add("第" + i + "次调用 -> " + product.getPort());
+//        }
+//        result.put("实际调用结果(5次)", loadBalanceResults);
+//
+//        result.put("说明", "Spring Cloud 默认使用轮询策略，多次调用会依次分配到不同实例");
+//        return ApiResponse.success("负载均衡策略获取成功", result);
+//    }
 
     /**
      * 4. 链路追踪与日志演示
@@ -461,5 +445,213 @@ public class OrderController {
         result.put("optimization", "串行执行需2000ms，并行执行仅需约1000ms");
 
         return ApiResponse.success("异步并发执行成功", result);
+    }
+
+
+    /**
+     * 9. 超时与重试机制演示
+     */
+    @GetMapping("/demo/timeout-retry")
+    @Operation(summary = "超时与重试机制演示")
+    public ApiResponse<Object> timeoutRetryDemo(@RequestParam(value = "delay", defaultValue = "0") int delay,
+                                              @RequestParam(value = "productId", defaultValue = "1") Long productId) {
+        Map<String, Object> result = new HashMap<>();
+        long start = System.currentTimeMillis();
+
+        try {
+            // 使用指定的productId调用product服务，如果productId=88888会触发5秒延迟
+            Product product = productFeignClient.getProductById(productId);
+            long elapsed = System.currentTimeMillis() - start;
+
+            result.put("调用结果", product);
+            result.put("实际耗时", elapsed + "ms");
+            result.put("超时配置", "连接超时: 3s, 读取超时: 6s");
+            result.put("重试配置", "默认不重试(避免幂等性问题)");
+            result.put("测试说明", "productId=88888会触发5秒延迟，可用于测试读取超时");
+            result.put("当前productId", productId);
+
+            return ApiResponse.success("超时重试测试完成", result);
+        } catch (Exception e) {
+            long elapsed = System.currentTimeMillis() - start;
+            result.put("错误信息", e.getMessage());
+            result.put("实际耗时", elapsed + "ms");
+            result.put("说明", "请求超时,已触发超时保护机制");
+            result.put("建议", "尝试使用productId=88888测试5秒延迟场景");
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "请求超时");
+        }
+    }
+
+    /**
+     * 10. 请求/响应拦截器演示
+     */
+    @GetMapping("/demo/feign-interceptor")
+    @Operation(summary = "Feign请求拦截器演示")
+    public ApiResponse<Object> feignInterceptorDemo() {
+        Map<String, Object> result = new HashMap<>();
+
+        // 调用 product 服务,拦截器会自动添加请求头
+        Product product = productFeignClient.getProductById(1L);
+
+        result.put("调用结果", product);
+        result.put("拦截器功能", new String[] {
+                "自动添加 X-Token 请求头",
+                "记录请求和响应日志",
+                "统计调用耗时",
+                "添加链路追踪ID"
+        });
+        result.put("配置位置", "FeignConfig.java 中配置 RequestInterceptor");
+        result.put("说明", "拦截器可用于统一添加认证信息、日志记录、性能监控等");
+
+        return ApiResponse.success("拦截器演示完成", result);
+    }
+
+    /**
+     * 11. 配置动态刷新增强演示
+     */
+    @GetMapping("/demo/config-refresh")
+    @Operation(summary = "Nacos配置动态刷新演示")
+    public ApiResponse<Object> configRefreshDemo() {
+        Map<String, Object> result = new HashMap<>();
+
+        // 读取当前配置
+        result.put("当前配置", Map.of(
+                "connectTimeout", ckProperties.getConnectTimeout(),
+                "readTimeout", ckProperties.getReadTimeout()));
+
+        result.put("配置来源", "Nacos配置中心 (common.yaml)");
+        result.put("刷新机制", "@RefreshScope 注解实现自动刷新");
+        result.put("操作步骤", new String[] {
+                "1. 在 Nacos 控制台修改配置",
+                "2. 发布配置",
+                "3. 应用自动感知并刷新(无需重启)",
+                "4. 再次调用此接口查看新配置"
+        });
+        result.put("验证方法", "修改 Nacos 中的 connectTimeout 值,然后刷新此接口");
+        result.put("Nacos地址", "http://localhost:8848/nacos");
+
+        return ApiResponse.success("配置信息读取成功", result);
+    }
+
+    /**
+     * 12. 服务健康检查演示
+     */
+    @GetMapping("/demo/health-check")
+    @Operation(summary = "服务健康检查演示")
+    public ApiResponse<Object> healthCheckDemo() {
+        Map<String, Object> result = new HashMap<>();
+
+        // 检查各个服务的健康状态
+        List<String> services = discoveryClient.getServices();
+        Map<String, Object> healthStatus = new HashMap<>();
+
+        for (String service : services) {
+            List<ServiceInstance> instances = discoveryClient.getInstances(service);
+            Map<String, Object> serviceHealth = new HashMap<>();
+            serviceHealth.put("实例数量", instances.size());
+            serviceHealth.put("健康实例", instances.size()); // 简化处理,实际应检查每个实例
+            serviceHealth.put("状态", instances.isEmpty() ? "DOWN" : "UP");
+
+            List<String> instanceList = instances.stream()
+                    .map(inst -> inst.getHost() + ":" + inst.getPort())
+                    .toList();
+            serviceHealth.put("实例列表", instanceList);
+
+            healthStatus.put(service, serviceHealth);
+        }
+
+        result.put("服务健康状态", healthStatus);
+        result.put("健康检查端点", "/actuator/health");
+        result.put("说明", new String[] {
+                "Spring Boot Actuator 提供健康检查端点",
+                "Nacos 会定期检查实例健康状态",
+                "不健康的实例会自动从服务列表中移除",
+                "支持自定义健康检查指标"
+        });
+        result.put("优雅下线", "通过 /actuator/shutdown 端点实现优雅下线");
+
+        return ApiResponse.success("健康检查完成", result);
+    }
+
+    /**
+     * 13. 改进版 - OpenFeign 调用(展示降级效果)
+     */
+    @GetMapping("/demo/feign/call-enhanced")
+    @Operation(summary = "OpenFeign调用增强版(含降级演示)")
+    public ApiResponse<Object> feignCallEnhancedDemo(
+            @RequestParam("productId") Long productId) {
+        Map<String, Object> result = new HashMap<>();
+        long start = System.currentTimeMillis();
+
+        try {
+            Product product = productFeignClient.getProductById(productId);
+
+            long elapsed = System.currentTimeMillis() - start;
+
+            result.put("调用结果", product);
+            result.put("调用耗时", elapsed + "ms");
+            result.put("是否降级", product.getProductName().equals("未知商品"));
+            result.put("降级策略", "返回默认商品信息,保证系统可用性");
+            // 获取Feign客户端的实际配置值
+            String connectTimeout = environment.getProperty("spring.cloud.openfeign.client.config.service-product.connect-timeout", "3000");
+            String readTimeout = environment.getProperty("spring.cloud.openfeign.client.config.service-product.read-timeout", "6000");
+            
+            result.put("配置信息", Map.of(
+                    "连接超时时间", connectTimeout + "ms",
+                    "读取超时时间", readTimeout + "ms",
+                    "降级类", "ProductFeignClientFallback.class",
+                    "负载均衡", "默认轮询策略"));
+
+            return ApiResponse.success("OpenFeign调用完成", result);
+        } catch (Exception e) {
+            long elapsed = System.currentTimeMillis() - start;
+            result.put("错误信息", e.getMessage());
+            result.put("调用耗时", elapsed + "ms");
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "服务调用失败");
+        }
+    }
+
+    /**
+     * 14. 改进版 - 负载均衡(展示多种策略)
+     */
+    @GetMapping("/demo/load-balance")
+    @Operation(summary = "负载均衡策略增强版")
+    public ApiResponse<Object> loadBalanceEnhancedDemo(
+            @RequestParam(value = "times", defaultValue = "10") int times) {
+        Map<String, Object> result = new HashMap<>();
+
+        // 获取服务实例信息
+        List<ServiceInstance> instances = discoveryClient.getInstances("service-product");
+        result.put("service-product实例数", instances.size());
+
+        List<Map<String, Object>> instanceDetails = instances.stream().map(inst -> {
+            Map<String, Object> detail = new HashMap<>();
+            detail.put("地址", inst.getHost() + ":" + inst.getPort());
+            detail.put("元数据", inst.getMetadata());
+            return detail;
+        }).toList();
+        result.put("实例详情", instanceDetails);
+
+        // 执行多次调用,统计负载均衡效果
+        Map<String, Integer> portCount = new HashMap<>();
+        List<String> callSequence = new ArrayList<>();
+
+        for (int i = 1; i <= times; i++) {
+            Product product = productFeignClient.getProductById(1L);
+            String port = product.getPort();
+            portCount.put(port, portCount.getOrDefault(port, 0) + 1);
+            callSequence.add("第" + i + "次 -> " + port);
+        }
+
+        result.put("调用序列", callSequence);
+        result.put("端口分布统计", portCount);
+        result.put("负载均衡策略", "默认轮询(Round Robin)");
+        result.put("其他支持策略", new String[] {
+                "RandomLoadBalancer - 随机策略",
+                "WeightedResponseTimeLoadBalancer - 加权响应时间",
+                "自定义策略 - 实现 ReactorServiceInstanceLoadBalancer 接口"
+        });
+        result.put("配置方式", "在配置类中通过 @Bean 注入自定义 LoadBalancer");
+
+        return ApiResponse.success("负载均衡测试完成", result);
     }
 }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * 产品服务 Dubbo 实现
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23
  */
 @Slf4j

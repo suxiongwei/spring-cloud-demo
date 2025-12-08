@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/4/9 22:27
  */
-@Component
+//@Component
 public class XTokenRequestInterceptor implements RequestInterceptor {
     /**
      * 请求拦截器

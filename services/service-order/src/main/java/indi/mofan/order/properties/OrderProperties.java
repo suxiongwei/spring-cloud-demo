@@ -8,7 +8,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 /**
- * @author mofan
+ * @author xiongweisu
  * @date 2025/3/23 22:32
  */
 @Getter
