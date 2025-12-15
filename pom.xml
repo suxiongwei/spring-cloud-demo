@@ -28,7 +28,7 @@
         <lombok.version>1.18.36</lombok.version>
         <assertj.version>3.27.2</assertj.version>
         <json-unit-assertj.version>4.1.0</json-unit-assertj.version>
-        <dubbo.version>3.2.11</dubbo.version>
+        <dubbo.version>3.2.15</dubbo.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -84,6 +84,11 @@
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-registry-nacos</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-configcenter-nacos</artifactId>
                 <version>${dubbo.version}</version>
             </dependency>
         </dependencies>

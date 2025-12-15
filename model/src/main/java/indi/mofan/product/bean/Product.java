@@ -22,4 +22,11 @@ public class Product implements Serializable {
     private String productName;
     private int num;
     private String port;
+
+    public Product(Long id, BigDecimal price, String productName, int num) {
+        this.id = id;
+        this.price = price;
+        this.productName = productName;
+        this.num = num;
+    }
 }

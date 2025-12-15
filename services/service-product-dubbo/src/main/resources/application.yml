@@ -4,6 +4,8 @@ server:
 spring:
   profiles:
     active: dev
+#   active: dev,shanghai
+  #  active: dev,beijing
   application:
     name: service-product-dubbo
   cloud:
@@ -31,6 +33,16 @@ dubbo:
     # QOS 配置
     qos-enable: true
     qos-port: 22222
+  # 配置中心（用于动态配置规则）
+  config-center:
+    address: nacos://172.29.64.1:8848
+    username: nacos
+    password: nacos
+    parameters:
+      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+    # 注意：这里不需要配置 config-file，动态配置规则会自动监听 *.configurators
+    # config-file: dubbo.properties  # 可选，仅用于应用启动时的静态全局配置
+    group: dubbo
   registry:
     address: nacos://172.29.64.1:8848
     username: nacos
@@ -38,49 +50,84 @@ dubbo:
     parameters:
       namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
       prefer-ip-address: true
+#      region: hangzhou
   # 协议配置
   protocol:
     name: dubbo
     port: 20881
     host: 127.0.0.1
   # 服务暴露配置
-  provider:
-    # 调用超时（窗口时间），单位：ms
-    timeout: 3000
-    # 失败重试次数
-    retries: 1
-    # 最大欢迎选抩数（failover模式）
-    loadbalance: random
-    # 需要管理的线程数
-    threads: 200
-    # 线程池队列次数（积压池）
-    queues: 0
-    # 集群模式：failover、failfast、failsafe、failback、forking，默认为failover
-    cluster: failover
+#  provider:
+#    tag: hangzhou
+#    # 调用超时（窗口时间），单位：ms
+##    timeout: 3000
+#    # 失败重试次数
+##    retries: 1
+#    # 最大欢迎选抩数（failover模式）
+#    loadbalance: random
+#    # 需要管理的线程数
+#    threads: 200
+#    # 线程池队列次数（积压池）
+#    queues: 0
+#    # 集群模式：failover、failfast、failsafe、failback、forking，默认为failover
+#    cluster: failover
 
 ---
 spring:
   config:
     import:
       - nacos:common.yaml?group=product
-      - nacos:database.yaml?group=product
     activate:
       on-profile: dev
+#
+#---
+#spring:
+#  config:
+#    import:
+#      - nacos:common.yaml?group=product
+#      - nacos:database.yaml?group=product
+#    activate:
+#      on-profile: test
+#
+#---
+#spring:
+#  config:
+#    import:
+#      - nacos:common.yaml?group=product
+#      - nacos:database.yaml?group=product
+#    activate:
+#      on-profile: prod
+#
+---
+spring:
+  config:
+    activate:
+      on-profile: beijing
+server:
+  port: 8012
+dubbo:
+  registry:
+    # 用于业务逻辑显示（在代码中获取区域名称）和服务元数据注册
+    parameters:
+      region: beijing
+  provider:
+    # 用于控制路由
+    tag: beijing
+  protocol:
+    port: 20882
 
 ---
 spring:
   config:
-    import:
-      - nacos:common.yaml?group=product
-      - nacos:database.yaml?group=product
     activate:
-      on-profile: test
-
----
-spring:
-  config:
-    import:
-      - nacos:common.yaml?group=product
-      - nacos:database.yaml?group=product
-    activate:
-      on-profile: prod
+      on-profile: shanghai
+server:
+  port: 8013
+dubbo:
+  registry:
+    parameters:
+      region: shanghai
+  provider:
+    tag: shanghai
+  protocol:
+    port: 20883

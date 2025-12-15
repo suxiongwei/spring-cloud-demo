@@ -31,6 +31,16 @@ dubbo:
     # QOS 配置
     qos-enable: true
     qos-port: 22223
+  # 配置中心（用于动态配置规则）
+  config-center:
+    address: nacos://172.29.64.1:8848
+    username: nacos
+    password: nacos
+    parameters:
+      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+    # 注意：这里不需要配置 config-file，动态配置规则会自动监听 *.configurators
+    # config-file: dubbo.properties  # 可选，仅用于应用启动时的静态全局配置
+    group: dubbo
   # 注册中心配置
   registry:
     address: nacos://172.29.64.1:8848
@@ -47,9 +57,9 @@ dubbo:
   # 消費者配置
   consumer:
     # 调用超时（窗口时间），单位：ms
-    timeout: 3000
-    # 失败重试次数（不包括第一次调用）
-    retries: 1
+#    timeout: 3000
+#    # 失败重试次数（不包括第一次调用）
+#    retries: 1
     # 不检查服务是否可用，决序启动时不会报错
     check: false
     # 负载均衡政策：random、roundrobin、leastactive，默认为random
@@ -62,26 +72,26 @@ spring:
   config:
     import:
       - nacos:common.yaml?group=order
-      - nacos:database.yaml?group=order
+#      - nacos:database.yaml?group=order
     activate:
       on-profile: dev
-
----
-spring:
-  config:
-    import:
-      - nacos:common.yaml?group=order
-      - nacos:database.yaml?group=order
-      - nacos:haha.yaml?group=order
-    activate:
-      on-profile: test
-
----
-spring:
-  config:
-    import:
-      - nacos:common.yaml?group=order
-      - nacos:database.yaml?group=order
-      - nacos:hehe.yaml?group=order
-    activate:
-      on-profile: prod
+#
+#---
+#spring:
+#  config:
+#    import:
+#      - nacos:common.yaml?group=order
+#      - nacos:database.yaml?group=order
+#      - nacos:haha.yaml?group=order
+#    activate:
+#      on-profile: test
+#
+#---
+#spring:
+#  config:
+#    import:
+#      - nacos:common.yaml?group=order
+#      - nacos:database.yaml?group=order
+#      - nacos:hehe.yaml?group=order
+#    activate:
+#      on-profile: prod

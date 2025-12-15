@@ -20,32 +20,32 @@ spring:
     loadbalancer:
       nacos:
         enabled: true
-    sentinel:
-      transport:
-        dashboard: localhost:8858
-        port: 8720
-      eager: true
-      datasource:
-        gw-flow:
-          nacos:
-            server-addr: 172.29.64.1:8848
-            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-            username: ${spring.cloud.nacos.username}
-            password: ${spring.cloud.nacos.password}
-            dataId: gateway-flow-rules
-            groupId: SENTINEL_GROUP
-            data-type: json
-            rule-type: gw-flow
-        gw-api-group:
-          nacos:
-            server-addr: 172.29.64.1:8848
-            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-            username: ${spring.cloud.nacos.username}
-            password: ${spring.cloud.nacos.password}
-            dataId: gateway-api-group-rules
-            groupId: SENTINEL_GROUP
-            data-type: json
-            rule-type: gw-api-group
+#    sentinel:
+#      transport:
+#        dashboard: localhost:8858
+#        port: 8720
+#      eager: true
+#      datasource:
+#        gw-flow:
+#          nacos:
+#            server-addr: 172.29.64.1:8848
+#            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+#            username: ${spring.cloud.nacos.username}
+#            password: ${spring.cloud.nacos.password}
+#            dataId: gateway-flow-rules
+#            groupId: SENTINEL_GROUP
+#            data-type: json
+#            rule-type: gw-flow
+#        gw-api-group:
+#          nacos:
+#            server-addr: 172.29.64.1:8848
+#            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+#            username: ${spring.cloud.nacos.username}
+#            password: ${spring.cloud.nacos.password}
+#            dataId: gateway-api-group-rules
+#            groupId: SENTINEL_GROUP
+#            data-type: json
+#            rule-type: gw-api-group
 
 server:
   port: 80
@@ -67,25 +67,25 @@ management:
         include: "*"
 
 ---
-spring:
-  config:
-    import:
-      - nacos:gateway-common.yaml?group=gateway
-    activate:
-      on-profile: dev
+#spring:
+#  config:
+#    import:
+#      - nacos:gateway-common.yaml?group=gateway
+#    activate:
+#      on-profile: dev
 
 ---
-spring:
-  config:
-    import:
-      - nacos:gateway-common.yaml?group=gateway
-    activate:
-      on-profile: test
+#spring:
+#  config:
+#    import:
+#      - nacos:gateway-common.yaml?group=gateway
+#    activate:
+#      on-profile: test
 
 ---
-spring:
-  config:
-    import:
-      - nacos:gateway-common.yaml?group=gateway
-    activate:
-      on-profile: prod
+#spring:
+#  config:
+#    import:
+#      - nacos:gateway-common.yaml?group=gateway
+#    activate:
+#      on-profile: prod

@@ -29,6 +29,57 @@
         .control-label {
             font-size: 14px !important;
         }
+
+        /* Collapsible Code Block Styles */
+        .code-block.collapsible {
+            position: relative;
+            transition: max-height 0.3s ease;
+        }
+
+        .code-block.collapsible.collapsed {
+            max-height: 150px;
+            overflow: hidden;
+        }
+
+        .code-block.collapsible.collapsed::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to bottom, rgba(248, 249, 250, 0), rgba(248, 249, 250, 0.95) 40%, #f8f9fa 100%);
+            pointer-events: none;
+        }
+
+        .collapse-btn {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            padding: 4px 16px;
+            font-size: 12px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-secondary, #666);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .collapse-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary, #333);
+        }
+
+        .code-block.collapsible.expanded {
+            padding-bottom: 40px;
+            /* Space for the button */
+        }
     </style>
 </head>
 
@@ -37,7 +88,7 @@
         <!-- Header -->
         <header class="header">
             <div class="brand">
-                <span class="brand-title">Spring Cloud</span>
+                <span class="brand-title">微服务</span>
                 <span class="brand-subtitle">开发者控制台</span>
             </div>
             <div class="status-badge">
@@ -386,7 +437,32 @@
                                         热点测试</button>
                                 </div>
 
-
+                                <!-- Result Display for Hotspot -->
+                                <div class="result-display" :class="getResultDisplay('sentinel-hot')?.status"
+                                    v-if="getResultDisplay('sentinel-hot')" @click="showResultDetail('sentinel-hot')"
+                                    style="cursor: pointer;">
+                                    <div class="result-header">
+                                        <span class="result-title">热点限流结果</span>
+                                        <span class="result-status" :class="getResultDisplay('sentinel-hot')?.status">
+                                            {{ getResultDisplay('sentinel-hot')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('sentinel-hot')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                    </div>
+                                    <div class="result-content">{{ getResultDisplay('sentinel-hot')?.message || '无返回信息'
+                                        }}</div>
+                                    <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('sentinel-hot')?.timestamp
+                                            }}</span>
+                                        <span class="result-response-time">{{
+                                            getResultDisplay('sentinel-hot')?.responseTime }}ms</span>
+                                        <span v-if="getResultDisplay('sentinel-hot')?.code">HTTP {{
+                                            getResultDisplay('sentinel-hot')?.code }}</span>
+                                    </div>
+                                    <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                        点击查看详情
+                                    </div>
+                                </div>
 
                                 <div class="config-panel">
                                     <div class="config-item">
@@ -485,69 +561,336 @@
                         </div>
 
                         <!-- Dubbo Controls -->
+                        <!-- Dubbo Controls -->
                         <div v-if="activeComponent === 'dubbo'">
                             <div class="control-group">
                                 <div class="control-label">RPC 调用</div>
-                                <div class="test-description">🔹 使用 Dubbo 进行远程整整本地数据序列化/反序列化，港口超有易首。相比 HTTP 性能提儵20倍以上。
+                                <div class="test-description">🔹 Dubbo 是一款高性能 Java RPC
+                                    框架，广泛应用于微服务架构中。它通过封装底层网络通信、序列化、服务发现等复杂逻辑，让开发者可以像调用本地方法一样调用远程服务。
                                 </div>
-                                <div class="input-row">
-                                    <input class="input" type="number" v-model.number="dubboProductId" placeholder="ID">
-                                </div>
-                                <div class="input-row">
-                                    <button class="btn btn-primary flex-1" @click="testDubboSync()"><span>▶</span>
-                                        同步调用</button>
-                                    <button class="btn btn-primary flex-1" @click="testDubboBatch()"><span>▶</span>
-                                        批量调用</button>
-                                    <button class="btn btn-primary flex-1" @click="testDubboListAll()"><span>▶</span>
-                                        查询所有</button>
-                                </div>
-
-
-
                                 <div class="config-panel">
                                     <div class="config-item">
                                         <span class="config-label">RPC 协议:</span>
-                                        <span class="config-value">Dubbo 3.2.11</span>
+                                        <span class="config-value">
+                                            1. 传统 Dubbo 协议：基于私有二进制协议，性能高但生态封闭</br>
+                                            2. Triple 协议（Dubbo 3.x 默认）：基于 HTTP/2 + Protobuf，兼容 gRPC，更适合云原生和跨语言场景
+                                        </span>
                                     </div>
                                     <div class="config-item">
-                                        <span class="config-label">传输协议:</span>
-                                        <span class="config-value">TCP (Netty)、HTTP/2</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">序列化:</span>
-                                        <span class="config-value">Hessian2 (䮤量小)</span>
+                                        <span class="config-label">优势:</span>
+                                        <span class="config-value">
+                                            1. 高性能：基于 Netty 的异步非阻塞 IO，支持高并发。</br>
+                                            2. 透明调用：对开发者屏蔽网络细节。</br>
+                                            3. 丰富的扩展点：协议、序列化、负载均衡等均可自定义。</br>
+                                            4. 服务治理能力：支持熔断、限流、路由、权重、动态配置等。</br>
+                                            5. 多语言支持：除 Java 外，还支持 Go、Node.js、Rust（通过 Triple 协议）。
+                                        </span>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- 1. Batch Call -->
                             <div class="control-group">
-                                <div class="control-label">协议性能对比</div>
-                                <div class="test-description">🔹 比较 Feign 和 Dubbo 两种 RPC 协议的性能实际差既。每整拫否会自动计算性能指标。</div>
-                                <div class="input-row">
-                                    <input class="input" type="number" v-model.number="compareTimes" placeholder="次数">
-                                    <button class="btn btn-primary" @click="testFeignVsDubbo()"><span>▶</span> Feign vs
-                                        Dubbo</button>
+                                <div class="control-label">批量调用</div>
+                                <div class="test-description">🔹 批量调用 Dubbo 服务接口，验证高性能场景下的处理能力。</div>
+                                <div class="config-panel api-address-panel">
+                                    <div class="config-item api-address-item">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-batch</span>
+                                    </div>
                                 </div>
-                                <div id="comparison-result" v-if="comparisonData.length > 0" style="margin-top: 12px;">
-                                    <table class="comparison-table">
-                                        <thead>
-                                            <tr>
-                                                <th>协议</th>
-                                                <th>平均响应時间</th>
-                                                <th>最少响应</th>
-                                                <th>最大响应</th>
-                                                <th>成功率</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="item in comparisonData" :key="item.protocol">
-                                                <td>{{ item.protocol }}</td>
-                                                <td>{{ item.avgRt }}ms</td>
-                                                <td>{{ item.minRt }}ms</td>
-                                                <td>{{ item.maxRt }}ms</td>
-                                                <td>{{ item.successRate }}%</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <button class="btn btn-primary" @click="testDubboBatch()"><span>▶</span> 批量调用</button>
+                                <!-- Result Display -->
+                                <div class="result-display" :class="getResultDisplay('dubbo-batch')?.status"
+                                    v-if="getResultDisplay('dubbo-batch')" @click="showResultDetail('dubbo-batch')"
+                                    style="cursor: pointer;">
+                                    <div class="result-header">
+                                        <span class="result-title">测试结果</span>
+                                        <span class="result-status" :class="getResultDisplay('dubbo-batch')?.status">
+                                            {{ getResultDisplay('dubbo-batch')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-batch')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                    </div>
+                                    <div class="result-content">{{ getResultDisplay('dubbo-batch')?.message || '无返回信息'
+                                        }}</div>
+                                    <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-batch')?.timestamp
+                                            }}</span>
+                                        <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-batch')?.responseTime }}ms</span>
+                                        <span v-if="getResultDisplay('dubbo-batch')?.code">HTTP {{
+                                            getResultDisplay('dubbo-batch')?.code }}</span>
+                                    </div>
+                                    <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                        点击查看详情</div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Query All -->
+                            <div class="control-group">
+                                <div class="control-label">查询所有</div>
+                                <div class="test-description">🔹 查询所有产品信息，验证 Dubbo 服务的数据返回能力。</div>
+                                <div class="config-panel api-address-panel">
+                                    <div class="config-item api-address-item">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/list-all</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" @click="testDubboListAll()"><span>▶</span> 查询所有</button>
+                                <!-- Result Display -->
+                                <div class="result-display" :class="getResultDisplay('dubbo-list-all')?.status"
+                                    v-if="getResultDisplay('dubbo-list-all')"
+                                    @click="showResultDetail('dubbo-list-all')" style="cursor: pointer;">
+                                    <div class="result-header">
+                                        <span class="result-title">测试结果</span>
+                                        <span class="result-status" :class="getResultDisplay('dubbo-list-all')?.status">
+                                            {{ getResultDisplay('dubbo-list-all')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-list-all')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                    </div>
+                                    <div class="result-content">{{ getResultDisplay('dubbo-list-all')?.message ||
+                                        '无返回信息'
+                                        }}</div>
+                                    <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-list-all')?.timestamp
+                                            }}</span>
+                                        <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-list-all')?.responseTime }}ms</span>
+                                        <span v-if="getResultDisplay('dubbo-list-all')?.code">HTTP {{
+                                            getResultDisplay('dubbo-list-all')?.code }}</span>
+                                    </div>
+                                    <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                        点击查看详情</div>
+                                </div>
+                            </div>
+
+                            <!-- 3. Timeout Call -->
+                            <div class="control-group">
+                                <div class="control-label">超时调用</div>
+                                <div class="test-description">🔹 为 RPC
+                                    调用设置超时时间可以提升集群整体稳定性，避免无限等待响应结果导致的资源占用（比如大量长期无响应的请求占用线程池等）。在调用没有响应的情况下，比如 5s 之后，Dubbo
+                                    框架就会自动终止调用等待过程（抛出 TimeoutException），释放此次调用占用的资源。</div>
+                                <div class="config-panel api-address-panel">
+                                    <div class="config-item api-address-item">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-timeout?productId={{dubboProductId}}&sleepTime=4000</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" @click="testDubboTimeout()"><span>▶</span> 超时调用</button>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">使用方式:</span>
+                                        <span class="config-value">
+                                            <div class="code-block no-copy collapsible">
+                                                <pre><code class="language-java">1.配置全局默认超时时间为 5s（不配置的情况下，所有服务的默认超时时间是 1s）
+dubbo:
+  provider:
+    timeout: 5000
+
+2.在消费端，指定 productDubboService 服务调用的超时时间为 3s
+@DubboReference(version = "1.0.0", group = "product", timeout = 3000, retries = 1, check = false)
+private IProductDubboService productDubboService;
+
+3.在提供端，指定 DemoService 服务调用的超时时间为 5s（可作为所有消费端的默认值，如果消费端有指定则优先级更高）
+@DubboService(timeout=5000)
+public class DemoServiceImpl implements DemoService{}
+
+4.在消费端，指定 DemoService sayHello 方法调用的超时时间为 5s
+@DubboReference(methods = {@Method(name = "sayHello", timeout = 5000)})
+private DemoService demoService;
+
+5.在提供端，指定 DemoService sayHello 方法调用的超时时间为 5s（可作为所有消费端的默认值，如果消费端有指定则优先级更高）
+@DubboService(methods = {@Method(name = "sayHello", timeout = 5000)})
+public class DemoServiceImpl implements DemoService{}
+</code></pre>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">优先级:</span>
+                                        <span class="config-value">
+                                            - 方法级别配置 > 服务级别配置 > 全局配置 > 默认值<br>
+                                            - nacos动态配置 > consumer > provider > 默认值
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Result Display -->
+                                <div class="result-display" :class="getResultDisplay('dubbo-timeout')?.status"
+                                    v-if="getResultDisplay('dubbo-timeout')" @click="showResultDetail('dubbo-timeout')"
+                                    style="cursor: pointer;">
+                                    <div class="result-header">
+                                        <span class="result-title">测试结果</span>
+                                        <span class="result-status" :class="getResultDisplay('dubbo-timeout')?.status">
+                                            {{ getResultDisplay('dubbo-timeout')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-timeout')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                    </div>
+                                    <div class="result-content">{{ getResultDisplay('dubbo-timeout')?.message || '无返回信息'
+                                        }}</div>
+                                    <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-timeout')?.timestamp
+                                            }}</span>
+                                        <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-timeout')?.responseTime }}ms</span>
+                                        <span v-if="getResultDisplay('dubbo-timeout')?.code">HTTP {{
+                                            getResultDisplay('dubbo-timeout')?.code }}</span>
+                                    </div>
+                                    <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                        点击查看详情</div>
+                                </div>
+                            </div>
+
+                            <!-- 4. Exception Call -->
+                            <div class="control-group">
+                                <div class="control-label">异常调用</div>
+                                <div class="test-description">🔹 模拟服务调用异常，验证 Dubbo 的异常处理和容错机制。</div>
+                                <div class="config-panel api-address-panel">
+                                    <div class="config-item api-address-item">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-exception?productId={{dubboProductId}}</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" @click="testDubboException()"><span>▶</span>
+                                    异常调用</button>
+                                <!-- Result Display -->
+                                <div class="result-display" :class="getResultDisplay('dubbo-exception')?.status"
+                                    v-if="getResultDisplay('dubbo-exception')"
+                                    @click="showResultDetail('dubbo-exception')" style="cursor: pointer;">
+                                    <div class="result-header">
+                                        <span class="result-title">测试结果</span>
+                                        <span class="result-status"
+                                            :class="getResultDisplay('dubbo-exception')?.status">
+                                            {{ getResultDisplay('dubbo-exception')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-exception')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
+                                            }}
+                                        </span>
+                                    </div>
+                                    <div class="result-content">{{ getResultDisplay('dubbo-exception')?.message ||
+                                        '无返回信息'
+                                        }}</div>
+                                    <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-exception')?.timestamp
+                                            }}</span>
+                                        <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-exception')?.responseTime }}ms</span>
+                                        <span v-if="getResultDisplay('dubbo-exception')?.code">HTTP {{
+                                            getResultDisplay('dubbo-exception')?.code }}</span>
+                                    </div>
+                                    <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                        点击查看详情</div>
+                                </div>
+                            </div>
+
+                            <!-- 5. Async Call -->
+                            <div class="control-group">
+                                <div class="control-label">异步调用</div>
+                                <div class="test-description">🔹 使用 CompletableFuture 实现异步调用，验证非阻塞通信能力。</div>
+                                <div class="config-panel api-address-panel">
+                                    <div class="config-item api-address-item">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-async?productId={{dubboProductId}}</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" @click="testDubboAsync()"><span>▶</span> 异步调用</button>
+                                <!-- Result Display -->
+                                <div class="result-display" :class="getResultDisplay('dubbo-async')?.status"
+                                    v-if="getResultDisplay('dubbo-async')" @click="showResultDetail('dubbo-async')"
+                                    style="cursor: pointer;">
+                                    <div class="result-header">
+                                        <span class="result-title">测试结果</span>
+                                        <span class="result-status" :class="getResultDisplay('dubbo-async')?.status">
+                                            {{ getResultDisplay('dubbo-async')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-async')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                    </div>
+                                    <div class="result-content">{{ getResultDisplay('dubbo-async')?.message || '无返回信息'
+                                        }}</div>
+                                    <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-async')?.timestamp
+                                            }}</span>
+                                        <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-async')?.responseTime }}ms</span>
+                                        <span v-if="getResultDisplay('dubbo-async')?.code">HTTP {{
+                                            getResultDisplay('dubbo-async')?.code }}</span>
+                                    </div>
+                                    <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                        点击查看详情</div>
+                                </div>
+                            </div>
+
+
+                            <!-- 6. Region Priority Call -->
+                            <div class="control-group">
+                                <div class="control-label">同机房/区域优先</div>
+                                <div class="test-description">🔹 验证 Dubbo 的同区域优先路由策略。当服务在多个区域部署时，优先调用同区域的服务实例，减少网络延迟。
+                                </div>
+                                <div class="config-panel api-address-panel">
+                                    <div class="config-item api-address-item">
+                                        <span class="config-label">📍 API 地址:</span>
+                                        <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-region?productId={{dubboProductId}}&amp;clientRegion={{dubboClientRegion}}</span>
+                                    </div>
+                                </div>
+                                <div class="input-row">
+                                    <select class="input" v-model="dubboClientRegion" style="width: 200px">
+                                        <option value="hangzhou">杭州 (hangzhou)</option>
+                                        <option value="beijing">北京 (beijing)</option>
+                                        <option value="shanghai">上海 (shanghai)</option>
+                                    </select>
+                                    <button class="btn btn-primary" @click="testDubboRegion()"
+                                        style="width: auto"><span>▶</span>
+                                        区域优先调用</button>
+                                </div>
+                                <!-- Result Display -->
+                                <div class="result-display" :class="getResultDisplay('dubbo-region')?.status"
+                                    v-if="getResultDisplay('dubbo-region')" @click="showResultDetail('dubbo-region')"
+                                    style="cursor: pointer;">
+                                    <div class="result-header">
+                                        <span class="result-title">测试结果</span>
+                                        <span class="result-status" :class="getResultDisplay('dubbo-region')?.status">
+                                            {{ getResultDisplay('dubbo-region')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-region')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                    </div>
+                                    <div class="result-content">{{ getResultDisplay('dubbo-region')?.message || '无返回信息'
+                                        }}</div>
+                                    <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-region')?.timestamp
+                                            }}</span>
+                                        <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-region')?.responseTime }}ms</span>
+                                        <span v-if="getResultDisplay('dubbo-region')?.code">HTTP {{
+                                            getResultDisplay('dubbo-region')?.code }}</span>
+                                    </div>
+                                    <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                        点击查看详情</div>
+                                </div>
+                                <div class="config-panel">
+                                    <div class="config-item">
+                                        <span class="config-label">当前服务区域:</span>
+                                        <span class="config-value">shanghai、beijing <br>
+                                            见 application.yml，激活(dev,shanghai)和(dev,beijing)配置分别启动两个服务
+                                        </span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">预期结果:</span>
+                                        <span class="config-value">
+                                            1. 选择"上海" -> 匹配成功，调用(tag=上海)服务<br>
+                                            2. 选择"北京" -> 匹配成功，调用(tag=北京)服务<br>
+                                            3. 选择"杭州" -> 匹配失败，若无其他服务则降级或报错(取决于路由策略)
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -930,7 +1273,7 @@
                                     <div class="config-item">
                                         <span class="config-label">超时配置:</span>
                                         <div class="config-value">
-                                            <div class="code-block">
+                                            <div class="code-block no-copy collapsible">
                                                 <pre><code class="language-yaml">spring:
   cloud:
     openfeign:
@@ -957,7 +1300,7 @@
                                     <div class="config-item">
                                         <span class="config-label">配置位置:</span>
                                         <div class="config-value">
-                                            <div class="code-block">
+                                            <div class="code-block no-copy collapsible">
                                                 <pre><code class="language-java">@Configuration
 public class ProductServiceConfig {
     @Bean
@@ -1020,8 +1363,8 @@ public class ProductServiceConfig {
                                     <div class="config-item">
                                         <span class="config-label">配置方式-全局生效:</span>
                                         <span class="config-value">
-                                            <div class="code-block">
-	                                            <pre><code class="language-java">@Component
+                                            <div class="code-block no-copy collapsible">
+                                                <pre><code class="language-java">@Component
 public class XTokenRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
@@ -1036,8 +1379,8 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                     <div class="config-item">
                                         <span class="config-label">配置方式-特定服务生效:</span>
                                         <span class="config-value">
-                                            <div class="code-block">
-	                                            <pre><code class="language-java">spring:
+                                            <div class="code-block no-copy collapsible">
+                                                <pre><code class="language-java">spring:
   cloud:
     openfeign:
       client:

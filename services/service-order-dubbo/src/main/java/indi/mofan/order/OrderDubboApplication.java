@@ -1,20 +1,20 @@
-package indi.mofan.product;
+package indi.mofan.order;
 
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 产品服务 - Dubbo 版本
+ * 订单服务 - Dubbo 版本
  * 
  * @author xiongweisu
  * @date 2025/3/23
  */
 @EnableDubbo
 @SpringBootApplication
-public class ProductDubboMainApplication {
+public class OrderDubboApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProductDubboMainApplication.class, args);
+        SpringApplication.run(OrderDubboApplication.class, args);
     }
 }

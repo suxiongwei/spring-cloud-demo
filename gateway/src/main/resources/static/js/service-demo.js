@@ -8,8 +8,8 @@ const app = createApp({
     },
     data() {
         return {
-            activePanoramaTab: 'control',
-            activeComponent: 'nacos',
+            activePanoramaTab: localStorage.getItem('service-demo-tab') || 'communication',
+            activeComponent: localStorage.getItem('service-demo-component') || 'dubbo',
             componentData: {
                 sentinel: { title: 'Sentinel', github: 'https://github.com/alibaba/Sentinel', website: 'https://sentinelguard.io' },
                 nacos: { title: 'Nacos', github: 'https://github.com/alibaba/nacos', website: 'https://nacos.io' },
@@ -36,6 +36,7 @@ const app = createApp({
             tccCount: 2,
             feignProductId: 1,
             dubboProductId: 1,
+            dubboClientRegion: 'hangzhou',
             compareTimes: 5,
 
             // System
@@ -50,6 +51,10 @@ const app = createApp({
             // Individual result displays for each test scenario
             resultDisplays: {}
         }
+    },
+    watch: {
+        activePanoramaTab(val) { localStorage.setItem('service-demo-tab', val) },
+        activeComponent(val) { localStorage.setItem('service-demo-component', val) }
     },
     methods: {
         selectComponent(id) {
@@ -71,6 +76,10 @@ const app = createApp({
                 'dubbo-sync': `/api/order/dubbo/call-sync?productId=${this.dubboProductId}`,
                 'dubbo-batch': '/api/order/dubbo/call-batch',
                 'dubbo-list-all': '/api/order/dubbo/list-all',
+                'dubbo-timeout': `/api/order/dubbo/call-timeout?productId=${this.dubboProductId}&sleepTime=4000`,
+                'dubbo-exception': `/api/order/dubbo/call-exception?productId=${this.dubboProductId}`,
+                'dubbo-async': `/api/order/dubbo/call-async?productId=${this.dubboProductId}`,
+                'dubbo-region': `/api/order/dubbo/call-region?productId=${this.dubboProductId}&clientRegion=${this.dubboClientRegion}`,
                 'compare-feign': `/api/order/feign/product/1`,
                 'compare-dubbo': `/api/order/dubbo/call-sync?productId=1`,
                 'nacos-services': '/api/order/demo/nacos/services',
@@ -231,6 +240,10 @@ const app = createApp({
         async testDubboSync() { await this.callWithResultDisplay(this.endpoint('dubbo-sync'), 'dubbo-sync', 'dubbo-sync') },
         async testDubboBatch() { await this.callWithResultDisplay(this.endpoint('dubbo-batch'), 'dubbo-batch', 'dubbo-batch') },
         async testDubboListAll() { await this.callWithResultDisplay(this.endpoint('dubbo-list-all'), 'dubbo-list-all', 'dubbo-list-all') },
+        async testDubboTimeout() { await this.callWithResultDisplay(this.endpoint('dubbo-timeout'), 'dubbo-timeout', 'dubbo-timeout') },
+        async testDubboException() { await this.callWithResultDisplay(this.endpoint('dubbo-exception'), 'dubbo-exception', 'dubbo-exception') },
+        async testDubboAsync() { await this.callWithResultDisplay(this.endpoint('dubbo-async'), 'dubbo-async', 'dubbo-async') },
+        async testDubboRegion() { await this.callWithResultDisplay(this.endpoint('dubbo-region'), 'dubbo-region', 'dubbo-region') },
         async testFeign() {
             await this.callWithResultDisplay(this.endpoint('feign'), 'feign', 'sca-feign')
         },
@@ -666,6 +679,10 @@ const app = createApp({
             this.$nextTick(() => {
                 setTimeout(() => {
                     this.initCodeHighlighting();
+                    // 重新初始化折叠代码块
+                    initCollapsibleCode();
+                    // 重新添加复制按钮 (如果需要)
+                    addCopyButtons();
                 }, 50);
             });
         });
@@ -674,7 +691,7 @@ const app = createApp({
 
 // 添加复制按钮到代码块
 function addCopyButtons() {
-    document.querySelectorAll('.code-block').forEach(block => {
+    document.querySelectorAll('.code-block:not(.no-copy)').forEach(block => {
         if (!block.querySelector('.copy-btn')) {
             const copyBtn = document.createElement('button')
             copyBtn.className = 'copy-btn'
@@ -690,9 +707,49 @@ function addCopyButtons() {
     })
 }
 
-// 在DOM加载完成后添加复制按钮
+// 初始化折叠代码块
+function initCollapsibleCode() {
+    document.querySelectorAll('.code-block.collapsible').forEach(block => {
+        // 避免重复初始化
+        if (block.dataset.collapsibleInit) return;
+        block.dataset.collapsibleInit = 'true';
+
+        // 检查高度是否需要折叠 (例如超过 150px)
+        if (block.scrollHeight > 150) {
+            block.classList.add('collapsed');
+
+            // 创建展开/收起按钮
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'collapse-btn';
+            toggleBtn.innerHTML = '<span>▼</span> 展开代码';
+
+            toggleBtn.onclick = function (e) {
+                e.stopPropagation(); // 防止触发其他点击事件
+                const isCollapsed = block.classList.contains('collapsed');
+                if (isCollapsed) {
+                    block.classList.remove('collapsed');
+                    block.classList.add('expanded');
+                    this.innerHTML = '<span>▲</span> 收起代码';
+                } else {
+                    block.classList.remove('expanded');
+                    block.classList.add('collapsed');
+                    this.innerHTML = '<span>▼</span> 展开代码';
+                    // 滚动回顶部，避免收起时页面跳动
+                    // block.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            };
+
+            block.appendChild(toggleBtn);
+        }
+    });
+}
+
+// 在DOM加载完成后添加复制按钮和初始化折叠
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(addCopyButtons, 100)
+    setTimeout(() => {
+        addCopyButtons();
+        initCollapsibleCode();
+    }, 100)
 })
 
 app.mount('#app')

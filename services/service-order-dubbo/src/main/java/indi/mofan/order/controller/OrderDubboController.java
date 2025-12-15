@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 订单服务 - Dubbo 版本 Controller
@@ -107,5 +108,103 @@ public class OrderDubboController {
     @GetMapping("/health")
     public ApiResponse<String> health() {
         return ApiResponse.success("service-order-dubbo 健康状态正常");
+    }
+
+    /**
+     * Dubbo 超时调用演示
+     */
+    @GetMapping("/call-timeout")
+    public ApiResponse<Map<String, Object>> dubboCallTimeout(
+            @RequestParam(value = "productId", defaultValue = "1") Long productId,
+            @RequestParam(value = "sleepTime", defaultValue = "4000") Long sleepTime) {
+        try {
+            long startTime = System.currentTimeMillis();
+            // 默认超时时间为 3000ms，如果 sleepTime > 3000ms 将触发超时
+            Product product = productDubboClient.getProductWithTimeout(productId, sleepTime);
+            long duration = System.currentTimeMillis() - startTime;
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("product", product);
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 超时测试");
+
+            return ApiResponse.success("Dubbo 调用成功 (未超时)", result);
+        } catch (Exception e) {
+            log.error("Dubbo 超时演示捕获异常", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 调用超时或失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 异常处理演示
+     */
+    @GetMapping("/call-exception")
+    public ApiResponse<Map<String, Object>> dubboCallException(
+            @RequestParam(value = "productId", defaultValue = "1") Long productId) {
+        try {
+            productDubboClient.getProductWithException(productId);
+            return ApiResponse.success("Dubbo 调用成功 (意外)", null);
+        } catch (Exception e) {
+            log.error("Dubbo 异常演示捕获异常", e);
+            Map<String, Object> result = new HashMap<>();
+            result.put("exception", e.getClass().getName());
+            result.put("message", e.getMessage());
+            result.put("method", "Dubbo RPC 异常测试");
+            return ApiResponse.success("Dubbo 异常捕获成功", result);
+        }
+    }
+
+    /**
+     * Dubbo 异步调用演示
+     */
+    @GetMapping("/call-async")
+    public ApiResponse<Map<String, Object>> dubboCallAsync(
+            @RequestParam(value = "productId", defaultValue = "1") Long productId) {
+        try {
+            long startTime = System.currentTimeMillis();
+            CompletableFuture<Product> future = productDubboClient.getProductAsync(productId);
+
+            // 模拟主线程做其他事情
+            Thread.sleep(50);
+
+            Product product = future.get(); // 阻塞等待结果
+            long duration = System.currentTimeMillis() - startTime;
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("product", product);
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 异步调用");
+            result.put("async", true);
+
+            return ApiResponse.success("Dubbo 异步调用成功", result);
+        } catch (Exception e) {
+            log.error("Dubbo 异步调用失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 异步调用失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 同机房/区域优先调用演示
+     */
+    @GetMapping("/call-region")
+    public ApiResponse<Map<String, Object>> dubboCallRegion(
+            @RequestParam(value = "productId", defaultValue = "1") Long productId,
+            @RequestParam(value = "clientRegion", defaultValue = "hangzhou") String clientRegion) {
+        try {
+            long startTime = System.currentTimeMillis();
+            Product product = productDubboClient.getProductRegionDetails(productId, clientRegion);
+            long duration = System.currentTimeMillis() - startTime;
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("product", product);
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 区域优先测试");
+            result.put("clientRegion", clientRegion);
+
+            return ApiResponse.success("Dubbo 区域优先调用成功", result);
+        } catch (Exception e) {
+            log.error("Dubbo 区域优先调用失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 区域优先调用失败: " + e.getMessage());
+        }
     }
 }
