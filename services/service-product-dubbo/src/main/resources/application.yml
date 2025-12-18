@@ -79,25 +79,7 @@ spring:
       - nacos:common.yaml?group=product
     activate:
       on-profile: dev
-#
-#---
-#spring:
-#  config:
-#    import:
-#      - nacos:common.yaml?group=product
-#      - nacos:database.yaml?group=product
-#    activate:
-#      on-profile: test
-#
-#---
-#spring:
-#  config:
-#    import:
-#      - nacos:common.yaml?group=product
-#      - nacos:database.yaml?group=product
-#    activate:
-#      on-profile: prod
-#
+
 ---
 spring:
   config:

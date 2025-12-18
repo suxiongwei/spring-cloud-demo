@@ -26,6 +26,9 @@ public class ProductDubboClient {
     @DubboReference(version = "1.0.0", group = "product", timeout = 3000, retries = 3)
     private IProductDubboService productDubboService;
 
+    @DubboReference(version = "1.0.0", group = "product-v1", timeout = 3000, retries = 3)
+    private IProductDubboService productDubboV1Service;
+
     /**
      * 获取产品
      * 策略: failover 失败自动转憻ubbo幻想接点，查被包接戈预预錄
