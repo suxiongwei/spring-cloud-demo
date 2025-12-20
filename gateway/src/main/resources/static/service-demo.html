@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-        rel="stylesheet">
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+            rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- 使用本地轻量级代码高亮库 -->
@@ -84,608 +84,608 @@
 </head>
 
 <body>
-    <div id="app">
-        <!-- Header -->
-        <header class="header">
-            <div class="brand">
-                <span class="brand-title">微服务</span>
-                <span class="brand-subtitle">开发者控制台</span>
-            </div>
-            <div class="status-badge">
-                ENV: DEVELOPMENT
-            </div>
-        </header>
+<div id="app">
+    <!-- Header -->
+    <header class="header">
+        <div class="brand">
+            <span class="brand-title">微服务</span>
+            <span class="brand-subtitle">开发者控制台</span>
+        </div>
+        <div class="status-badge">
+            ENV: DEVELOPMENT
+        </div>
+    </header>
 
-        <main class="container">
-            <!-- 1. Microservice Panorama -->
-            <section>
-                <div class="section-header">
-                    <h2 class="section-title">微服务全景图</h2>
-                    <div class="section-line"></div>
-                </div>
+    <main class="container">
+        <!-- 1. Microservice Panorama -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">微服务全景图</h2>
+                <div class="section-line"></div>
+            </div>
 
-                <!-- Tab Navigation -->
-                <div class="tabs-nav">
-                    <button class="tab-item" @click="activePanoramaTab = 'control'"
+            <!-- Tab Navigation -->
+            <div class="tabs-nav">
+                <button class="tab-item" @click="activePanoramaTab = 'control'"
                         :class="{ active: activePanoramaTab === 'control' }">控制面</button>
-                    <button class="tab-item" @click="activePanoramaTab = 'governance'"
+                <button class="tab-item" @click="activePanoramaTab = 'governance'"
                         :class="{ active: activePanoramaTab === 'governance' }">治理面</button>
-                    <button class="tab-item" @click="activePanoramaTab = 'communication'"
+                <button class="tab-item" @click="activePanoramaTab = 'communication'"
                         :class="{ active: activePanoramaTab === 'communication' }">通信层</button>
-                    <button class="tab-item" @click="activePanoramaTab = 'gateway'"
+                <button class="tab-item" @click="activePanoramaTab = 'gateway'"
                         :class="{ active: activePanoramaTab === 'gateway' }">网关与调度</button>
-                    <button class="tab-item" @click="activePanoramaTab = 'data'"
+                <button class="tab-item" @click="activePanoramaTab = 'data'"
                         :class="{ active: activePanoramaTab === 'data' }">数据与运维</button>
-                </div>
+            </div>
 
-                <div>
-                    <!-- Control Plane Section -->
-                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'control' }">
-                        <h3 class="category-title">控制面</h3>
-                        <div class="panorama-grid">
-                            <!-- Nacos -->
-                            <div class="service-card" :class="{ active: activeComponent === 'nacos' }"
-                                @click="selectComponent('nacos')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/nacos.png" alt="Nacos"></div>
-                                    <div>
-                                        <div class="card-title">Nacos</div>
-                                        <div class="card-subtitle">配置管理、服务发现、服务管理</div>
-                                    </div>
+            <div>
+                <!-- Control Plane Section -->
+                <div class="panorama-section" :class="{ active: activePanoramaTab === 'control' }">
+                    <h3 class="category-title">控制面</h3>
+                    <div class="panorama-grid">
+                        <!-- Nacos -->
+                        <div class="service-card" :class="{ active: activeComponent === 'nacos' }"
+                             @click="selectComponent('nacos')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/nacos.png" alt="Nacos"></div>
+                                <div>
+                                    <div class="card-title">Nacos</div>
+                                    <div class="card-subtitle">配置管理、服务发现、服务管理</div>
                                 </div>
-                                <div class="card-desc">⼀个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台</div>
                             </div>
-                            <!-- OpenSergo -->
-                            <div class="service-card" :class="{ active: activeComponent === 'opensergo' }"
-                                @click="selectComponent('opensergo')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/opensergo.png" alt="OpenSergo"></div>
-                                    <div>
-                                        <div class="card-title">OpenSergo</div>
-                                        <div class="card-subtitle">治理标准</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">开放通用的微服务治理标准,覆盖流量治理、服务容错等。</div>
-                            </div>
+                            <div class="card-desc">⼀个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台</div>
                         </div>
-                    </div>
-
-                    <!-- Governance Plane Section -->
-                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'governance' }">
-                        <h3 class="category-title">治理面 - 流量控制与容错保护</h3>
-                        <div class="panorama-grid">
-                            <!-- Sentinel -->
-                            <div class="service-card" :class="{ active: activeComponent === 'sentinel' }"
-                                @click="selectComponent('sentinel')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/sentinel.png" alt="Sentinel"></div>
-                                    <div>
-                                        <div class="card-title">Sentinel</div>
-                                        <div class="card-subtitle">流量防卫兵</div>
-                                    </div>
+                        <!-- OpenSergo -->
+                        <div class="service-card" :class="{ active: activeComponent === 'opensergo' }"
+                             @click="selectComponent('opensergo')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/opensergo.png" alt="OpenSergo"></div>
+                                <div>
+                                    <div class="card-title">OpenSergo</div>
+                                    <div class="card-subtitle">治理标准</div>
                                 </div>
-                                <div class="card-desc">面向分布式服务架构的流量控制组件,提供熔断降级、系统负载保护。</div>
                             </div>
-                            <!-- ChaosBlade -->
-                            <div class="service-card" :class="{ active: activeComponent === 'chaosblade' }"
-                                @click="selectComponent('chaosblade')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/ChaosBlade.png" alt="ChaosBlade">
-                                    </div>
-                                    <div>
-                                        <div class="card-title">ChaosBlade</div>
-                                        <div class="card-subtitle">混沌工程</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">故障注入、混沌实验、系统韧性验证工具。</div>
-                            </div>
-                            <!-- AppActive -->
-                            <div class="service-card" :class="{ active: activeComponent === 'appactive' }"
-                                @click="selectComponent('appactive')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/appactive.svg" alt="AppActive"></div>
-                                    <div>
-                                        <div class="card-title">AppActive</div>
-                                        <div class="card-subtitle">多活容灾</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">应用多活架构、异地多活、容灾切换解决方案。</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Communication Layer Section -->
-                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'communication' }">
-                        <h3 class="category-title">通信层 - 同步与异步通信</h3>
-                        <div class="panorama-grid">
-                            <!-- Dubbo -->
-                            <div class="service-card" :class="{ active: activeComponent === 'dubbo' }"
-                                @click="selectComponent('dubbo')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/dubbo.png" alt="Dubbo"></div>
-                                    <div>
-                                        <div class="card-title">Dubbo</div>
-                                        <div class="card-subtitle">RPC 框架</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">高性能、轻量级的开源 Java RPC 框架,提供面向接口的远程方法调用。</div>
-                            </div>
-                            <!-- Spring Cloud -->
-                            <div class="service-card" :class="{ active: activeComponent === 'sca' }"
-                                @click="selectComponent('sca')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/sca.svg" alt="SCA"></div>
-                                    <div>
-                                        <div class="card-title">Spring Cloud</div>
-                                        <div class="card-subtitle">微服务标准</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">整合 OpenFeign、LoadBalancer 等标准组件,提供一站式解决方案。</div>
-                            </div>
-                            <!-- RocketMQ -->
-                            <div class="service-card" :class="{ active: activeComponent === 'rocketmq' }"
-                                @click="selectComponent('rocketmq')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/rocketmq.svg" alt="RocketMQ"></div>
-                                    <div>
-                                        <div class="card-title">RocketMQ</div>
-                                        <div class="card-subtitle">消息队列</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">异步消息通信、削峰填谷、事件驱动、流式处理。</div>
-                            </div>
-                            <!-- Seata -->
-                            <div class="service-card" :class="{ active: activeComponent === 'seata' }"
-                                @click="selectComponent('seata')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/seata.png" alt="Seata"></div>
-                                    <div>
-                                        <div class="card-title">Seata</div>
-                                        <div class="card-subtitle">分布式事务</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">致力于提供高性能和简单易用的分布式事务服务,支持 AT、TCC、SAGA 等模式。</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Gateway & Scheduling Section -->
-                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'gateway' }">
-                        <h3 class="category-title">网关与调度 - 流量入口与任务管理</h3>
-                        <div class="panorama-grid">
-                            <!-- Higress -->
-                            <div class="service-card" :class="{ active: activeComponent === 'higress' }"
-                                @click="selectComponent('higress')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/Higress.png" alt="Higress"></div>
-                                    <div>
-                                        <div class="card-title">Higress</div>
-                                        <div class="card-subtitle">云原生网关</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">基于 Envoy 的云原生网关,实现了流量网关、微服务网关、安全网关三合一。</div>
-                            </div>
-                            <!-- SchedulerX -->
-                            <div class="service-card" :class="{ active: activeComponent === 'schedulerx' }"
-                                @click="selectComponent('schedulerx')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/schedulerx.svg" alt="SchedulerX">
-                                    </div>
-                                    <div>
-                                        <div class="card-title">SchedulerX</div>
-                                        <div class="card-subtitle">任务调度</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">分布式任务调度、定时任务、工作流调度、分布式计算。</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Data & Ops Section -->
-                    <div class="panorama-section" :class="{ active: activePanoramaTab === 'data' }">
-                        <h3 class="category-title">数据与运维 - 容器与可观测性</h3>
-                        <div class="panorama-grid">
-                            <!-- Kubernetes -->
-                            <div class="service-card" :class="{ active: activeComponent === 'k8s' }"
-                                @click="selectComponent('k8s')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/k8s.svg" alt="K8s"></div>
-                                    <div>
-                                        <div class="card-title">Kubernetes</div>
-                                        <div class="card-subtitle">容器编排</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">自动化容器的部署、扩展和管理,云原生应用的基础设施。</div>
-                            </div>
-                            <!-- OpenTelemetry -->
-                            <div class="service-card" :class="{ active: activeComponent === 'opentelemetry' }"
-                                @click="selectComponent('opentelemetry')">
-                                <div class="card-header">
-                                    <div class="card-icon"><img src="images/logos/opentelemetry.svg" alt="OTel"></div>
-                                    <div>
-                                        <div class="card-title">OpenTelemetry</div>
-                                        <div class="card-subtitle">可观测性</div>
-                                    </div>
-                                </div>
-                                <div class="card-desc">云原生可观测性标准,提供 Trace、Metric、Log 的统一采集。</div>
-                            </div>
+                            <div class="card-desc">开放通用的微服务治理标准,覆盖流量治理、服务容错等。</div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- 2. Console & Terminal -->
-            <section class="console-layout-single" v-if="activeComponent && componentData[activeComponent]">
-                <!-- Left: Control Panel -->
-                <div class="console-panel-full panel">
-                    <div class="panel-header">
-                        <div class="panel-title">
-                            <span>⚡</span>
-                            <span>{{ componentData[activeComponent].title }} 控制台</span>
+                <!-- Governance Plane Section -->
+                <div class="panorama-section" :class="{ active: activePanoramaTab === 'governance' }">
+                    <h3 class="category-title">治理面 - 流量控制与容错保护</h3>
+                    <div class="panorama-grid">
+                        <!-- Sentinel -->
+                        <div class="service-card" :class="{ active: activeComponent === 'sentinel' }"
+                             @click="selectComponent('sentinel')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/sentinel.png" alt="Sentinel"></div>
+                                <div>
+                                    <div class="card-title">Sentinel</div>
+                                    <div class="card-subtitle">流量防卫兵</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">面向分布式服务架构的流量控制组件,提供熔断降级、系统负载保护。</div>
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <a :href="componentData[activeComponent].github" target="_blank"
-                                class="btn btn-sm">GitHub</a>
-                            <a :href="componentData[activeComponent].website" target="_blank"
-                                class="btn btn-sm">Docs</a>
+                        <!-- ChaosBlade -->
+                        <div class="service-card" :class="{ active: activeComponent === 'chaosblade' }"
+                             @click="selectComponent('chaosblade')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/ChaosBlade.png" alt="ChaosBlade">
+                                </div>
+                                <div>
+                                    <div class="card-title">ChaosBlade</div>
+                                    <div class="card-subtitle">混沌工程</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">故障注入、混沌实验、系统韧性验证工具。</div>
+                        </div>
+                        <!-- AppActive -->
+                        <div class="service-card" :class="{ active: activeComponent === 'appactive' }"
+                             @click="selectComponent('appactive')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/appactive.svg" alt="AppActive"></div>
+                                <div>
+                                    <div class="card-title">AppActive</div>
+                                    <div class="card-subtitle">多活容灾</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">应用多活架构、异地多活、容灾切换解决方案。</div>
                         </div>
                     </div>
-                    <div class="panel-body">
-                        <!-- Sentinel Controls -->
-                        <div v-if="activeComponent === 'sentinel'">
-                            <div class="control-group">
-                                <div class="control-label">流量控制 (QPS)</div>
-                                <div class="test-description">🔹 向服务发送 N 个并发请求，观察 Sentinel
-                                    是否正确限流。QPS限流基于滑动时间窗口算法，超过阈值的请求会被直接拒绝。</div>
-                                <div class="input-row">
-                                    <input class="input" type="number" min="1" v-model.number="qpsTimes"
-                                        placeholder="次数">
-                                    <button class="btn btn-primary" @click="trigger('qps', qpsTimes)"><span>▶</span>
-                                        发送请求</button>
+                </div>
+
+                <!-- Communication Layer Section -->
+                <div class="panorama-section" :class="{ active: activePanoramaTab === 'communication' }">
+                    <h3 class="category-title">通信层 - 同步与异步通信</h3>
+                    <div class="panorama-grid">
+                        <!-- Dubbo -->
+                        <div class="service-card" :class="{ active: activeComponent === 'dubbo' }"
+                             @click="selectComponent('dubbo')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/dubbo.png" alt="Dubbo"></div>
+                                <div>
+                                    <div class="card-title">Dubbo</div>
+                                    <div class="card-subtitle">RPC 框架</div>
                                 </div>
-
-
-
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">限流阈值:</span>
-                                        <span class="config-value">1000 QPS</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">当前状态:</span>
-                                        <span class="config-value">✓ 正常运行</span>
-                                    </div>
+                            </div>
+                            <div class="card-desc">高性能、轻量级的开源 Java RPC 框架,提供面向接口的远程方法调用。</div>
+                        </div>
+                        <!-- Spring Cloud -->
+                        <div class="service-card" :class="{ active: activeComponent === 'sca' }"
+                             @click="selectComponent('sca')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/sca.svg" alt="SCA"></div>
+                                <div>
+                                    <div class="card-title">Spring Cloud</div>
+                                    <div class="card-subtitle">微服务标准</div>
                                 </div>
+                            </div>
+                            <div class="card-desc">整合 OpenFeign、LoadBalancer 等标准组件,提供一站式解决方案。</div>
+                        </div>
+                        <!-- RocketMQ -->
+                        <div class="service-card" :class="{ active: activeComponent === 'rocketmq' }"
+                             @click="selectComponent('rocketmq')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/rocketmq.svg" alt="RocketMQ"></div>
+                                <div>
+                                    <div class="card-title">RocketMQ</div>
+                                    <div class="card-subtitle">消息队列</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">异步消息通信、削峰填谷、事件驱动、流式处理。</div>
+                        </div>
+                        <!-- Seata -->
+                        <div class="service-card" :class="{ active: activeComponent === 'seata' }"
+                             @click="selectComponent('seata')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/seata.png" alt="Seata"></div>
+                                <div>
+                                    <div class="card-title">Seata</div>
+                                    <div class="card-subtitle">分布式事务</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">致力于提供高性能和简单易用的分布式事务服务,支持 AT、TCC、SAGA 等模式。</div>
+                        </div>
+                    </div>
+                </div>
 
-                                <!-- Result Display for QPS Test -->
-                                <div class="result-display" :class="getResultDisplay('sentinel-qps')?.status"
-                                    v-if="getResultDisplay('sentinel-qps')" @click="showResultDetail('sentinel-qps')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('sentinel-qps')?.status">
+                <!-- Gateway & Scheduling Section -->
+                <div class="panorama-section" :class="{ active: activePanoramaTab === 'gateway' }">
+                    <h3 class="category-title">网关与调度 - 流量入口与任务管理</h3>
+                    <div class="panorama-grid">
+                        <!-- Higress -->
+                        <div class="service-card" :class="{ active: activeComponent === 'higress' }"
+                             @click="selectComponent('higress')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/Higress.png" alt="Higress"></div>
+                                <div>
+                                    <div class="card-title">Higress</div>
+                                    <div class="card-subtitle">云原生网关</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">基于 Envoy 的云原生网关,实现了流量网关、微服务网关、安全网关三合一。</div>
+                        </div>
+                        <!-- SchedulerX -->
+                        <div class="service-card" :class="{ active: activeComponent === 'schedulerx' }"
+                             @click="selectComponent('schedulerx')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/schedulerx.svg" alt="SchedulerX">
+                                </div>
+                                <div>
+                                    <div class="card-title">SchedulerX</div>
+                                    <div class="card-subtitle">任务调度</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">分布式任务调度、定时任务、工作流调度、分布式计算。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data & Ops Section -->
+                <div class="panorama-section" :class="{ active: activePanoramaTab === 'data' }">
+                    <h3 class="category-title">数据与运维 - 容器与可观测性</h3>
+                    <div class="panorama-grid">
+                        <!-- Kubernetes -->
+                        <div class="service-card" :class="{ active: activeComponent === 'k8s' }"
+                             @click="selectComponent('k8s')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/k8s.svg" alt="K8s"></div>
+                                <div>
+                                    <div class="card-title">Kubernetes</div>
+                                    <div class="card-subtitle">容器编排</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">自动化容器的部署、扩展和管理,云原生应用的基础设施。</div>
+                        </div>
+                        <!-- OpenTelemetry -->
+                        <div class="service-card" :class="{ active: activeComponent === 'opentelemetry' }"
+                             @click="selectComponent('opentelemetry')">
+                            <div class="card-header">
+                                <div class="card-icon"><img src="images/logos/opentelemetry.svg" alt="OTel"></div>
+                                <div>
+                                    <div class="card-title">OpenTelemetry</div>
+                                    <div class="card-subtitle">可观测性</div>
+                                </div>
+                            </div>
+                            <div class="card-desc">云原生可观测性标准,提供 Trace、Metric、Log 的统一采集。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Console & Terminal -->
+        <section class="console-layout-single" v-if="activeComponent && componentData[activeComponent]">
+            <!-- Left: Control Panel -->
+            <div class="console-panel-full panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span>⚡</span>
+                        <span>{{ componentData[activeComponent].title }} 控制台</span>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <a :href="componentData[activeComponent].github" target="_blank"
+                           class="btn btn-sm">GitHub</a>
+                        <a :href="componentData[activeComponent].website" target="_blank"
+                           class="btn btn-sm">Docs</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <!-- Sentinel Controls -->
+                    <div v-if="activeComponent === 'sentinel'">
+                        <div class="control-group">
+                            <div class="control-label">流量控制 (QPS)</div>
+                            <div class="test-description">🔹 向服务发送 N 个并发请求，观察 Sentinel
+                                是否正确限流。QPS限流基于滑动时间窗口算法，超过阈值的请求会被直接拒绝。</div>
+                            <div class="input-row">
+                                <input class="input" type="number" min="1" v-model.number="qpsTimes"
+                                       placeholder="次数">
+                                <button class="btn btn-primary" @click="trigger('qps', qpsTimes)"><span>▶</span>
+                                    发送请求</button>
+                            </div>
+
+
+
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">限流阈值:</span>
+                                    <span class="config-value">1000 QPS</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">当前状态:</span>
+                                    <span class="config-value">✓ 正常运行</span>
+                                </div>
+                            </div>
+
+                            <!-- Result Display for QPS Test -->
+                            <div class="result-display" :class="getResultDisplay('sentinel-qps')?.status"
+                                 v-if="getResultDisplay('sentinel-qps')" @click="showResultDetail('sentinel-qps')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('sentinel-qps')?.status">
                                             {{ getResultDisplay('sentinel-qps')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('sentinel-qps')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('sentinel-qps')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('sentinel-qps')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('sentinel-qps')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('sentinel-qps')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('sentinel-qps')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('sentinel-qps')?.code">HTTP {{
                                             getResultDisplay('sentinel-qps')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
-                                </div>
+                                    点击查看详情</div>
                             </div>
-                            <div class="control-group">
-                                <div class="control-label">并发控制 (Thread)</div>
-                                <div class="test-description">🔹 通过线程隔离限制最多同时执行的线程数。当线程数达到阈值，新请求进入等待队列。</div>
-                                <div class="input-row">
-                                    <input class="input" type="number" min="1" v-model.number="threadTimes"
-                                        placeholder="线程数">
-                                    <button class="btn btn-primary" @click="testThread()"><span>▶</span> 并发测试</button>
-                                </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">并发控制 (Thread)</div>
+                            <div class="test-description">🔹 通过线程隔离限制最多同时执行的线程数。当线程数达到阈值，新请求进入等待队列。</div>
+                            <div class="input-row">
+                                <input class="input" type="number" min="1" v-model.number="threadTimes"
+                                       placeholder="线程数">
+                                <button class="btn btn-primary" @click="testThread()"><span>▶</span> 并发测试</button>
+                            </div>
 
-                                <!-- Result Display for Thread Test -->
-                                <div class="result-display" :class="getResultDisplay('sentinel-thread')?.status"
-                                    v-if="getResultDisplay('sentinel-thread')"
-                                    @click="showResultDetail('sentinel-thread')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status"
-                                            :class="getResultDisplay('sentinel-thread')?.status">
+                            <!-- Result Display for Thread Test -->
+                            <div class="result-display" :class="getResultDisplay('sentinel-thread')?.status"
+                                 v-if="getResultDisplay('sentinel-thread')"
+                                 @click="showResultDetail('sentinel-thread')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('sentinel-thread')?.status">
                                             {{ getResultDisplay('sentinel-thread')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('sentinel-thread')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
                                             }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('sentinel-thread')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('sentinel-thread')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('sentinel-thread')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('sentinel-thread')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('sentinel-thread')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('sentinel-thread')?.code">HTTP {{
                                             getResultDisplay('sentinel-thread')?.code }}</span>
-                                    </div>
-                                </div>
-
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">线程数限制:</span>
-                                        <span class="config-value">200</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">队列大小:</span>
-                                        <span class="config-value">100</span>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <div class="control-label">热点参数限流</div>
-                                <div class="test-description">🔹 对特定的参数值（如用户ID）单独限流。常用于防护热点数据被恶意访问。</div>
-                                <div class="input-row">
-                                    <input class="input" v-model="hotUserId" placeholder="User ID">
-                                    <button class="btn btn-primary" @click="trigger('hot', hotTimes)"><span>▶</span>
-                                        热点测试</button>
-                                </div>
 
-                                <!-- Result Display for Hotspot -->
-                                <div class="result-display" :class="getResultDisplay('sentinel-hot')?.status"
-                                    v-if="getResultDisplay('sentinel-hot')" @click="showResultDetail('sentinel-hot')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">热点限流结果</span>
-                                        <span class="result-status" :class="getResultDisplay('sentinel-hot')?.status">
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">线程数限制:</span>
+                                    <span class="config-value">200</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">队列大小:</span>
+                                    <span class="config-value">100</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">热点参数限流</div>
+                            <div class="test-description">🔹 对特定的参数值（如用户ID）单独限流。常用于防护热点数据被恶意访问。</div>
+                            <div class="input-row">
+                                <input class="input" v-model="hotUserId" placeholder="User ID">
+                                <button class="btn btn-primary" @click="trigger('hot', hotTimes)"><span>▶</span>
+                                    热点测试</button>
+                            </div>
+
+                            <!-- Result Display for Hotspot -->
+                            <div class="result-display" :class="getResultDisplay('sentinel-hot')?.status"
+                                 v-if="getResultDisplay('sentinel-hot')" @click="showResultDetail('sentinel-hot')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">热点限流结果</span>
+                                    <span class="result-status" :class="getResultDisplay('sentinel-hot')?.status">
                                             {{ getResultDisplay('sentinel-hot')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('sentinel-hot')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('sentinel-hot')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('sentinel-hot')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('sentinel-hot')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('sentinel-hot')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('sentinel-hot')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('sentinel-hot')?.code">HTTP {{
                                             getResultDisplay('sentinel-hot')?.code }}</span>
-                                    </div>
-                                    <div
-                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情
-                                    </div>
                                 </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
 
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">参数字段:</span>
-                                        <span class="config-value">userId</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">热点阈值:</span>
-                                        <span class="config-value">100 QPS</span>
-                                    </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">参数字段:</span>
+                                    <span class="config-value">userId</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">热点阈值:</span>
+                                    <span class="config-value">100 QPS</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Nacos Controls -->
-                        <div v-if="activeComponent === 'nacos'">
-                            <div class="control-group">
-                                <div class="control-label">服务发现</div>
-                                <div class="test-description">🔹 查询当前 Nacos 注册中的所有实例，验证服务发现功能是否正常。</div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
+                    <!-- Nacos Controls -->
+                    <div v-if="activeComponent === 'nacos'">
+                        <div class="control-group">
+                            <div class="control-label">服务发现</div>
+                            <div class="test-description">🔹 查询当前 Nacos 注册中的所有实例，验证服务发现功能是否正常。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
                                             /api/order/demo/nacos/services</span>
-                                    </div>
                                 </div>
-                                <button class="btn btn-primary" @click="testNacosServices()">
-                                    <span>▶</span>获取服务列表</button>
+                            </div>
+                            <button class="btn btn-primary" @click="testNacosServices()">
+                                <span>▶</span>获取服务列表</button>
 
-                                <!-- Result Display for Nacos Services -->
-                                <div class="result-display" :class="getResultDisplay('nacos-services')?.status"
-                                    v-if="getResultDisplay('nacos-services')"
-                                    @click="showResultDetail('nacos-services')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('nacos-services')?.status">
+                            <!-- Result Display for Nacos Services -->
+                            <div class="result-display" :class="getResultDisplay('nacos-services')?.status"
+                                 v-if="getResultDisplay('nacos-services')"
+                                 @click="showResultDetail('nacos-services')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('nacos-services')?.status">
                                             {{ getResultDisplay('nacos-services')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('nacos-services')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('nacos-services')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('nacos-services')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('nacos-services')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('nacos-services')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('nacos-services')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('nacos-services')?.code">HTTP {{
                                             getResultDisplay('nacos-services')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
+                                    点击查看详情</div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">配置管理</div>
+                            <div class="test-description">🔹 加载 Nacos 的配置，动态刷新。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/demo/nacos/nacos-config</span>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <div class="control-label">配置管理</div>
-                                <div class="test-description">🔹 加载 Nacos 的配置，动态刷新。</div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
-                                            /api/order/demo/nacos/nacos-config</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary" @click="testNacosConfig()">
-                                    <span>▶</span>读取动态配置
-                                </button>
+                            <button class="btn btn-primary" @click="testNacosConfig()">
+                                <span>▶</span>读取动态配置
+                            </button>
 
-                                <!-- Result Display for Nacos Config -->
-                                <div class="result-display" :class="getResultDisplay('nacos-config')?.status"
-                                    v-if="getResultDisplay('nacos-config')" @click="showResultDetail('nacos-config')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('nacos-config')?.status">
+                            <!-- Result Display for Nacos Config -->
+                            <div class="result-display" :class="getResultDisplay('nacos-config')?.status"
+                                 v-if="getResultDisplay('nacos-config')" @click="showResultDetail('nacos-config')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('nacos-config')?.status">
                                             {{ getResultDisplay('nacos-config')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('nacos-config')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('nacos-config')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('nacos-config')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('nacos-config')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('nacos-config')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('nacos-config')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('nacos-config')?.code">HTTP {{
                                             getResultDisplay('nacos-config')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
+                                    点击查看详情</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dubbo Controls -->
+                    <!-- Dubbo Controls -->
+                    <div v-if="activeComponent === 'dubbo'">
+                        <div class="control-group">
+                            <div class="control-label">RPC 调用</div>
+                            <div class="test-description">🔹 Dubbo 是一款高性能 Java RPC
+                                框架，广泛应用于微服务架构中。它通过封装底层网络通信、序列化、服务发现等复杂逻辑，让开发者可以像调用本地方法一样调用远程服务。
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">RPC 协议:</span>
+                                    <span class="config-value">
+                                            1. 传统 Dubbo 协议：基于私有二进制协议，性能高但生态封闭</br>
+                                        2. Triple 协议（Dubbo 3.x 默认）：基于 HTTP/2 + Protobuf，兼容 gRPC，更适合云原生和跨语言场景
+                                        </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">优势:</span>
+                                    <span class="config-value">
+                                            1. 高性能：基于 Netty 的异步非阻塞 IO，支持高并发。</br>
+                                        2. 透明调用：对开发者屏蔽网络细节。</br>
+                                        3. 丰富的扩展点：协议、序列化、负载均衡等均可自定义。</br>
+                                        4. 服务治理能力：支持熔断、限流、路由、权重、动态配置等。</br>
+                                        5. 多语言支持：除 Java 外，还支持 Go、Node.js、Rust（通过 Triple 协议）。
+                                        </span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Dubbo Controls -->
-                        <!-- Dubbo Controls -->
-                        <div v-if="activeComponent === 'dubbo'">
-                            <div class="control-group">
-                                <div class="control-label">RPC 调用</div>
-                                <div class="test-description">🔹 Dubbo 是一款高性能 Java RPC
-                                    框架，广泛应用于微服务架构中。它通过封装底层网络通信、序列化、服务发现等复杂逻辑，让开发者可以像调用本地方法一样调用远程服务。
-                                </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">RPC 协议:</span>
-                                        <span class="config-value">
-                                            1. 传统 Dubbo 协议：基于私有二进制协议，性能高但生态封闭</br>
-                                            2. Triple 协议（Dubbo 3.x 默认）：基于 HTTP/2 + Protobuf，兼容 gRPC，更适合云原生和跨语言场景
-                                        </span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">优势:</span>
-                                        <span class="config-value">
-                                            1. 高性能：基于 Netty 的异步非阻塞 IO，支持高并发。</br>
-                                            2. 透明调用：对开发者屏蔽网络细节。</br>
-                                            3. 丰富的扩展点：协议、序列化、负载均衡等均可自定义。</br>
-                                            4. 服务治理能力：支持熔断、限流、路由、权重、动态配置等。</br>
-                                            5. 多语言支持：除 Java 外，还支持 Go、Node.js、Rust（通过 Triple 协议）。
-                                        </span>
-                                    </div>
+                        <!-- 1. Batch Call -->
+                        <div class="control-group">
+                            <div class="control-label">批量调用</div>
+                            <div class="test-description">🔹 批量调用 Dubbo 服务接口，验证高性能场景下的处理能力。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-batch</span>
                                 </div>
                             </div>
-
-                            <!-- 1. Batch Call -->
-                            <div class="control-group">
-                                <div class="control-label">批量调用</div>
-                                <div class="test-description">🔹 批量调用 Dubbo 服务接口，验证高性能场景下的处理能力。</div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
-                                            /api/order/dubbo/call-batch</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary" @click="testDubboBatch()"><span>▶</span> 批量调用</button>
-                                <!-- Result Display -->
-                                <div class="result-display" :class="getResultDisplay('dubbo-batch')?.status"
-                                    v-if="getResultDisplay('dubbo-batch')" @click="showResultDetail('dubbo-batch')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('dubbo-batch')?.status">
+                            <button class="btn btn-primary" @click="testDubboBatch()"><span>▶</span> 批量调用</button>
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-batch')?.status"
+                                 v-if="getResultDisplay('dubbo-batch')" @click="showResultDetail('dubbo-batch')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-batch')?.status">
                                             {{ getResultDisplay('dubbo-batch')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('dubbo-batch')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('dubbo-batch')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-batch')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-batch')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('dubbo-batch')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('dubbo-batch')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('dubbo-batch')?.code">HTTP {{
                                             getResultDisplay('dubbo-batch')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
+                                    点击查看详情</div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Query All -->
+                        <div class="control-group">
+                            <div class="control-label">查询所有</div>
+                            <div class="test-description">🔹 查询所有产品信息，验证 Dubbo 服务的数据返回能力。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/list-all</span>
                                 </div>
                             </div>
-
-                            <!-- 2. Query All -->
-                            <div class="control-group">
-                                <div class="control-label">查询所有</div>
-                                <div class="test-description">🔹 查询所有产品信息，验证 Dubbo 服务的数据返回能力。</div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
-                                            /api/order/dubbo/list-all</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary" @click="testDubboListAll()"><span>▶</span> 查询所有</button>
-                                <!-- Result Display -->
-                                <div class="result-display" :class="getResultDisplay('dubbo-list-all')?.status"
-                                    v-if="getResultDisplay('dubbo-list-all')"
-                                    @click="showResultDetail('dubbo-list-all')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('dubbo-list-all')?.status">
+                            <button class="btn btn-primary" @click="testDubboListAll()"><span>▶</span> 查询所有</button>
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-list-all')?.status"
+                                 v-if="getResultDisplay('dubbo-list-all')"
+                                 @click="showResultDetail('dubbo-list-all')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-list-all')?.status">
                                             {{ getResultDisplay('dubbo-list-all')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('dubbo-list-all')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('dubbo-list-all')?.message ||
-                                        '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-list-all')?.message ||
+                                    '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-list-all')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('dubbo-list-all')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('dubbo-list-all')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('dubbo-list-all')?.code">HTTP {{
                                             getResultDisplay('dubbo-list-all')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
+                                    点击查看详情</div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Timeout Call -->
+                        <div class="control-group">
+                            <div class="control-label">超时调用</div>
+                            <div class="test-description">🔹 为 RPC
+                                调用设置超时时间可以提升集群整体稳定性，避免无限等待响应结果导致的资源占用（比如大量长期无响应的请求占用线程池等）。在调用没有响应的情况下，比如 5s 之后，Dubbo
+                                框架就会自动终止调用等待过程（抛出 TimeoutException），释放此次调用占用的资源。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-timeout?productId={{dubboProductId}}&sleepTime=4000</span>
                                 </div>
                             </div>
-
-                            <!-- 3. Timeout Call -->
-                            <div class="control-group">
-                                <div class="control-label">超时调用</div>
-                                <div class="test-description">🔹 为 RPC
-                                    调用设置超时时间可以提升集群整体稳定性，避免无限等待响应结果导致的资源占用（比如大量长期无响应的请求占用线程池等）。在调用没有响应的情况下，比如 5s 之后，Dubbo
-                                    框架就会自动终止调用等待过程（抛出 TimeoutException），释放此次调用占用的资源。</div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
-                                            /api/order/dubbo/call-timeout?productId={{dubboProductId}}&sleepTime=4000</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary" @click="testDubboTimeout()"><span>▶</span> 超时调用</button>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">使用方式:</span>
-                                        <span class="config-value">
+                            <button class="btn btn-primary" @click="testDubboTimeout()"><span>▶</span> 超时调用</button>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">使用方式:</span>
+                                    <span class="config-value">
                                             <div class="code-block no-copy collapsible">
                                                 <pre><code class="language-java">1.配置全局默认超时时间为 5s（不配置的情况下，所有服务的默认超时时间是 1s）
 dubbo:
@@ -710,570 +710,570 @@ public class DemoServiceImpl implements DemoService{}
 </code></pre>
                                             </div>
                                         </span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">优先级:</span>
-                                        <span class="config-value">
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">优先级:</span>
+                                    <span class="config-value">
                                             - 方法级别配置 > 服务级别配置 > 全局配置 > 默认值<br>
                                             - nacos动态配置 > consumer > provider > 默认值
                                         </span>
-                                    </div>
                                 </div>
-                                <!-- Result Display -->
-                                <div class="result-display" :class="getResultDisplay('dubbo-timeout')?.status"
-                                    v-if="getResultDisplay('dubbo-timeout')" @click="showResultDetail('dubbo-timeout')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('dubbo-timeout')?.status">
+                            </div>
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-timeout')?.status"
+                                 v-if="getResultDisplay('dubbo-timeout')" @click="showResultDetail('dubbo-timeout')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-timeout')?.status">
                                             {{ getResultDisplay('dubbo-timeout')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('dubbo-timeout')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('dubbo-timeout')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-timeout')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-timeout')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('dubbo-timeout')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('dubbo-timeout')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('dubbo-timeout')?.code">HTTP {{
                                             getResultDisplay('dubbo-timeout')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
+                                    点击查看详情</div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Exception Call -->
+                        <div class="control-group">
+                            <div class="control-label">异常调用</div>
+                            <div class="test-description">🔹 模拟服务调用异常，验证 Dubbo 的异常处理和容错机制。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-exception?productId={{dubboProductId}}</span>
                                 </div>
                             </div>
-
-                            <!-- 4. Exception Call -->
-                            <div class="control-group">
-                                <div class="control-label">异常调用</div>
-                                <div class="test-description">🔹 模拟服务调用异常，验证 Dubbo 的异常处理和容错机制。</div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
-                                            /api/order/dubbo/call-exception?productId={{dubboProductId}}</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary" @click="testDubboException()"><span>▶</span>
-                                    异常调用</button>
-                                <!-- Result Display -->
-                                <div class="result-display" :class="getResultDisplay('dubbo-exception')?.status"
-                                    v-if="getResultDisplay('dubbo-exception')"
-                                    @click="showResultDetail('dubbo-exception')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status"
-                                            :class="getResultDisplay('dubbo-exception')?.status">
+                            <button class="btn btn-primary" @click="testDubboException()"><span>▶</span>
+                                异常调用</button>
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-exception')?.status"
+                                 v-if="getResultDisplay('dubbo-exception')"
+                                 @click="showResultDetail('dubbo-exception')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('dubbo-exception')?.status">
                                             {{ getResultDisplay('dubbo-exception')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('dubbo-exception')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
                                             }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('dubbo-exception')?.message ||
-                                        '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-exception')?.message ||
+                                    '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-exception')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('dubbo-exception')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('dubbo-exception')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('dubbo-exception')?.code">HTTP {{
                                             getResultDisplay('dubbo-exception')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
+                                    点击查看详情</div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Async Call -->
+                        <div class="control-group">
+                            <div class="control-label">异步调用</div>
+                            <div class="test-description">🔹 使用 CompletableFuture 实现异步调用，验证非阻塞通信能力。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-async?productId={{dubboProductId}}</span>
                                 </div>
                             </div>
-
-                            <!-- 5. Async Call -->
-                            <div class="control-group">
-                                <div class="control-label">异步调用</div>
-                                <div class="test-description">🔹 使用 CompletableFuture 实现异步调用，验证非阻塞通信能力。</div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
-                                            /api/order/dubbo/call-async?productId={{dubboProductId}}</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary" @click="testDubboAsync()"><span>▶</span> 异步调用</button>
-                                <!-- Result Display -->
-                                <div class="result-display" :class="getResultDisplay('dubbo-async')?.status"
-                                    v-if="getResultDisplay('dubbo-async')" @click="showResultDetail('dubbo-async')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('dubbo-async')?.status">
+                            <button class="btn btn-primary" @click="testDubboAsync()"><span>▶</span> 异步调用</button>
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-async')?.status"
+                                 v-if="getResultDisplay('dubbo-async')" @click="showResultDetail('dubbo-async')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-async')?.status">
                                             {{ getResultDisplay('dubbo-async')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('dubbo-async')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('dubbo-async')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-async')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-async')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('dubbo-async')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('dubbo-async')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('dubbo-async')?.code">HTTP {{
                                             getResultDisplay('dubbo-async')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
+                                    点击查看详情</div>
+                            </div>
+                        </div>
+
+
+                        <!-- 6. Region Priority Call -->
+                        <div class="control-group">
+                            <div class="control-label">同机房/区域优先</div>
+                            <div class="test-description">🔹 验证 Dubbo 的同区域优先路由策略。当服务在多个区域部署时，优先调用同区域的服务实例，减少网络延迟。
+                            </div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/call-region?productId={{dubboProductId}}&amp;clientRegion={{dubboClientRegion}}</span>
                                 </div>
                             </div>
-
-
-                            <!-- 6. Region Priority Call -->
-                            <div class="control-group">
-                                <div class="control-label">同机房/区域优先</div>
-                                <div class="test-description">🔹 验证 Dubbo 的同区域优先路由策略。当服务在多个区域部署时，优先调用同区域的服务实例，减少网络延迟。
-                                </div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
-                                            /api/order/dubbo/call-region?productId={{dubboProductId}}&amp;clientRegion={{dubboClientRegion}}</span>
-                                    </div>
-                                </div>
-                                <div class="input-row">
-                                    <select class="input" v-model="dubboClientRegion" style="width: 200px">
-                                        <option value="hangzhou">杭州 (hangzhou)</option>
-                                        <option value="beijing">北京 (beijing)</option>
-                                        <option value="shanghai">上海 (shanghai)</option>
-                                    </select>
-                                    <button class="btn btn-primary" @click="testDubboRegion()"
+                            <div class="input-row">
+                                <select class="input" v-model="dubboClientRegion" style="width: 200px">
+                                    <option value="hangzhou">杭州 (hangzhou)</option>
+                                    <option value="beijing">北京 (beijing)</option>
+                                    <option value="shanghai">上海 (shanghai)</option>
+                                </select>
+                                <button class="btn btn-primary" @click="testDubboRegion()"
                                         style="width: auto"><span>▶</span>
-                                        区域优先调用</button>
-                                </div>
-                                <!-- Result Display -->
-                                <div class="result-display" :class="getResultDisplay('dubbo-region')?.status"
-                                    v-if="getResultDisplay('dubbo-region')" @click="showResultDetail('dubbo-region')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('dubbo-region')?.status">
+                                    区域优先调用</button>
+                            </div>
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-region')?.status"
+                                 v-if="getResultDisplay('dubbo-region')" @click="showResultDetail('dubbo-region')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-region')?.status">
                                             {{ getResultDisplay('dubbo-region')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('dubbo-region')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('dubbo-region')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-region')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-region')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('dubbo-region')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('dubbo-region')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('dubbo-region')?.code">HTTP {{
                                             getResultDisplay('dubbo-region')?.code }}</span>
-                                    </div>
-                                    <div
-                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">当前服务区域:</span>
-                                        <span class="config-value">shanghai、beijing <br>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情</div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">当前服务区域:</span>
+                                    <span class="config-value">shanghai、beijing <br>
                                             见 application.yml，激活(dev,shanghai)和(dev,beijing)配置分别启动两个服务
                                         </span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">预期结果:</span>
-                                        <span class="config-value">
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">预期结果:</span>
+                                    <span class="config-value">
                                             1. 选择"上海" -> 匹配成功，调用(tag=上海)服务<br>
                                             2. 选择"北京" -> 匹配成功，调用(tag=北京)服务<br>
                                             3. 选择"杭州" -> 匹配失败，若无其他服务则降级或报错(取决于路由策略)
                                         </span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Seata Controls -->
-                        <div v-if="activeComponent === 'seata'">
-                            <div class="process-flow">
-                                <div class="flow-title">🔄 Seata TCC 分布式事务1务流程</div>
-                                <div class="flow-diagram">1. Try: 业务2服务预保留资源（锁元 锁账户）
-                                    2. Confirm: 全部服务预保成功后，事务提交，真正执行业务
-                                    3. Cancel: 法业务稁发失败，恢复所有法字级字段不物理量</div>
+                    <!-- Seata Controls -->
+                    <div v-if="activeComponent === 'seata'">
+                        <div class="process-flow">
+                            <div class="flow-title">🔄 Seata TCC 分布式事务1务流程</div>
+                            <div class="flow-diagram">1. Try: 业务2服务预保留资源（锁元 锁账户）
+                                2. Confirm: 全部服务预保成功后，事务提交，真正执行业务
+                                3. Cancel: 法业务稁发失败，恢复所有法字级字段不物理量</div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">TCC 事务模式</div>
+                            <div class="test-description">🔹 TCC 保证强一致性，但需业业服务实现 Try/Confirm/Cancel
+                                三个接口。适合对一致性要求高的业务场景。</div>
+                            <div class="input-row">
+                                <input class="input" v-model="tccCommodityCode" placeholder="商品编码">
+                                <input class="input" type="number" v-model.number="tccCount" placeholder="数量"
+                                       style="width:60px">
                             </div>
-                            <div class="control-group">
-                                <div class="control-label">TCC 事务模式</div>
-                                <div class="test-description">🔹 TCC 保证强一致性，但需业业服务实现 Try/Confirm/Cancel
-                                    三个接口。适合对一致性要求高的业务场景。</div>
-                                <div class="input-row">
-                                    <input class="input" v-model="tccCommodityCode" placeholder="商品编码">
-                                    <input class="input" type="number" v-model.number="tccCount" placeholder="数量"
-                                        style="width:60px">
-                                </div>
-                                <div class="input-row">
-                                    <button class="btn btn-primary flex-1"
+                            <div class="input-row">
+                                <button class="btn btn-primary flex-1"
                                         @click="callWithResultDisplay(endpoint('tcc-ok'),'tcc-ok', 'seata-tcc-ok')"><span>▶</span>
-                                        提交事务</button>
-                                    <button class="btn btn-danger flex-1"
+                                    提交事务</button>
+                                <button class="btn btn-danger flex-1"
                                         @click="callWithResultDisplay(endpoint('tcc-fail'),'tcc-fail', 'seata-tcc-fail')"><span>▶</span>
-                                        回滚事务</button>
-                                </div>
+                                    回滚事务</button>
+                            </div>
 
-                                <!-- Result Display for TCC Test -->
-                                <div class="result-display" :class="getResultDisplay('seata-tcc-ok')?.status"
-                                    v-if="getResultDisplay('seata-tcc-ok') && !getResultDisplay('seata-tcc-fail')"
-                                    @click="showResultDetail('seata-tcc-ok')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">事务测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('seata-tcc-ok')?.status">
+                            <!-- Result Display for TCC Test -->
+                            <div class="result-display" :class="getResultDisplay('seata-tcc-ok')?.status"
+                                 v-if="getResultDisplay('seata-tcc-ok') && !getResultDisplay('seata-tcc-fail')"
+                                 @click="showResultDetail('seata-tcc-ok')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">事务测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('seata-tcc-ok')?.status">
                                             {{ getResultDisplay('seata-tcc-ok')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('seata-tcc-ok')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('seata-tcc-ok')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('seata-tcc-ok')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('seata-tcc-ok')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('seata-tcc-ok')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('seata-tcc-ok')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('seata-tcc-ok')?.code">HTTP {{
                                             getResultDisplay('seata-tcc-ok')?.code }}</span>
-                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="result-display" :class="getResultDisplay('seata-tcc-fail')?.status"
-                                    v-if="getResultDisplay('seata-tcc-fail')"
-                                    @click="showResultDetail('seata-tcc-fail')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">事务测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('seata-tcc-fail')?.status">
+                            <div class="result-display" :class="getResultDisplay('seata-tcc-fail')?.status"
+                                 v-if="getResultDisplay('seata-tcc-fail')"
+                                 @click="showResultDetail('seata-tcc-fail')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">事务测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('seata-tcc-fail')?.status">
                                             {{ getResultDisplay('seata-tcc-fail')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('seata-tcc-fail')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('seata-tcc-fail')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('seata-tcc-fail')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('seata-tcc-fail')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('seata-tcc-fail')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('seata-tcc-fail')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('seata-tcc-fail')?.code">HTTP {{
                                             getResultDisplay('seata-tcc-fail')?.code }}</span>
-                                    </div>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">事务模式:</span>
-                                        <span class="config-value">TCC (强一致)</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">参与治理方式:</span>
-                                        <span class="config-value">Seata Server</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">超时设置:</span>
-                                        <span class="config-value">300s</span>
-                                    </div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">事务模式:</span>
+                                    <span class="config-value">TCC (强一致)</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">参与治理方式:</span>
+                                    <span class="config-value">Seata Server</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">超时设置:</span>
+                                    <span class="config-value">300s</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Higress Controls -->
-                        <div v-if="activeComponent === 'higress'">
-                            <div class="process-flow">
-                                <div class="flow-title">🔄 网关与鉴权流程</div>
-                                <div class="flow-diagram">1. 来自请求 → Higress 网关
-                                    2. 执行路由规则 (鉴权、限流)
-                                    3. 传递后端业务服务
-                                    4. 返回应答给客户端</div>
-                            </div>
-                            <div class="control-group">
-                                <div class="control-label">网关路由</div>
-                                <div class="test-description">🔹 检查网关路由规则配置，验证路由是否正常工作。包含传递模式、负载均衡等配置。</div>
-                                <button class="btn btn-primary mb-2" @click="testGatewayRouting()"><span>▶</span>
-                                    检查路由规则</button>
+                    <!-- Higress Controls -->
+                    <div v-if="activeComponent === 'higress'">
+                        <div class="process-flow">
+                            <div class="flow-title">🔄 网关与鉴权流程</div>
+                            <div class="flow-diagram">1. 来自请求 → Higress 网关
+                                2. 执行路由规则 (鉴权、限流)
+                                3. 传递后端业务服务
+                                4. 返回应答给客户端</div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">网关路由</div>
+                            <div class="test-description">🔹 检查网关路由规则配置，验证路由是否正常工作。包含传递模式、负载均衡等配置。</div>
+                            <button class="btn btn-primary mb-2" @click="testGatewayRouting()"><span>▶</span>
+                                检查路由规则</button>
 
-                                <!-- Result Display for Gateway Routing Test -->
-                                <div class="result-display" :class="getResultDisplay('higress-routing')?.status"
-                                    v-if="getResultDisplay('higress-routing')"
-                                    @click="showResultDetail('higress-routing')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">路由测试结果</span>
-                                        <span class="result-status"
-                                            :class="getResultDisplay('higress-routing')?.status">
+                            <!-- Result Display for Gateway Routing Test -->
+                            <div class="result-display" :class="getResultDisplay('higress-routing')?.status"
+                                 v-if="getResultDisplay('higress-routing')"
+                                 @click="showResultDetail('higress-routing')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">路由测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('higress-routing')?.status">
                                             {{ getResultDisplay('higress-routing')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('higress-routing')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
                                             }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('higress-routing')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('higress-routing')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('higress-routing')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('higress-routing')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('higress-routing')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('higress-routing')?.code">HTTP {{
                                             getResultDisplay('higress-routing')?.code }}</span>
-                                    </div>
-                                </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">网关类型:</span>
-                                        <span class="config-value">Higress (Envoy 基础)</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">路由模式:</span>
-                                        <span class="config-value">加权轮询、Random</span>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <div class="control-label">安全鉴权</div>
-                                <div class="test-description">🔹 测试鉴权一行，模拟认可的请求与不认可的请求。验证模型是否正常工作。</div>
-                                <div class="input-row">
-                                    <button class="btn btn-primary flex-1"
-                                        @click="callWithResultDisplay(endpoint('gateway-auth-pass'),'gateway-auth', 'higress-auth-pass')"><span>▶</span>
-                                        鉴权通过</button>
-                                    <button class="btn btn-danger flex-1"
-                                        @click="callWithResultDisplay(endpoint('gateway-auth-fail'),'gateway-auth', 'higress-auth-fail')"><span>▶</span>
-                                        鉴权拒绝</button>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">网关类型:</span>
+                                    <span class="config-value">Higress (Envoy 基础)</span>
                                 </div>
+                                <div class="config-item">
+                                    <span class="config-label">路由模式:</span>
+                                    <span class="config-value">加权轮询、Random</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">安全鉴权</div>
+                            <div class="test-description">🔹 测试鉴权一行，模拟认可的请求与不认可的请求。验证模型是否正常工作。</div>
+                            <div class="input-row">
+                                <button class="btn btn-primary flex-1"
+                                        @click="callWithResultDisplay(endpoint('gateway-auth-pass'),'gateway-auth', 'higress-auth-pass')"><span>▶</span>
+                                    鉴权通过</button>
+                                <button class="btn btn-danger flex-1"
+                                        @click="callWithResultDisplay(endpoint('gateway-auth-fail'),'gateway-auth', 'higress-auth-fail')"><span>▶</span>
+                                    鉴权拒绝</button>
+                            </div>
 
-                                <!-- Result Display for Auth Tests -->
-                                <div class="result-display" :class="getResultDisplay('higress-auth-pass')?.status"
-                                    v-if="getResultDisplay('higress-auth-pass') && !getResultDisplay('higress-auth-fail')"
-                                    @click="showResultDetail('higress-auth-pass')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">鉴权测试结果</span>
-                                        <span class="result-status"
-                                            :class="getResultDisplay('higress-auth-pass')?.status">
+                            <!-- Result Display for Auth Tests -->
+                            <div class="result-display" :class="getResultDisplay('higress-auth-pass')?.status"
+                                 v-if="getResultDisplay('higress-auth-pass') && !getResultDisplay('higress-auth-fail')"
+                                 @click="showResultDetail('higress-auth-pass')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">鉴权测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('higress-auth-pass')?.status">
                                             {{ getResultDisplay('higress-auth-pass')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('higress-auth-pass')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
                                             }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('higress-auth-pass')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('higress-auth-pass')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{
                                             getResultDisplay('higress-auth-pass')?.timestamp }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('higress-auth-pass')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('higress-auth-pass')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('higress-auth-pass')?.code">HTTP {{
                                             getResultDisplay('higress-auth-pass')?.code }}</span>
-                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="result-display" :class="getResultDisplay('higress-auth-fail')?.status"
-                                    v-if="getResultDisplay('higress-auth-fail')"
-                                    @click="showResultDetail('higress-auth-fail')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">鉴权测试结果</span>
-                                        <span class="result-status"
-                                            :class="getResultDisplay('higress-auth-fail')?.status">
+                            <div class="result-display" :class="getResultDisplay('higress-auth-fail')?.status"
+                                 v-if="getResultDisplay('higress-auth-fail')"
+                                 @click="showResultDetail('higress-auth-fail')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">鉴权测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('higress-auth-fail')?.status">
                                             {{ getResultDisplay('higress-auth-fail')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('higress-auth-fail')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
                                             }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('higress-auth-fail')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('higress-auth-fail')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{
                                             getResultDisplay('higress-auth-fail')?.timestamp }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('higress-auth-fail')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('higress-auth-fail')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('higress-auth-fail')?.code">HTTP {{
                                             getResultDisplay('higress-auth-fail')?.code }}</span>
-                                    </div>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">身份验证:</span>
-                                        <span class="config-value">JWT Token</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">鉴权方式:</span>
-                                        <span class="config-value">Header Authorization</span>
-                                    </div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">身份验证:</span>
+                                    <span class="config-value">JWT Token</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">鉴权方式:</span>
+                                    <span class="config-value">Header Authorization</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- SCA Controls -->
-                        <div v-if="activeComponent === 'sca'">
-                            <div class="control-group">
-                                <div class="control-label">OpenFeign REST 调用</div>
-                                <div class="test-description">
-                                    🔹 展示 OpenFeign 的完整功能,包括负载均衡、熔断降级、超时控制、性能监控等,提供更全面的调用信息。
-                                </div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
+                    <!-- SCA Controls -->
+                    <div v-if="activeComponent === 'sca'">
+                        <div class="control-group">
+                            <div class="control-label">OpenFeign REST 调用</div>
+                            <div class="test-description">
+                                🔹 展示 OpenFeign 的完整功能,包括负载均衡、熔断降级、超时控制、性能监控等,提供更全面的调用信息。
+                            </div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
                                             /api/order/demo/feign/call-enhanced</span>
-                                    </div>
                                 </div>
-                                <div class="input-row">
-                                    <input class="input" type="number" v-model.number="feignProductId"
-                                        placeholder="商品ID">
-                                    <button class="btn btn-primary" @click="testFeignEnhanced('normal')"><span>▶</span>
-                                        正常调用</button>
-                                    <button class="btn btn-danger" @click="testFeignEnhanced('error')"><span>▶</span>
-                                        模拟失败</button>
-                                    <button class="btn btn-warning" @click="testFeignEnhanced('degrade')"><span>▶</span>
-                                        模拟超时降级</button>
-                                </div>
+                            </div>
+                            <div class="input-row">
+                                <input class="input" type="number" v-model.number="feignProductId"
+                                       placeholder="商品ID">
+                                <button class="btn btn-primary" @click="testFeignEnhanced('normal')"><span>▶</span>
+                                    正常调用</button>
+                                <button class="btn btn-danger" @click="testFeignEnhanced('error')"><span>▶</span>
+                                    模拟失败</button>
+                                <button class="btn btn-warning" @click="testFeignEnhanced('degrade')"><span>▶</span>
+                                    模拟超时降级</button>
+                            </div>
 
-                                <!-- Result Display for OpenFeign Enhanced -->
-                                <div class="result-display" :class="getResultDisplay('feign-enhanced')?.status"
-                                    v-if="getResultDisplay('feign-enhanced')"
-                                    @click="showResultDetail('feign-enhanced')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('feign-enhanced')?.status">
+                            <!-- Result Display for OpenFeign Enhanced -->
+                            <div class="result-display" :class="getResultDisplay('feign-enhanced')?.status"
+                                 v-if="getResultDisplay('feign-enhanced')"
+                                 @click="showResultDetail('feign-enhanced')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('feign-enhanced')?.status">
                                             {{ getResultDisplay('feign-enhanced')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('feign-enhanced')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('feign-enhanced')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('feign-enhanced')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('feign-enhanced')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('feign-enhanced')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('feign-enhanced')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('feign-enhanced')?.code">HTTP {{
                                             getResultDisplay('feign-enhanced')?.code }}</span>
-                                    </div>
-                                    <div
-                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
                                 </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情</div>
+                            </div>
 
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">参数含义:</span>
-                                        <span class="config-value">productId: 商品ID (99999=模拟失败, 88888=模拟降级)</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">功能集成:</span>
-                                        <span class="config-value">负载均衡+熔断+超时</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">降级策略:</span>
-                                        <span class="config-value">返回默认商品</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">性能监控:</span>
-                                        <span class="config-value">自动记录调用耗时</span>
-                                    </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">参数含义:</span>
+                                    <span class="config-value">productId: 商品ID (99999=模拟失败, 88888=模拟降级)</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">功能集成:</span>
+                                    <span class="config-value">负载均衡+熔断+超时</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">降级策略:</span>
+                                    <span class="config-value">返回默认商品</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">性能监控:</span>
+                                    <span class="config-value">自动记录调用耗时</span>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <div class="control-label">LoadBalancer 负载均衡</div>
-                                <div class="test-description">
-                                    🔹 Spring Cloud LoadBalancer 是一个轻量级、响应式友好的客户端负载均衡器，用于在调用远程服务时，从服务注册中心（如
-                                    Eureka、Nacos、Consul）获取可用实例列表，并根据策略选择一个实例进行请求
-                                </div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">LoadBalancer 负载均衡</div>
+                            <div class="test-description">
+                                🔹 Spring Cloud LoadBalancer 是一个轻量级、响应式友好的客户端负载均衡器，用于在调用远程服务时，从服务注册中心（如
+                                Eureka、Nacos、Consul）获取可用实例列表，并根据策略选择一个实例进行请求
+                            </div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
                                             /api/order/demo/load-balance</span>
-                                    </div>
                                 </div>
-                                <button class="btn btn-primary" @click="testLoadBalance()"><span>▶</span>
-                                    测试负载均衡策略</button>
+                            </div>
+                            <button class="btn btn-primary" @click="testLoadBalance()"><span>▶</span>
+                                测试负载均衡策略</button>
 
-                                <!-- Result Display for Load Balance -->
-                                <div class="result-display" :class="getResultDisplay('load-balance')?.status"
-                                    v-if="getResultDisplay('load-balance')" @click="showResultDetail('load-balance')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('load-balance')?.status">
+                            <!-- Result Display for Load Balance -->
+                            <div class="result-display" :class="getResultDisplay('load-balance')?.status"
+                                 v-if="getResultDisplay('load-balance')" @click="showResultDetail('load-balance')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('load-balance')?.status">
                                             {{ getResultDisplay('load-balance')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('load-balance')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('load-balance')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('load-balance')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('load-balance')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('load-balance')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('load-balance')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('load-balance')?.code">HTTP {{
                                             getResultDisplay('load-balance')?.code }}</span>
-                                    </div>
-                                    <div
-                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">方案:</span>
-                                        <span class="config-value">默认轮询（Round Robin）</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">如何启用:</span>
-                                        <span class="config-value">
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情</div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">方案:</span>
+                                    <span class="config-value">默认轮询（Round Robin）</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">如何启用:</span>
+                                    <span class="config-value">
                                             在pom中配置spring-cloud-starter-loadbalancer
                                         </span>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <div class="control-label">超时与重试机制</div>
-                                <div class="test-description">
-                                    🔹 配置连接超时和读取超时,防止服务调用长时间阻塞。支持自定义重试策略,但需注意幂等性问题。
-                                </div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">超时与重试机制</div>
+                            <div class="test-description">
+                                🔹 配置连接超时和读取超时,防止服务调用长时间阻塞。支持自定义重试策略,但需注意幂等性问题。
+                            </div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
                                             /api/order/demo/timeout-retry</span>
-                                    </div>
                                 </div>
-                                <button class="btn btn-primary" @click="testTimeoutRetry()"><span>▶</span>
-                                    测试超时机制</button>
+                            </div>
+                            <button class="btn btn-primary" @click="testTimeoutRetry()"><span>▶</span>
+                                测试超时机制</button>
 
-                                <!-- Result Display for Timeout Retry -->
-                                <div class="result-display" :class="getResultDisplay('timeout-retry')?.status"
-                                    v-if="getResultDisplay('timeout-retry')" @click="showResultDetail('timeout-retry')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('timeout-retry')?.status">
+                            <!-- Result Display for Timeout Retry -->
+                            <div class="result-display" :class="getResultDisplay('timeout-retry')?.status"
+                                 v-if="getResultDisplay('timeout-retry')" @click="showResultDetail('timeout-retry')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('timeout-retry')?.status">
                                             {{ getResultDisplay('timeout-retry')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('timeout-retry')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('timeout-retry')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('timeout-retry')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('timeout-retry')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('timeout-retry')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('timeout-retry')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('timeout-retry')?.code">HTTP {{
                                             getResultDisplay('timeout-retry')?.code }}</span>
-                                    </div>
-                                    <div
-                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">超时配置:</span>
-                                        <div class="config-value">
-                                            <div class="code-block no-copy collapsible">
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情</div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">超时配置:</span>
+                                    <div class="config-value">
+                                        <div class="code-block no-copy collapsible">
                                                 <pre><code class="language-yaml">spring:
   cloud:
     openfeign:
@@ -1290,17 +1290,17 @@ public class DemoServiceImpl implements DemoService{}
             connect-timeout: 3000
             read-timeout: 4000
 </code></pre>
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="config-item">
-                                        <span class="config-label">重试策略:</span>
-                                        <span class="config-value">默认不重试</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">配置位置:</span>
-                                        <div class="config-value">
-                                            <div class="code-block no-copy collapsible">
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">重试策略:</span>
+                                    <span class="config-value">默认不重试</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">配置位置:</span>
+                                    <div class="config-value">
+                                        <div class="code-block no-copy collapsible">
                                                 <pre><code class="language-java">@Configuration
 public class ProductServiceConfig {
     @Bean
@@ -1308,61 +1308,61 @@ public class ProductServiceConfig {
         return new Retryer.Default(100, 1000, 3);
     }
 }</code></pre>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <div class="control-label">请求拦截器</div>
-                                <div class="test-description">
-                                    🔹 Feign 拦截器可统一处理请求头、认证信息、日志记录、性能监控等横切关注点,实现 AOP 功能。
-                                </div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">请求拦截器</div>
+                            <div class="test-description">
+                                🔹 Feign 拦截器可统一处理请求头、认证信息、日志记录、性能监控等横切关注点,实现 AOP 功能。
+                            </div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
                                             /api/order/demo/feign-interceptor</span>
-                                    </div>
                                 </div>
-                                <button class="btn btn-primary" @click="testFeignInterceptor()"><span>▶</span>
-                                    测试拦截器</button>
+                            </div>
+                            <button class="btn btn-primary" @click="testFeignInterceptor()"><span>▶</span>
+                                测试拦截器</button>
 
-                                <!-- Result Display for Feign Interceptor -->
-                                <div class="result-display" :class="getResultDisplay('feign-interceptor')?.status"
-                                    v-if="getResultDisplay('feign-interceptor')"
-                                    @click="showResultDetail('feign-interceptor')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status"
-                                            :class="getResultDisplay('feign-interceptor')?.status">
+                            <!-- Result Display for Feign Interceptor -->
+                            <div class="result-display" :class="getResultDisplay('feign-interceptor')?.status"
+                                 v-if="getResultDisplay('feign-interceptor')"
+                                 @click="showResultDetail('feign-interceptor')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('feign-interceptor')?.status">
                                             {{ getResultDisplay('feign-interceptor')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('feign-interceptor')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
                                             }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('feign-interceptor')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('feign-interceptor')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{
                                             getResultDisplay('feign-interceptor')?.timestamp }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('feign-interceptor')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('feign-interceptor')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('feign-interceptor')?.code">HTTP {{
                                             getResultDisplay('feign-interceptor')?.code }}</span>
-                                    </div>
-                                    <div
-                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">功能:</span>
-                                        <span class="config-value">添加 Token、日志、追踪ID</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">配置方式-全局生效:</span>
-                                        <span class="config-value">
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情</div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">功能:</span>
+                                    <span class="config-value">添加 Token、日志、追踪ID</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">配置方式-全局生效:</span>
+                                    <span class="config-value">
                                             <div class="code-block no-copy collapsible">
                                                 <pre><code class="language-java">@Component
 public class XTokenRequestInterceptor implements RequestInterceptor {
@@ -1375,10 +1375,10 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
 </code></pre>
                                             </div>
                                         </span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">配置方式-特定服务生效:</span>
-                                        <span class="config-value">
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">配置方式-特定服务生效:</span>
+                                    <span class="config-value">
                                             <div class="code-block no-copy collapsible">
                                                 <pre><code class="language-java">spring:
   cloud:
@@ -1392,311 +1392,311 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
 </code></pre>
                                             </div>
                                         </span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">应用场景:</span>
-                                        <span class="config-value">认证、监控、链路追踪</span>
-                                    </div>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">应用场景:</span>
+                                    <span class="config-value">认证、监控、链路追踪</span>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="control-group">
-                                <div class="control-label">配置动态刷新</div>
-                                <div class="test-description">
-                                    🔹 通过 Nacos 配置中心和 @RefreshScope 注解,实现配置的动态刷新,无需重启应用即可生效。
-                                </div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
+                        <div class="control-group">
+                            <div class="control-label">配置动态刷新</div>
+                            <div class="test-description">
+                                🔹 通过 Nacos 配置中心和 @RefreshScope 注解,实现配置的动态刷新,无需重启应用即可生效。
+                            </div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
                                             /api/order/demo/config-refresh</span>
-                                    </div>
                                 </div>
-                                <button class="btn btn-primary" @click="testConfigRefresh()"><span>▶</span>
-                                    查看当前配置</button>
+                            </div>
+                            <button class="btn btn-primary" @click="testConfigRefresh()"><span>▶</span>
+                                查看当前配置</button>
 
-                                <!-- Result Display for Config Refresh -->
-                                <div class="result-display" :class="getResultDisplay('config-refresh')?.status"
-                                    v-if="getResultDisplay('config-refresh')"
-                                    @click="showResultDetail('config-refresh')" style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('config-refresh')?.status">
+                            <!-- Result Display for Config Refresh -->
+                            <div class="result-display" :class="getResultDisplay('config-refresh')?.status"
+                                 v-if="getResultDisplay('config-refresh')"
+                                 @click="showResultDetail('config-refresh')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('config-refresh')?.status">
                                             {{ getResultDisplay('config-refresh')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('config-refresh')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('config-refresh')?.message ||
-                                        '无返回信息' }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('config-refresh')?.message ||
+                                    '无返回信息' }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('config-refresh')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('config-refresh')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('config-refresh')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('config-refresh')?.code">HTTP {{
                                             getResultDisplay('config-refresh')?.code }}</span>
-                                    </div>
-                                    <div
-                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">配置来源:</span>
-                                        <span class="config-value">Nacos (common.yaml)</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">刷新机制:</span>
-                                        <span class="config-value">@RefreshScope 自动刷新</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">Nacos 地址:</span>
-                                        <span class="config-value">http://localhost:8848/nacos</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">验证方法:</span>
-                                        <span class="config-value">修改 Nacos 配置后刷新</span>
-                                    </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情</div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">配置来源:</span>
+                                    <span class="config-value">Nacos (common.yaml)</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">刷新机制:</span>
+                                    <span class="config-value">@RefreshScope 自动刷新</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">Nacos 地址:</span>
+                                    <span class="config-value">http://localhost:8848/nacos</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">验证方法:</span>
+                                    <span class="config-value">修改 Nacos 配置后刷新</span>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="control-group">
-                                <div class="control-label">服务健康检查</div>
-                                <div class="test-description">
-                                    🔹 通过 Spring Boot Actuator 和 Nacos 健康检查机制,实时监控服务实例状态,自动剔除不健康实例。
-                                </div>
-                                <div class="config-panel api-address-panel">
-                                    <div class="config-item api-address-item">
-                                        <span class="config-label">📍 API 地址:</span>
-                                        <span class="config-value api-address-value">GET
+                        <div class="control-group">
+                            <div class="control-label">服务健康检查</div>
+                            <div class="test-description">
+                                🔹 通过 Spring Boot Actuator 和 Nacos 健康检查机制,实时监控服务实例状态,自动剔除不健康实例。
+                            </div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
                                             /api/order/demo/health-check</span>
-                                    </div>
                                 </div>
-                                <button class="btn btn-primary" @click="testHealthCheck()"><span>▶</span>
-                                    检查服务健康</button>
+                            </div>
+                            <button class="btn btn-primary" @click="testHealthCheck()"><span>▶</span>
+                                检查服务健康</button>
 
-                                <!-- Result Display for Health Check -->
-                                <div class="result-display" :class="getResultDisplay('health-check')?.status"
-                                    v-if="getResultDisplay('health-check')" @click="showResultDetail('health-check')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('health-check')?.status">
+                            <!-- Result Display for Health Check -->
+                            <div class="result-display" :class="getResultDisplay('health-check')?.status"
+                                 v-if="getResultDisplay('health-check')" @click="showResultDetail('health-check')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('health-check')?.status">
                                             {{ getResultDisplay('health-check')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('health-check')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('health-check')?.message || '无返回信息'
-                                        }}</div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('health-check')?.message || '无返回信息'
+                                    }}</div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('health-check')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{
+                                    <span class="result-response-time">{{
                                             getResultDisplay('health-check')?.responseTime }}ms</span>
-                                        <span v-if="getResultDisplay('health-check')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('health-check')?.code">HTTP {{
                                             getResultDisplay('health-check')?.code }}</span>
-                                    </div>
-                                    <div
-                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">健康端点:</span>
-                                        <span class="config-value">/actuator/health</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">检查机制:</span>
-                                        <span class="config-value">Nacos 定期心跳检测</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">自动剔除:</span>
-                                        <span class="config-value">不健康实例自动下线</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">优雅下线:</span>
-                                        <span class="config-value">/actuator/shutdown</span>
-                                    </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情</div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">健康端点:</span>
+                                    <span class="config-value">/actuator/health</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">检查机制:</span>
+                                    <span class="config-value">Nacos 定期心跳检测</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">自动剔除:</span>
+                                    <span class="config-value">不健康实例自动下线</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">优雅下线:</span>
+                                    <span class="config-value">/actuator/shutdown</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- OpenTelemetry Controls -->
-                        <div v-if="activeComponent === 'opentelemetry'">
-                            <div class="process-flow">
-                                <div class="flow-title">🔄 可観测性库流程</div>
-                                <div class="flow-diagram">1. 应用自轫折中 Trace/Metric/Log
-                                    2. OpenTelemetry SDK 收集数据
-                                    3. 传递到可観测性后端
-                                    4. 可観测平台业务化展示与分析</div>
-                            </div>
-                            <div class="control-group">
-                                <div class="control-label">分布式互追 Trace</div>
-                                <div class="test-description">🔹 生成模拟的应用链路数据，展示路迷液中的各个谢拒的执行流程、时间消耗、业务参数等。</div>
-                                <button class="btn btn-primary" @click="testTracing()"><span>▶</span> 生成模拟链路数据</button>
+                    <!-- OpenTelemetry Controls -->
+                    <div v-if="activeComponent === 'opentelemetry'">
+                        <div class="process-flow">
+                            <div class="flow-title">🔄 可観测性库流程</div>
+                            <div class="flow-diagram">1. 应用自轫折中 Trace/Metric/Log
+                                2. OpenTelemetry SDK 收集数据
+                                3. 传递到可観测性后端
+                                4. 可観测平台业务化展示与分析</div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">分布式互追 Trace</div>
+                            <div class="test-description">🔹 生成模拟的应用链路数据，展示路迷液中的各个谢拒的执行流程、时间消耗、业务参数等。</div>
+                            <button class="btn btn-primary" @click="testTracing()"><span>▶</span> 生成模拟链路数据</button>
 
-                                <!-- Result Display for Tracing -->
-                                <div class="result-display" :class="getResultDisplay('tracing')?.status"
-                                    v-if="getResultDisplay('tracing')" @click="showResultDetail('tracing')"
-                                    style="cursor: pointer;">
-                                    <div class="result-header">
-                                        <span class="result-title">测试结果</span>
-                                        <span class="result-status" :class="getResultDisplay('tracing')?.status">
+                            <!-- Result Display for Tracing -->
+                            <div class="result-display" :class="getResultDisplay('tracing')?.status"
+                                 v-if="getResultDisplay('tracing')" @click="showResultDetail('tracing')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('tracing')?.status">
                                             {{ getResultDisplay('tracing')?.status === 'success' ? '✔ 成功' :
                                             getResultDisplay('tracing')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
                                         </span>
-                                    </div>
-                                    <div class="result-content">{{ getResultDisplay('tracing')?.message || '无返回信息' }}
-                                    </div>
-                                    <div class="result-meta">
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('tracing')?.message || '无返回信息' }}
+                                </div>
+                                <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('tracing')?.timestamp
                                             }}</span>
-                                        <span class="result-response-time">{{ getResultDisplay('tracing')?.responseTime
+                                    <span class="result-response-time">{{ getResultDisplay('tracing')?.responseTime
                                             }}ms</span>
-                                        <span v-if="getResultDisplay('tracing')?.code">HTTP {{
+                                    <span v-if="getResultDisplay('tracing')?.code">HTTP {{
                                             getResultDisplay('tracing')?.code }}</span>
-                                    </div>
-                                    <div
+                                </div>
+                                <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                        点击查看详情</div>
+                                    点击查看详情</div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">Trace 采样率:</span>
+                                    <span class="config-value">100% (demo 模式)</span>
                                 </div>
-                                <div class="config-panel">
-                                    <div class="config-item">
-                                        <span class="config-label">Trace 采样率:</span>
-                                        <span class="config-value">100% (demo 模式)</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">Trace 最大事件:</span>
-                                        <span class="config-value">1024</span>
-                                    </div>
-                                    <div class="config-item">
-                                        <span class="config-label">后端接口:</span>
-                                        <span class="config-value">Jaeger/Skywalking</span>
-                                    </div>
+                                <div class="config-item">
+                                    <span class="config-label">Trace 最大事件:</span>
+                                    <span class="config-value">1024</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">后端接口:</span>
+                                    <span class="config-value">Jaeger/Skywalking</span>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                </div>
 
-                <!-- Right: Terminal Output -->
-                <div class="panel" style="border:none; box-shadow:var(--shadow-lg);">
-                    <div class="terminal">
-                        <div class="terminal-header">
-                            <div class="terminal-dots">
-                                <div class="dot dot-red"></div>
-                                <div class="dot dot-yellow"></div>
-                                <div class="dot dot-green"></div>
-                            </div>
-                            <div class="terminal-title">user@dev-console:~/logs</div>
-                            <div style="flex:1"></div>
-                            <button class="btn btn-sm" @click="reset"
+                </div>
+            </div>
+
+            <!-- Right: Terminal Output -->
+            <div class="panel" style="border:none; box-shadow:var(--shadow-lg);">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <div class="dot dot-red"></div>
+                            <div class="dot dot-yellow"></div>
+                            <div class="dot dot-green"></div>
+                        </div>
+                        <div class="terminal-title">user@dev-console:~/logs</div>
+                        <div style="flex:1"></div>
+                        <button class="btn btn-sm" @click="reset"
                                 style="background:transparent; border:none; color:var(--text-secondary);">
-                                🗑️ Clear
-                            </button>
+                            🗑️ Clear
+                        </button>
+                    </div>
+                    <div class="terminal-body" id="terminal-body">
+                        <div v-if="history.length === 0"
+                             style="color:var(--text-secondary); padding:20px; text-align:center;">
+                            // Waiting for commands...<br>
+                            // Click buttons on the left to execute tests.
                         </div>
-                        <div class="terminal-body" id="terminal-body">
-                            <div v-if="history.length === 0"
-                                style="color:var(--text-secondary); padding:20px; text-align:center;">
-                                // Waiting for commands...<br>
-                                // Click buttons on the left to execute tests.
+                        <div class="log-entry" v-for="item in history" :key="item.id">
+                            <div class="log-time">[{{ item.time }}]</div>
+                            <div class="log-type">{{ item.type }}</div>
+                            <div class="log-status" :class="item.status === '成功' ? 'success' : 'error'">
+                                {{ item.status === '成功' ? '✔' : '✘' }}
                             </div>
-                            <div class="log-entry" v-for="item in history" :key="item.id">
-                                <div class="log-time">[{{ item.time }}]</div>
-                                <div class="log-type">{{ item.type }}</div>
-                                <div class="log-status" :class="item.status === '成功' ? 'success' : 'error'">
-                                    {{ item.status === '成功' ? '✔' : '✘' }}
-                                </div>
-                                <div class="log-content" @click="viewDetail(item)">
-                                    {{ item.msg }}
-                                    <span class="log-meta">{{ item.rt }}ms</span>
-                                    <span class="log-meta">HTTP {{ item.code }}</span>
-                                </div>
+                            <div class="log-content" @click="viewDetail(item)">
+                                {{ item.msg }}
+                                <span class="log-meta">{{ item.rt }}ms</span>
+                                <span class="log-meta">HTTP {{ item.code }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- 3. Best Practices & Statistics -->
-            <div>
-                <div class="stats-summary">
-                    <div class="stat-item">
-                        <span class="stat-label">总请求数:</span>
-                        <span class="stat-value">{{ history.length }}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">成功率:</span>
-                        <span class="stat-value">{{ successRate }}%</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">平均响应时间:</span>
-                        <span class="stat-value">{{ avgResponseTime }}ms</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">测试覆盖:</span>
-                        <span class="stat-value">{{ testedComponents }}/13</span>
-                    </div>
+        <!-- 3. Best Practices & Statistics -->
+        <div>
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <span class="stat-label">总请求数:</span>
+                    <span class="stat-value">{{ history.length }}</span>
                 </div>
+                <div class="stat-item">
+                    <span class="stat-label">成功率:</span>
+                    <span class="stat-value">{{ successRate }}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">平均响应时间:</span>
+                    <span class="stat-value">{{ avgResponseTime }}ms</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">测试覆盖:</span>
+                    <span class="stat-value">{{ testedComponents }}/13</span>
+                </div>
+            </div>
 
-                <div class="best-practices">
-                    <div class="best-practices-title">📚 微服务最佳实践</div>
-                    <div class="practice-item">
-                        <span class="practice-icon">✅</span>
-                        <span>
+            <div class="best-practices">
+                <div class="best-practices-title">📚 微服务最佳实践</div>
+                <div class="practice-item">
+                    <span class="practice-icon">✅</span>
+                    <span>
                             <strong>流量防护</strong>：在网关和服务层使用 Sentinel 进行流量控制，防止级联故障。建议配置 QPS 限流、线程隔离、熔断降级等多个维度的防护。
                         </span>
-                    </div>
-                    <div class="practice-item">
-                        <span class="practice-icon">✅</span>
-                        <span>
+                </div>
+                <div class="practice-item">
+                    <span class="practice-icon">✅</span>
+                    <span>
                             <strong>服务通信</strong>：同步调用使用 OpenFeign + LoadBalancer，异步调用使用消息队列。Dubbo 适合内部高性能调用，REST
                             适合跨域/外部调用。
                         </span>
-                    </div>
-                    <div class="practice-item">
-                        <span class="practice-icon">✅</span>
-                        <span>
+                </div>
+                <div class="practice-item">
+                    <span class="practice-icon">✅</span>
+                    <span>
                             <strong>分布式事务</strong>：强一致性业务使用 Seata TCC 模式，最终一致性业务使用本地消息表或 SAGA 模式。
                         </span>
-                    </div>
-                    <div class="practice-item">
-                        <span class="practice-icon">✅</span>
-                        <span>
+                </div>
+                <div class="practice-item">
+                    <span class="practice-icon">✅</span>
+                    <span>
                             <strong>配置管理</strong>：敏感配置和环境相关配置通过 Nacos 集中管理，支持应用热更新。避免硬编码和手动修改。
                         </span>
-                    </div>
-                    <div class="practice-item">
-                        <span class="practice-icon">✅</span>
-                        <span>
+                </div>
+                <div class="practice-item">
+                    <span class="practice-icon">✅</span>
+                    <span>
                             <strong>可观测性</strong>：使用 OpenTelemetry 统一采集 Trace、Metric、Log，提升故障排查效率。在链路上加上业务标记便于问题追踪。
                         </span>
-                    </div>
-                    <div class="practice-item">
-                        <span class="practice-icon">✅</span>
-                        <span>
+                </div>
+                <div class="practice-item">
+                    <span class="practice-icon">✅</span>
+                    <span>
                             <strong>网关安全</strong>：所有流量通过网关，在网关层做统一的鉴权、限流、日志记录。使用黑白名单和 JWT Token 控制访问权限。
                         </span>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Detail Modal -->
-        <div class="modal-overlay" v-cloak v-if="showDetailModal" @click.self="showDetailModal=false">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 style="margin:0; font-size:16px;">Response Details</h3>
-                    <button class="btn btn-sm" @click="showDetailModal=false">Close</button>
-                </div>
-                <div class="modal-body">
-                    <pre class="code-block" id="json-display"></pre>
                 </div>
             </div>
         </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" v-cloak v-if="showDetailModal" @click.self="showDetailModal=false">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 style="margin:0; font-size:16px;">Response Details</h3>
+                <button class="btn btn-sm" @click="showDetailModal=false">Close</button>
+            </div>
+            <div class="modal-body">
+                <pre class="code-block" id="json-display"></pre>
+            </div>
+        </div>
     </div>
-    <script type="module" src="js/service-demo.js"></script>
+</div>
+<script type="module" src="js/service-demo.js"></script>
 </body>
 
 </html>
