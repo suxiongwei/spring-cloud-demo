@@ -31,6 +31,8 @@ dubbo:
     # QOS 配置
     qos-enable: true
     qos-port: 22223
+    # 启用详细日志
+    logger: slf4j
   # 配置中心（用于动态配置规则）
   config-center:
     address: nacos://172.29.64.1:8848
@@ -38,9 +40,10 @@ dubbo:
     password: nacos
     parameters:
       namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+    group: dubbo
+    timeout: 3000
     # 注意：这里不需要配置 config-file，动态配置规则会自动监听 *.configurators
     # config-file: dubbo.properties  # 可选，仅用于应用启动时的静态全局配置
-    group: dubbo
   # 注册中心配置
   registry:
     address: nacos://172.29.64.1:8848

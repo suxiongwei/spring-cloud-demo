@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @date 2025/3/23
  */
 @Slf4j
-@DubboService(version = "1.0.0", group = "product", timeout = 2000, retries = 2)
+@DubboService(version = "1.0.0", group = "product", retries = 2)
 public class ProductDubboServiceImpl implements IProductDubboService {
 
     /**

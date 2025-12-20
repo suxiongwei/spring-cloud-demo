@@ -4,6 +4,7 @@ import indi.mofan.product.bean.Product;
 import indi.mofan.product.dubbo.service.IProductDubboService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.Method;
 import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +24,96 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class ProductDubboClient {
 
-    @DubboReference(version = "1.0.0", group = "product", timeout = 3000, retries = 3)
+    /**
+     * 在nacos这样配置没有生效，先在项目中进行硬编码
+     * Data ID：indi.mofan.product.dubbo.service.IProductDubboService.configurators
+     * Group：product
+     * 配置内容：
+     * configVersion: v3.0
+     * scope: service
+     * key: indi.mofan.product.dubbo.service.IProductDubboService
+     * enabled: true
+     * configs:
+     *   - side: provider
+     *     parameters:
+     *       timeout: 3000
+     *       retries: 2
+     *     methods:
+     *       - name: getProductById
+     *         parameters:
+     *           timeout: 2000
+     *       - name: listAllProducts
+     *         parameters:
+     *           timeout: 5000
+     *       - name: simulateTimeout
+     *         parameters:
+     *           timeout: 2600
+     *   - side: consumer
+     *     parameters:
+     *       timeout: 3000
+     *       retries: 3
+     *     methods:
+     *       - name: getProductById
+     *         parameters:
+     *           timeout: 2000
+     *           retries: 2
+     *       - name: listAllProducts
+     *         parameters:
+     *           timeout: 5000
+     *           retries: 1
+     *       - name: simulateTimeout
+     *         parameters:
+     *           timeout: 2400
+     *           retries: 2
+     *
+     * service-order-dubbo.configurators
+     * 以下配置同样不生效
+     * configVersion: v3.0
+     * scope: application
+     * key: service-order-dubbo
+     * enabled: true
+     * configs:
+     *   - side: consumer
+     *     applications:
+     *       - service-order-dubbo
+     *     services:
+     *       - indi.mofan.product.dubbo.service.IProductDubboService
+     *     parameters:
+     *       timeout: 3200
+     *     methods:
+     *       - name: getProductById
+     *         parameters:
+     *           timeout: 2000
+     *           retries: 2
+     *       - name: listAllProducts
+     *         parameters:
+     *           timeout: 5000
+     *           retries: 1
+     *       - name: simulateTimeout
+     *         parameters:
+     *           timeout: 2600
+     *           retries: 2
+     *
+     * 当前服务生效的NACOS动态配置:
+     * configVersion: v3.0
+     * scope: application
+     * key: service-order-dubbo
+     * enabled: true
+     * configs:
+     *   - side: consumer
+     *     parameters:
+     *       timeout: 3200
+     */
+    @DubboReference(
+            version = "1.0.0",
+            group = "product",
+            retries = 3,
+            methods = {
+                    @Method(name = "simulateTimeout", timeout = 2400, retries = 2),// 在nacos全局配置了超时时间后会覆盖此处的配置
+                    @Method(name = "listAllProducts", timeout = 5000, retries = 1)
+            }
+    )
     private IProductDubboService productDubboService;
-
-    @DubboReference(version = "1.0.0", group = "product-v1", timeout = 3000, retries = 3)
-    private IProductDubboService productDubboV1Service;
 
     /**
      * 获取产品
