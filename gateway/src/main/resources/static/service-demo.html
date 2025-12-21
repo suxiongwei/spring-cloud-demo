@@ -1,4 +1,4 @@
-﻿﻿<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 
 <head>
@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
             rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -17,6 +17,8 @@
     <link rel='stylesheet' href='css/service-demo.css'>
     <link rel="stylesheet" href="css/result-panel.css">
     <link rel="stylesheet" href="css/utility.css">
+    <!-- 引入新主题样式 -->
+    <link rel="stylesheet" href="css/new-theme.css">
     <style>
         [v-cloak] {
             display: none !important;
@@ -28,6 +30,90 @@
 
         .control-label {
             font-size: 14px !important;
+        }
+        
+        /* 主题切换按钮样式 */
+        .theme-toggle {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card, #ffffff);
+            border: 1px solid var(--border, #e5e7eb);
+            border-radius: var(--radius-lg, 12px);
+            padding: 12px 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-sans, 'Inter', sans-serif);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--card-foreground, #374151);
+            backdrop-filter: blur(10px);
+        }
+        
+        .theme-toggle:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-xl, 0 12px 32px rgba(0, 0, 0, 0.15));
+        }
+        
+        /* 深色模式下的主题切换按钮 */
+        .dark .theme-toggle {
+            background: color-mix(in srgb, var(--card) 90%, rgba(255, 255, 255, 0.1));
+            border: 1px solid color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+            box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.2));
+        }
+        
+        .dark .theme-toggle:hover {
+            box-shadow: var(--shadow-xl, 0 12px 32px rgba(0, 0, 0, 0.3));
+        }
+        
+        /* 应用新主题变量到现有样式 */
+        :root {
+            /* 将新主题的颜色映射到现有变量 */
+            --bg-canvas: var(--background);
+            --bg-surface: var(--card);
+            --bg-surface-hover: var(--accent);
+            --border-default: var(--border);
+            --border-active: var(--primary);
+            
+            --text-primary: var(--foreground);
+            --text-secondary: var(--muted-foreground);
+            --text-inverse: var(--card-foreground);
+            
+            --accent-primary: var(--primary);
+            --accent-success: var(--chart-3);
+            --accent-warning: var(--chart-5);
+            --accent-danger: var(--destructive);
+            
+            /* 字体映射 */
+            --font-ui: var(--font-sans);
+            --font-code: var(--font-mono);
+            
+            /* 圆角映射 */
+            --radius-sm: var(--radius-sm);
+            --radius-md: var(--radius-md);
+            --radius-lg: var(--radius-lg);
+            
+            /* 阴影映射 */
+            --shadow-sm: var(--shadow-sm);
+            --shadow-md: var(--shadow-md);
+            --shadow-lg: var(--shadow-lg);
+            --shadow-xl: var(--shadow-xl);
+            
+            /* 渐变映射 */
+            --gradient-bg: linear-gradient(180deg, var(--background) 0%, var(--muted) 100%);
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, black) 100%);
+            --gradient-success: linear-gradient(135deg, var(--chart-3) 0%, color-mix(in srgb, var(--chart-3) 85%, black) 100%);
+            --gradient-warning: linear-gradient(135deg, var(--chart-5) 0%, color-mix(in srgb, var(--chart-5) 85%, black) 100%);
+            
+            /* 彩色阴影映射 */
+            --shadow-colored-primary: var(--shadow-md);
+            --shadow-colored-success: var(--shadow-md);
+            --shadow-colored-warning: var(--shadow-md);
         }
 
         /* Collapsible Code Block Styles */
@@ -50,6 +136,11 @@
             height: 60px;
             background: linear-gradient(to bottom, rgba(248, 249, 250, 0), rgba(248, 249, 250, 0.95) 40%, #f8f9fa 100%);
             pointer-events: none;
+        }
+        
+        /* 深色模式下的折叠渐变效果 */
+        .dark .code-block.collapsible.collapsed::after {
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0), rgba(15, 23, 42, 0.95) 40%, rgba(15, 23, 42, 1) 100%);
         }
 
         .collapse-btn {
@@ -75,6 +166,18 @@
             background: rgba(0, 0, 0, 0.1);
             color: var(--text-primary, #333);
         }
+        
+        /* 深色模式下的collapse-btn样式 */
+        .dark .collapse-btn {
+            background: color-mix(in srgb, var(--foreground) 10%, transparent);
+            color: var(--muted-foreground);
+            border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+        }
+        
+        .dark .collapse-btn:hover {
+            background: color-mix(in srgb, var(--foreground) 20%, transparent);
+            color: var(--foreground);
+        }
 
         .code-block.collapsible.expanded {
             padding-bottom: 40px;
@@ -85,11 +188,18 @@
 
 <body>
 <div id="app">
+    <!-- 主题切换按钮 -->
+    <div class="theme-toggle" @click="toggleTheme">
+        <span v-if="isDarkMode">🌙</span>
+        <span v-else>☀️</span>
+        <span>{{ isDarkMode ? '深色模式' : '浅色模式' }}</span>
+    </div>
+    
     <!-- Header -->
     <header class="header">
         <div class="brand">
-            <span class="brand-title">微服务</span>
-            <span class="brand-subtitle">开发者控制台</span>
+            <span class="brand-title">Cloud</span>
+            <span class="brand-subtitle">DevConsole</span>
         </div>
         <div class="status-badge">
             ENV: DEVELOPMENT
@@ -984,13 +1094,6 @@ public class DemoServiceImpl implements DemoService{}
 
                     <!-- Higress Controls -->
                     <div v-if="activeComponent === 'higress'">
-                        <div class="process-flow">
-                            <div class="flow-title">🔄 网关与鉴权流程</div>
-                            <div class="flow-diagram">1. 来自请求 → Higress 网关
-                                2. 执行路由规则 (鉴权、限流)
-                                3. 传递后端业务服务
-                                4. 返回应答给客户端</div>
-                        </div>
                         <div class="control-group">
                             <div class="control-label">网关路由</div>
                             <div class="test-description">🔹 检查网关路由规则配置，验证路由是否正常工作。包含传递模式、负载均衡等配置。</div>
@@ -1523,13 +1626,6 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
 
                     <!-- OpenTelemetry Controls -->
                     <div v-if="activeComponent === 'opentelemetry'">
-                        <div class="process-flow">
-                            <div class="flow-title">🔄 可観测性库流程</div>
-                            <div class="flow-diagram">1. 应用自轫折中 Trace/Metric/Log
-                                2. OpenTelemetry SDK 收集数据
-                                3. 传递到可観测性后端
-                                4. 可観测平台业务化展示与分析</div>
-                        </div>
                         <div class="control-group">
                             <div class="control-label">分布式互追 Trace</div>
                             <div class="test-description">🔹 生成模拟的应用链路数据，展示路迷液中的各个谢拒的执行流程、时间消耗、业务参数等。</div>
@@ -1591,8 +1687,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                         </div>
                         <div class="terminal-title">user@dev-console:~/logs</div>
                         <div style="flex:1"></div>
-                        <button class="btn btn-sm" @click="reset"
-                                style="background:transparent; border:none; color:var(--text-secondary);">
+                        <button class="btn btn-sm terminal-clear-btn" @click="reset">
                             🗑️ Clear
                         </button>
                     </div>

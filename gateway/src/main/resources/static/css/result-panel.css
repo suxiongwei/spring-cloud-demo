@@ -13,20 +13,26 @@
     transition: all 0.3s ease;
 }
 
+/* 深色模式下的result-display样式 */
+.dark .result-display {
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
 .result-display.loading {
     opacity: 0.7;
     border-color: var(--accent-primary);
-    background: rgba(99, 102, 241, 0.02);
+    background: color-mix(in srgb, var(--accent-primary) 2%, transparent);
 }
 
 .result-display.success {
     border-color: var(--accent-success);
-    background: rgba(16, 185, 129, 0.02);
+    background: color-mix(in srgb, var(--accent-success) 2%, transparent);
 }
 
 .result-display.error {
     border-color: var(--accent-danger);
-    background: rgba(239, 68, 68, 0.02);
+    background: color-mix(in srgb, var(--accent-danger) 2%, transparent);
 }
 
 .result-display.empty {
@@ -41,6 +47,11 @@
     margin-bottom: 8px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border-default);
+}
+
+/* 深色模式下的result-header样式 */
+.dark .result-header {
+    border-bottom: 1px solid var(--border);
 }
 
 .result-title {
@@ -58,17 +69,17 @@
 }
 
 .result-status.success {
-    background: rgba(16, 185, 129, 0.1);
+    background: color-mix(in srgb, var(--accent-success) 10%, transparent);
     color: var(--accent-success);
 }
 
 .result-status.error {
-    background: rgba(239, 68, 68, 0.1);
+    background: color-mix(in srgb, var(--accent-danger) 10%, transparent);
     color: var(--accent-danger);
 }
 
 .result-status.loading {
-    background: rgba(99, 102, 241, 0.1);
+    background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
     color: var(--accent-primary);
 }
 

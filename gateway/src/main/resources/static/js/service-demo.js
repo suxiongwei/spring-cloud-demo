@@ -47,6 +47,10 @@ const app = createApp({
             successRate: 0,
             avgResponseTime: 0,
             testedComponents: 0,
+            
+            // 主题切换
+            isDarkMode: localStorage.getItem('theme-mode') === 'dark' || 
+                        (!localStorage.getItem('theme-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches),
 
             // Individual result displays for each test scenario
             resultDisplays: {}
@@ -666,9 +670,31 @@ const app = createApp({
             }).catch(err => {
                 console.error('复制失败:', err)
             })
+        },
+        
+        // 主题切换功能
+        toggleTheme() {
+            this.isDarkMode = !this.isDarkMode;
+            this.applyTheme();
+        },
+        
+        // 应用主题
+        applyTheme() {
+            const htmlElement = document.documentElement;
+            
+            if (this.isDarkMode) {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme-mode', 'dark');
+            } else {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme-mode', 'light');
+            }
         }
     },
     mounted() {
+        // 初始化主题
+        this.applyTheme();
+        
         // 初始化代码高亮 - 延迟执行确保 DOM 完全渲染
         setTimeout(() => {
             this.initCodeHighlighting();
