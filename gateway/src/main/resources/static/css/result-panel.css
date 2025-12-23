@@ -153,15 +153,37 @@
     border-bottom: 1px solid var(--border-default);
 }
 
+/* 深色模式下的modal-header */
+.dark .modal-header {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent) 0%, color-mix(in srgb, var(--accent) 5%, transparent) 100%);
+    border-bottom-color: var(--border-default);
+}
+
 .modal-body {
     padding: 20px;
     max-height: calc(80vh - 80px);
     overflow-y: auto;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+/* 深色模式下的modal-body */
+.dark .modal-body {
+    background: var(--bg-surface);
+    color: var(--text-primary);
 }
 
 .modal-body .code-block {
     margin: 0;
     max-height: none;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+}
+
+/* 深色模式下的modal-body .code-block */
+.dark .modal-body .code-block {
+    background: var(--bg-canvas);
+    color: var(--text-primary);
 }
 
 /* Responsive Design */

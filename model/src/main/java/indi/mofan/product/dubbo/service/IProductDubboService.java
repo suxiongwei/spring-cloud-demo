@@ -3,6 +3,7 @@ package indi.mofan.product.dubbo.service;
 import indi.mofan.product.bean.Product;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 产品服务 - Dubbo RPC 接口
@@ -59,4 +60,27 @@ public interface IProductDubboService {
      * @return 产品信息(包含区域详情)
      */
     Product getProductRegionDetails(Long id);
+
+    /**
+     * 服务端并发控制测试
+     * 
+     * @param concurrentCount 并发数量
+     * @param sleepTime 休眠时间(ms)
+     * @return 测试结果
+     */
+    Map<String, Object> testConcurrencyControl(Long sleepTime);
+
+    /**
+     * 消费端并发控制测试
+     * 
+     * @return 测试结果
+     */
+    Map<String, Object> testActivesControl();
+
+    /**
+     * 最小并发数负载均衡测试
+     * 
+     * @return 测试结果
+     */
+    Map<String, Object> testLeastActiveLoadBalance();
 }

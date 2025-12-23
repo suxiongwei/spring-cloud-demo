@@ -1,9 +1,9 @@
-﻿<!doctype html>
+﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Spring Cloud DevConsole</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
         .control-label {
             font-size: 14px !important;
         }
-        
+
         /* 主题切换按钮样式 */
         .theme-toggle {
             position: fixed;
@@ -54,23 +54,23 @@
             color: var(--card-foreground, #374151);
             backdrop-filter: blur(10px);
         }
-        
+
         .theme-toggle:hover {
             transform: translateY(-3px) scale(1.02);
             box-shadow: var(--shadow-xl, 0 12px 32px rgba(0, 0, 0, 0.15));
         }
-        
+
         /* 深色模式下的主题切换按钮 */
         .dark .theme-toggle {
             background: color-mix(in srgb, var(--card) 90%, rgba(255, 255, 255, 0.1));
             border: 1px solid color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
             box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.2));
         }
-        
+
         .dark .theme-toggle:hover {
             box-shadow: var(--shadow-xl, 0 12px 32px rgba(0, 0, 0, 0.3));
         }
-        
+
         /* 应用新主题变量到现有样式 */
         :root {
             /* 将新主题的颜色映射到现有变量 */
@@ -79,37 +79,37 @@
             --bg-surface-hover: var(--accent);
             --border-default: var(--border);
             --border-active: var(--primary);
-            
+
             --text-primary: var(--foreground);
             --text-secondary: var(--muted-foreground);
             --text-inverse: var(--card-foreground);
-            
+
             --accent-primary: var(--primary);
             --accent-success: var(--chart-3);
             --accent-warning: var(--chart-5);
             --accent-danger: var(--destructive);
-            
+
             /* 字体映射 */
             --font-ui: var(--font-sans);
             --font-code: var(--font-mono);
-            
+
             /* 圆角映射 */
             --radius-sm: var(--radius-sm);
             --radius-md: var(--radius-md);
             --radius-lg: var(--radius-lg);
-            
+
             /* 阴影映射 */
             --shadow-sm: var(--shadow-sm);
             --shadow-md: var(--shadow-md);
             --shadow-lg: var(--shadow-lg);
             --shadow-xl: var(--shadow-xl);
-            
+
             /* 渐变映射 */
             --gradient-bg: linear-gradient(180deg, var(--background) 0%, var(--muted) 100%);
             --gradient-primary: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, black) 100%);
             --gradient-success: linear-gradient(135deg, var(--chart-3) 0%, color-mix(in srgb, var(--chart-3) 85%, black) 100%);
             --gradient-warning: linear-gradient(135deg, var(--chart-5) 0%, color-mix(in srgb, var(--chart-5) 85%, black) 100%);
-            
+
             /* 彩色阴影映射 */
             --shadow-colored-primary: var(--shadow-md);
             --shadow-colored-success: var(--shadow-md);
@@ -137,7 +137,7 @@
             background: linear-gradient(to bottom, rgba(248, 249, 250, 0), rgba(248, 249, 250, 0.95) 40%, #f8f9fa 100%);
             pointer-events: none;
         }
-        
+
         /* 深色模式下的折叠渐变效果 */
         .dark .code-block.collapsible.collapsed::after {
             background: linear-gradient(to bottom, rgba(15, 23, 42, 0), rgba(15, 23, 42, 0.95) 40%, rgba(15, 23, 42, 1) 100%);
@@ -166,14 +166,14 @@
             background: rgba(0, 0, 0, 0.1);
             color: var(--text-primary, #333);
         }
-        
+
         /* 深色模式下的collapse-btn样式 */
         .dark .collapse-btn {
             background: color-mix(in srgb, var(--foreground) 10%, transparent);
             color: var(--muted-foreground);
             border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
         }
-        
+
         .dark .collapse-btn:hover {
             background: color-mix(in srgb, var(--foreground) 20%, transparent);
             color: var(--foreground);
@@ -194,7 +194,7 @@
         <span v-else>☀️</span>
         <span>{{ isDarkMode ? '深色模式' : '浅色模式' }}</span>
     </div>
-    
+
     <!-- Header -->
     <header class="header">
         <div class="brand">
@@ -217,15 +217,20 @@
             <!-- Tab Navigation -->
             <div class="tabs-nav">
                 <button class="tab-item" @click="activePanoramaTab = 'control'"
-                        :class="{ active: activePanoramaTab === 'control' }">控制面</button>
+                        :class="{ active: activePanoramaTab === 'control' }">控制面
+                </button>
                 <button class="tab-item" @click="activePanoramaTab = 'governance'"
-                        :class="{ active: activePanoramaTab === 'governance' }">治理面</button>
+                        :class="{ active: activePanoramaTab === 'governance' }">治理面
+                </button>
                 <button class="tab-item" @click="activePanoramaTab = 'communication'"
-                        :class="{ active: activePanoramaTab === 'communication' }">通信层</button>
+                        :class="{ active: activePanoramaTab === 'communication' }">通信层
+                </button>
                 <button class="tab-item" @click="activePanoramaTab = 'gateway'"
-                        :class="{ active: activePanoramaTab === 'gateway' }">网关与调度</button>
+                        :class="{ active: activePanoramaTab === 'gateway' }">网关与调度
+                </button>
                 <button class="tab-item" @click="activePanoramaTab = 'data'"
-                        :class="{ active: activePanoramaTab === 'data' }">数据与运维</button>
+                        :class="{ active: activePanoramaTab === 'data' }">数据与运维
+                </button>
             </div>
 
             <div>
@@ -354,7 +359,8 @@
                                     <div class="card-subtitle">分布式事务</div>
                                 </div>
                             </div>
-                            <div class="card-desc">致力于提供高性能和简单易用的分布式事务服务,支持 AT、TCC、SAGA 等模式。</div>
+                            <div class="card-desc">致力于提供高性能和简单易用的分布式事务服务,支持 AT、TCC、SAGA 等模式。
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -373,7 +379,8 @@
                                     <div class="card-subtitle">云原生网关</div>
                                 </div>
                             </div>
-                            <div class="card-desc">基于 Envoy 的云原生网关,实现了流量网关、微服务网关、安全网关三合一。</div>
+                            <div class="card-desc">基于 Envoy 的云原生网关,实现了流量网关、微服务网关、安全网关三合一。
+                            </div>
                         </div>
                         <!-- SchedulerX -->
                         <div class="service-card" :class="{ active: activeComponent === 'schedulerx' }"
@@ -446,14 +453,15 @@
                         <div class="control-group">
                             <div class="control-label">流量控制 (QPS)</div>
                             <div class="test-description">🔹 向服务发送 N 个并发请求，观察 Sentinel
-                                是否正确限流。QPS限流基于滑动时间窗口算法，超过阈值的请求会被直接拒绝。</div>
+                                是否正确限流。QPS限流基于滑动时间窗口算法，超过阈值的请求会被直接拒绝。
+                            </div>
                             <div class="input-row">
                                 <input class="input" type="number" min="1" v-model.number="qpsTimes"
                                        placeholder="次数">
                                 <button class="btn btn-primary" @click="trigger('qps', qpsTimes)"><span>▶</span>
-                                    发送请求</button>
+                                    发送请求
+                                </button>
                             </div>
-
 
 
                             <div class="config-panel">
@@ -479,7 +487,8 @@
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('sentinel-qps')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('sentinel-qps')?.timestamp
                                             }}</span>
@@ -490,12 +499,15 @@
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="control-label">并发控制 (Thread)</div>
-                            <div class="test-description">🔹 通过线程隔离限制最多同时执行的线程数。当线程数达到阈值，新请求进入等待队列。</div>
+                            <div class="test-description">🔹
+                                通过线程隔离限制最多同时执行的线程数。当线程数达到阈值，新请求进入等待队列。
+                            </div>
                             <div class="input-row">
                                 <input class="input" type="number" min="1" v-model.number="threadTimes"
                                        placeholder="线程数">
@@ -516,7 +528,8 @@
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('sentinel-thread')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('sentinel-thread')?.timestamp
                                             }}</span>
@@ -540,11 +553,14 @@
                         </div>
                         <div class="control-group">
                             <div class="control-label">热点参数限流</div>
-                            <div class="test-description">🔹 对特定的参数值（如用户ID）单独限流。常用于防护热点数据被恶意访问。</div>
+                            <div class="test-description">🔹
+                                对特定的参数值（如用户ID）单独限流。常用于防护热点数据被恶意访问。
+                            </div>
                             <div class="input-row">
                                 <input class="input" v-model="hotUserId" placeholder="User ID">
                                 <button class="btn btn-primary" @click="trigger('hot', hotTimes)"><span>▶</span>
-                                    热点测试</button>
+                                    热点测试
+                                </button>
                             </div>
 
                             <!-- Result Display for Hotspot -->
@@ -559,7 +575,8 @@
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('sentinel-hot')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('sentinel-hot')?.timestamp
                                             }}</span>
@@ -591,7 +608,8 @@
                     <div v-if="activeComponent === 'nacos'">
                         <div class="control-group">
                             <div class="control-label">服务发现</div>
-                            <div class="test-description">🔹 查询当前 Nacos 注册中的所有实例，验证服务发现功能是否正常。</div>
+                            <div class="test-description">🔹 查询当前 Nacos 注册中的所有实例，验证服务发现功能是否正常。
+                            </div>
                             <div class="config-panel api-address-panel">
                                 <div class="config-item api-address-item">
                                     <span class="config-label">📍 API 地址:</span>
@@ -600,7 +618,8 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary" @click="testNacosServices()">
-                                <span>▶</span>获取服务列表</button>
+                                <span>▶</span>获取服务列表
+                            </button>
 
                             <!-- Result Display for Nacos Services -->
                             <div class="result-display" :class="getResultDisplay('nacos-services')?.status"
@@ -614,7 +633,8 @@
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('nacos-services')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('nacos-services')?.timestamp
                                             }}</span>
@@ -625,7 +645,8 @@
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                         </div>
                         <div class="control-group">
@@ -654,7 +675,8 @@
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('nacos-config')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('nacos-config')?.timestamp
                                             }}</span>
@@ -665,7 +687,8 @@
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -723,7 +746,8 @@
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('dubbo-batch')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-batch')?.timestamp
                                             }}</span>
@@ -734,7 +758,8 @@
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                         </div>
 
@@ -763,7 +788,8 @@
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('dubbo-list-all')?.message ||
                                     '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-list-all')?.timestamp
                                             }}</span>
@@ -774,7 +800,8 @@
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                         </div>
 
@@ -782,8 +809,10 @@
                         <div class="control-group">
                             <div class="control-label">超时调用</div>
                             <div class="test-description">🔹 为 RPC
-                                调用设置超时时间可以提升集群整体稳定性，避免无限等待响应结果导致的资源占用（比如大量长期无响应的请求占用线程池等）。在调用没有响应的情况下，比如 5s 之后，Dubbo
-                                框架就会自动终止调用等待过程（抛出 TimeoutException），释放此次调用占用的资源。</div>
+                                调用设置超时时间可以提升集群整体稳定性，避免无限等待响应结果导致的资源占用（比如大量长期无响应的请求占用线程池等）。在调用没有响应的情况下，比如
+                                5s 之后，Dubbo
+                                框架就会自动终止调用等待过程（抛出 TimeoutException），释放此次调用占用的资源。
+                            </div>
                             <div class="config-panel api-address-panel">
                                 <div class="config-item api-address-item">
                                     <span class="config-label">📍 API 地址:</span>
@@ -841,7 +870,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('dubbo-timeout')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-timeout')?.timestamp
                                             }}</span>
@@ -852,7 +882,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                         </div>
 
@@ -868,7 +899,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                             </div>
                             <button class="btn btn-primary" @click="testDubboException()"><span>▶</span>
-                                异常调用</button>
+                                异常调用
+                            </button>
                             <!-- Result Display -->
                             <div class="result-display" :class="getResultDisplay('dubbo-exception')?.status"
                                  v-if="getResultDisplay('dubbo-exception')"
@@ -884,7 +916,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('dubbo-exception')?.message ||
                                     '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-exception')?.timestamp
                                             }}</span>
@@ -895,14 +928,16 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                         </div>
 
                         <!-- 5. Async Call -->
                         <div class="control-group">
                             <div class="control-label">异步调用</div>
-                            <div class="test-description">🔹 使用 CompletableFuture 实现异步调用，验证非阻塞通信能力。</div>
+                            <div class="test-description">🔹 使用 CompletableFuture 实现异步调用，验证非阻塞通信能力。
+                            </div>
                             <div class="config-panel api-address-panel">
                                 <div class="config-item api-address-item">
                                     <span class="config-label">📍 API 地址:</span>
@@ -923,7 +958,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('dubbo-async')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-async')?.timestamp
                                             }}</span>
@@ -934,7 +970,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                         </div>
 
@@ -959,7 +996,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </select>
                                 <button class="btn btn-primary" @click="testDubboRegion()"
                                         style="width: auto"><span>▶</span>
-                                    区域优先调用</button>
+                                    区域优先调用
+                                </button>
                             </div>
                             <!-- Result Display -->
                             <div class="result-display" :class="getResultDisplay('dubbo-region')?.status"
@@ -973,7 +1011,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('dubbo-region')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('dubbo-region')?.timestamp
                                             }}</span>
@@ -984,7 +1023,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                             <div class="config-panel">
                                 <div class="config-item">
@@ -1003,6 +1043,153 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                             </div>
                         </div>
+
+                        <!-- 7. Concurrency Control - Rate Limiting -->
+                        <div class="control-group">
+                            <div class="control-label">限流降级 - 并发控制</div>
+                            <div class="test-description">🔹
+                                Dubbo框架内置的并发控制策略，通过限制从同一客户端到同一服务的并发请求数，防止恶意请求使服务器过载，确保服务的稳定性，并防止使用过多资源。
+                            </div>
+
+                            <!-- Server-side Concurrency Control -->
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/concurrency-test-backend?concurrentCount=20&sleepTime=1000</span>
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <input class="input" v-model.number="dubboConcurrentCount" type="number"
+                                       placeholder="并发数量" style="width:120px">
+                                <input class="input" v-model.number="dubboSleepTime" type="number"
+                                       placeholder="延迟(ms)" style="width:120px">
+                                <button class="btn btn-primary" @click="testDubboConcurrency()"><span>▶</span> 并发测试
+                                </button>
+                            </div>
+
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">服务端并发控制 (executes):</span>
+                                    <span class="config-value">
+                                        限制服务器端并发执行数(服务粒度)，控制某些服务的最大并发请求数，确保其他服务的资源可用性。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">配置示例:</span>
+                                    <span class="config-value">
+                                        <div class="code-block no-copy collapsible">
+                                            <pre><code class="language-java">// 注解方式：限制服务端并发执行数不能超过 10 个
+@DubboService(executes=10)
+private DemoServiceImpl implements DemoService{}
+
+// 方法级别限制
+@DubboService(methods = {@Method(name="sayHello", executes=10)})
+private DemoServiceImpl implements DemoService{}
+
+// XML方式：
+&lt;dubbo:service interface="com.foo.BarService" executes="10" /&gt;</code></pre>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-concurrency')?.status"
+                                 v-if="getResultDisplay('dubbo-concurrency')"
+                                 @click="showResultDetail('dubbo-concurrency')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">并发测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-concurrency')?.status">
+                                            {{ getResultDisplay('dubbo-concurrency')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-concurrency')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-concurrency')?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-concurrency')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-concurrency')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('dubbo-concurrency')?.code">HTTP {{
+                                            getResultDisplay('dubbo-concurrency')?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+
+                            <!-- Load Balance Strategy -->
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/leastactive-test</span>
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <button class="btn btn-primary" @click="testDubboLeastActive()"><span>▶</span>并发测试
+                                </button>
+                            </div>
+
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">最小并发数负载均衡:</span>
+                                    <span class="config-value">
+                                        配置服务的客户端的 loadbalance 属性为 leastactive，此 Loadbalance 会调用并发数最小的 Provider（Consumer端并发数）。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">配置示例:</span>
+                                    <span class="config-value">
+                                        <div class="code-block no-copy collapsible">
+                                            <pre><code class="language-java">// 注解方式
+@DubboReference(loadbalance = "leastactive")
+private DemoService demoService;
+
+// XML方式：
+&lt;dubbo:reference interface="com.foo.BarService" loadbalance="leastactive" /&gt;</code></pre>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-leastactive')?.status"
+                                 v-if="getResultDisplay('dubbo-leastactive')"
+                                 @click="showResultDetail('dubbo-leastactive')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">最小并发数负载均衡测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-leastactive')?.status">
+                                            {{ getResultDisplay('dubbo-leastactive')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-leastactive')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-leastactive')?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-leastactive')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-leastactive')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('dubbo-leastactive')?.code">HTTP {{
+                                            getResultDisplay('dubbo-leastactive')?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Seata Controls -->
@@ -1011,12 +1198,14 @@ public class DemoServiceImpl implements DemoService{}
                             <div class="flow-title">🔄 Seata TCC 分布式事务1务流程</div>
                             <div class="flow-diagram">1. Try: 业务2服务预保留资源（锁元 锁账户）
                                 2. Confirm: 全部服务预保成功后，事务提交，真正执行业务
-                                3. Cancel: 法业务稁发失败，恢复所有法字级字段不物理量</div>
+                                3. Cancel: 法业务稁发失败，恢复所有法字级字段不物理量
+                            </div>
                         </div>
                         <div class="control-group">
                             <div class="control-label">TCC 事务模式</div>
                             <div class="test-description">🔹 TCC 保证强一致性，但需业业服务实现 Try/Confirm/Cancel
-                                三个接口。适合对一致性要求高的业务场景。</div>
+                                三个接口。适合对一致性要求高的业务场景。
+                            </div>
                             <div class="input-row">
                                 <input class="input" v-model="tccCommodityCode" placeholder="商品编码">
                                 <input class="input" type="number" v-model.number="tccCount" placeholder="数量"
@@ -1024,11 +1213,15 @@ public class DemoServiceImpl implements DemoService{}
                             </div>
                             <div class="input-row">
                                 <button class="btn btn-primary flex-1"
-                                        @click="callWithResultDisplay(endpoint('tcc-ok'),'tcc-ok', 'seata-tcc-ok')"><span>▶</span>
-                                    提交事务</button>
+                                        @click="callWithResultDisplay(endpoint('tcc-ok'),'tcc-ok', 'seata-tcc-ok')">
+                                    <span>▶</span>
+                                    提交事务
+                                </button>
                                 <button class="btn btn-danger flex-1"
-                                        @click="callWithResultDisplay(endpoint('tcc-fail'),'tcc-fail', 'seata-tcc-fail')"><span>▶</span>
-                                    回滚事务</button>
+                                        @click="callWithResultDisplay(endpoint('tcc-fail'),'tcc-fail', 'seata-tcc-fail')">
+                                    <span>▶</span>
+                                    回滚事务
+                                </button>
                             </div>
 
                             <!-- Result Display for TCC Test -->
@@ -1043,7 +1236,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('seata-tcc-ok')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('seata-tcc-ok')?.timestamp
                                             }}</span>
@@ -1065,7 +1259,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('seata-tcc-fail')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('seata-tcc-fail')?.timestamp
                                             }}</span>
@@ -1096,9 +1291,12 @@ public class DemoServiceImpl implements DemoService{}
                     <div v-if="activeComponent === 'higress'">
                         <div class="control-group">
                             <div class="control-label">网关路由</div>
-                            <div class="test-description">🔹 检查网关路由规则配置，验证路由是否正常工作。包含传递模式、负载均衡等配置。</div>
+                            <div class="test-description">🔹
+                                检查网关路由规则配置，验证路由是否正常工作。包含传递模式、负载均衡等配置。
+                            </div>
                             <button class="btn btn-primary mb-2" @click="testGatewayRouting()"><span>▶</span>
-                                检查路由规则</button>
+                                检查路由规则
+                            </button>
 
                             <!-- Result Display for Gateway Routing Test -->
                             <div class="result-display" :class="getResultDisplay('higress-routing')?.status"
@@ -1114,7 +1312,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('higress-routing')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('higress-routing')?.timestamp
                                             }}</span>
@@ -1137,14 +1336,20 @@ public class DemoServiceImpl implements DemoService{}
                         </div>
                         <div class="control-group">
                             <div class="control-label">安全鉴权</div>
-                            <div class="test-description">🔹 测试鉴权一行，模拟认可的请求与不认可的请求。验证模型是否正常工作。</div>
+                            <div class="test-description">🔹
+                                测试鉴权一行，模拟认可的请求与不认可的请求。验证模型是否正常工作。
+                            </div>
                             <div class="input-row">
                                 <button class="btn btn-primary flex-1"
-                                        @click="callWithResultDisplay(endpoint('gateway-auth-pass'),'gateway-auth', 'higress-auth-pass')"><span>▶</span>
-                                    鉴权通过</button>
+                                        @click="callWithResultDisplay(endpoint('gateway-auth-pass'),'gateway-auth', 'higress-auth-pass')">
+                                    <span>▶</span>
+                                    鉴权通过
+                                </button>
                                 <button class="btn btn-danger flex-1"
-                                        @click="callWithResultDisplay(endpoint('gateway-auth-fail'),'gateway-auth', 'higress-auth-fail')"><span>▶</span>
-                                    鉴权拒绝</button>
+                                        @click="callWithResultDisplay(endpoint('gateway-auth-fail'),'gateway-auth', 'higress-auth-fail')">
+                                    <span>▶</span>
+                                    鉴权拒绝
+                                </button>
                             </div>
 
                             <!-- Result Display for Auth Tests -->
@@ -1161,7 +1366,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('higress-auth-pass')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{
                                             getResultDisplay('higress-auth-pass')?.timestamp }}</span>
@@ -1185,7 +1391,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('higress-auth-fail')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{
                                             getResultDisplay('higress-auth-fail')?.timestamp }}</span>
@@ -1226,11 +1433,14 @@ public class DemoServiceImpl implements DemoService{}
                                 <input class="input" type="number" v-model.number="feignProductId"
                                        placeholder="商品ID">
                                 <button class="btn btn-primary" @click="testFeignEnhanced('normal')"><span>▶</span>
-                                    正常调用</button>
+                                    正常调用
+                                </button>
                                 <button class="btn btn-danger" @click="testFeignEnhanced('error')"><span>▶</span>
-                                    模拟失败</button>
+                                    模拟失败
+                                </button>
                                 <button class="btn btn-warning" @click="testFeignEnhanced('degrade')"><span>▶</span>
-                                    模拟超时降级</button>
+                                    模拟超时降级
+                                </button>
                             </div>
 
                             <!-- Result Display for OpenFeign Enhanced -->
@@ -1245,7 +1455,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('feign-enhanced')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('feign-enhanced')?.timestamp
                                             }}</span>
@@ -1256,7 +1467,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
 
                             <div class="config-panel">
@@ -1292,7 +1504,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                             </div>
                             <button class="btn btn-primary" @click="testLoadBalance()"><span>▶</span>
-                                测试负载均衡策略</button>
+                                测试负载均衡策略
+                            </button>
 
                             <!-- Result Display for Load Balance -->
                             <div class="result-display" :class="getResultDisplay('load-balance')?.status"
@@ -1306,7 +1519,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('load-balance')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('load-balance')?.timestamp
                                             }}</span>
@@ -1317,7 +1531,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                             <div class="config-panel">
                                 <div class="config-item">
@@ -1345,7 +1560,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                             </div>
                             <button class="btn btn-primary" @click="testTimeoutRetry()"><span>▶</span>
-                                测试超时机制</button>
+                                测试超时机制
+                            </button>
 
                             <!-- Result Display for Timeout Retry -->
                             <div class="result-display" :class="getResultDisplay('timeout-retry')?.status"
@@ -1359,7 +1575,8 @@ public class DemoServiceImpl implements DemoService{}
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('timeout-retry')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('timeout-retry')?.timestamp
                                             }}</span>
@@ -1370,7 +1587,8 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                             <div class="config-panel">
                                 <div class="config-item">
@@ -1429,7 +1647,8 @@ public class ProductServiceConfig {
                                 </div>
                             </div>
                             <button class="btn btn-primary" @click="testFeignInterceptor()"><span>▶</span>
-                                测试拦截器</button>
+                                测试拦截器
+                            </button>
 
                             <!-- Result Display for Feign Interceptor -->
                             <div class="result-display" :class="getResultDisplay('feign-interceptor')?.status"
@@ -1445,7 +1664,8 @@ public class ProductServiceConfig {
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('feign-interceptor')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{
                                             getResultDisplay('feign-interceptor')?.timestamp }}</span>
@@ -1456,7 +1676,8 @@ public class ProductServiceConfig {
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                             <div class="config-panel">
                                 <div class="config-item">
@@ -1516,7 +1737,8 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 </div>
                             </div>
                             <button class="btn btn-primary" @click="testConfigRefresh()"><span>▶</span>
-                                查看当前配置</button>
+                                查看当前配置
+                            </button>
 
                             <!-- Result Display for Config Refresh -->
                             <div class="result-display" :class="getResultDisplay('config-refresh')?.status"
@@ -1530,7 +1752,8 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('config-refresh')?.message ||
-                                    '无返回信息' }}</div>
+                                    '无返回信息' }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('config-refresh')?.timestamp
                                             }}</span>
@@ -1541,7 +1764,8 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                             <div class="config-panel">
                                 <div class="config-item">
@@ -1576,7 +1800,8 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 </div>
                             </div>
                             <button class="btn btn-primary" @click="testHealthCheck()"><span>▶</span>
-                                检查服务健康</button>
+                                检查服务健康
+                            </button>
 
                             <!-- Result Display for Health Check -->
                             <div class="result-display" :class="getResultDisplay('health-check')?.status"
@@ -1590,7 +1815,8 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                         </span>
                                 </div>
                                 <div class="result-content">{{ getResultDisplay('health-check')?.message || '无返回信息'
-                                    }}</div>
+                                    }}
+                                </div>
                                 <div class="result-meta">
                                         <span class="result-timestamp">{{ getResultDisplay('health-check')?.timestamp
                                             }}</span>
@@ -1601,7 +1827,8 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                             <div class="config-panel">
                                 <div class="config-item">
@@ -1628,8 +1855,11 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                     <div v-if="activeComponent === 'opentelemetry'">
                         <div class="control-group">
                             <div class="control-label">分布式互追 Trace</div>
-                            <div class="test-description">🔹 生成模拟的应用链路数据，展示路迷液中的各个谢拒的执行流程、时间消耗、业务参数等。</div>
-                            <button class="btn btn-primary" @click="testTracing()"><span>▶</span> 生成模拟链路数据</button>
+                            <div class="test-description">🔹
+                                生成模拟的应用链路数据，展示路迷液中的各个谢拒的执行流程、时间消耗、业务参数等。
+                            </div>
+                            <button class="btn btn-primary" @click="testTracing()"><span>▶</span> 生成模拟链路数据
+                            </button>
 
                             <!-- Result Display for Tracing -->
                             <div class="result-display" :class="getResultDisplay('tracing')?.status"
@@ -1654,7 +1884,8 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
-                                    点击查看详情</div>
+                                    点击查看详情
+                                </div>
                             </div>
                             <div class="config-panel">
                                 <div class="config-item">
@@ -1791,7 +2022,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
         </div>
     </div>
 </div>
-<script type="module" src="js/service-demo.js"></script>
+<script type="module" src="js/service-demo.js?v=20231222"></script>
 </body>
 
 </html>

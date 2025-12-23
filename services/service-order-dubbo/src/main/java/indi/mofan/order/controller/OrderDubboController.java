@@ -207,4 +207,55 @@ public class OrderDubboController {
             return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 区域优先调用失败: " + e.getMessage());
         }
     }
+
+    /**
+     * Dubbo 并发控制测试（同时测试消费端actives和服务端executes限流）
+     */
+    @GetMapping("/concurrency-test-backend")
+    public ApiResponse<Map<String, Object>> dubboConcurrencyTestBackend(
+            @RequestParam(value = "concurrentCount", defaultValue = "20") Integer concurrentCount,
+            @RequestParam(value = "sleepTime", defaultValue = "1000") Long sleepTime) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            // 使用后端多线程并发调用测试
+//            Map<String, Object> result = productDubboClient.testConcurrencyControlWithThreads(concurrentCount, sleepTime);
+            Map<String, Object> result = productDubboClient.testActivesControl();
+
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 并发控制测试（消费端actives+服务端executes）");
+            result.put("concurrentCount", concurrentCount);
+            result.put("sleepTime", sleepTime);
+
+            return ApiResponse.success("Dubbo 并发控制测试完成（消费端actives+服务端executes）", result);
+        } catch (Exception e) {
+            log.error("Dubbo 并发控制测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 并发控制测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 最小并发数负载均衡测试
+     */
+    @GetMapping("/leastactive-test")
+    public ApiResponse<Map<String, Object>> dubboLeastActiveTest() {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            // 最小并发数负载均衡测试
+            Map<String, Object> result = productDubboClient.testLeastActiveLoadBalance();
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 最小并发数负载均衡测试");
+
+            return ApiResponse.success("Dubbo 最小并发数负载均衡测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 最小并发数负载均衡测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 最小并发数负载均衡测试失败: " + e.getMessage());
+        }
+    }
 }

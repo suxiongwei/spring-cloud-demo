@@ -4,11 +4,17 @@ import indi.mofan.product.bean.Product;
 import indi.mofan.product.dubbo.service.IProductDubboService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.apache.dubbo.config.annotation.Method;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -18,7 +24,19 @@ import java.util.stream.Collectors;
  * @date 2025/3/23
  */
 @Slf4j
-@DubboService(version = "1.0.0", group = "product", retries = 2)
+@DubboService(
+    version = "1.0.0", 
+    group = "product", 
+    retries = 2,
+    // 服务端并发控制：限制整个服务的最大并发执行数为10
+    executes = 5,
+    methods = {
+        // 方法级别的并发控制：限制testConcurrencyControl方法的最大并发执行数为3
+        @Method(name = "testConcurrencyControl", executes = 10),
+        // 方法级别的并发控制：限制testActivesControl方法的最大并发执行数为8
+        @Method(name = "testActivesControl", executes = 8)
+    }
+)
 public class ProductDubboServiceImpl implements IProductDubboService {
 
     /**
@@ -30,6 +48,15 @@ public class ProductDubboServiceImpl implements IProductDubboService {
             new Product(3L, new BigDecimal("113210"), "产品名2", 12),
             new Product(4L, new BigDecimal("22"), "产品名3", 13),
             new Product(5L, new BigDecimal("323"), "产品名4", 14));
+
+    // 用于跟踪当前并发请求数
+    private final AtomicInteger currentConcurrency = new AtomicInteger(0);
+    // 用于记录请求开始时间
+    private final Map<String, Long> requestStartTimes = new ConcurrentHashMap<>();
+    // 用于跟踪每个服务实例的活跃请求数
+    private final AtomicInteger activeRequests = new AtomicInteger(0);
+    // 线程池用于并发测试
+    private final ExecutorService executorService = Executors.newFixedThreadPool(20);
 
     @Override
     public Product getProductById(Long id) {
@@ -89,5 +116,143 @@ public class ProductDubboServiceImpl implements IProductDubboService {
             return p;
         }
         return null;
+    }
+
+    @Override
+    public Map<String, Object> testConcurrencyControl(Long sleepTime) {
+        log.info("Dubbo Service: 开始服务端并发控制测试, 休眠时间: {}ms", sleepTime);
+        
+        Map<String, Object> result = new HashMap<>();
+        List<String> messages = new ArrayList<>();
+        List<Long> executionTimes = new ArrayList<>();
+        
+        try {
+            // 记录当前并发数
+            int current = currentConcurrency.incrementAndGet();
+            log.info("Dubbo Service: 当前并发数: {}, 请求开始时间: {}", current, System.currentTimeMillis());
+            messages.add(String.format("当前并发数: %d", current));
+            
+            // 记录请求开始时间
+            String requestId = UUID.randomUUID().toString();
+            requestStartTimes.put(requestId, System.currentTimeMillis());
+            
+            // 模拟耗时操作
+            Thread.sleep(sleepTime);
+            
+            // 记录执行时间
+            long executionTime = System.currentTimeMillis() - requestStartTimes.get(requestId);
+            executionTimes.add(executionTime);
+            requestStartTimes.remove(requestId);
+            
+            // 减少当前并发数
+            currentConcurrency.decrementAndGet();
+            log.info("Dubbo Service: 请求完成，当前并发数: {}, 请求结束时间: {}", currentConcurrency.get(), System.currentTimeMillis());
+            
+            result.put("success", true);
+            result.put("message", "服务端并发控制测试成功");
+            result.put("currentConcurrency", current);
+            result.put("executionTime", executionTime + "ms");
+            result.put("sleepTime", sleepTime + "ms");
+            
+        } catch (Exception e) {
+            currentConcurrency.decrementAndGet();
+            log.error("服务端并发控制测试异常", e);
+            
+            result.put("success", false);
+            result.put("message", "服务端并发控制测试异常: " + e.getMessage());
+            result.put("error", e.getClass().getName());
+        }
+        
+        result.put("messages", messages);
+        result.put("executionTimes", executionTimes);
+        
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> testActivesControl() {
+        Map<String, Object> result = new HashMap<>();
+        List<String> messages = new ArrayList<>();
+        List<Long> executionTimes = new ArrayList<>();
+        AtomicInteger successCount = new AtomicInteger(0);
+        AtomicInteger failCount = new AtomicInteger(0);
+        
+        try {
+            // 记录当前活跃请求数
+            int current = activeRequests.incrementAndGet();
+            messages.add(String.format("当前活跃请求数: %d", current));
+            
+            // 模拟处理时间
+            long processingTime = 500 + new Random().nextInt(1000); // 500-1500ms随机处理时间
+            Thread.sleep(processingTime);
+            
+            // 记录执行时间
+            executionTimes.add(processingTime);
+            
+            // 减少当前活跃请求数
+            activeRequests.decrementAndGet();
+            
+            successCount.incrementAndGet();
+            
+            result.put("success", true);
+            result.put("message", "消费端并发控制测试成功");
+            result.put("activeRequests", current);
+            result.put("processingTime", processingTime + "ms");
+
+        } catch (Exception e) {
+            activeRequests.decrementAndGet();
+            failCount.incrementAndGet();
+            log.error("消费端并发控制测试异常", e);
+            
+            result.put("success", false);
+            result.put("message", "消费端并发控制测试异常: " + e.getMessage());
+            result.put("error", e.getClass().getName());
+        }
+        
+        result.put("messages", messages);
+        result.put("executionTimes", executionTimes);
+        result.put("successCount", successCount.get());
+        result.put("failCount", failCount.get());
+        
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> testLeastActiveLoadBalance() {
+        log.info("Dubbo Service: 开始最小并发数负载均衡测试");
+        
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            // 记录当前活跃请求数
+            int current = activeRequests.incrementAndGet();
+            
+            // 模拟处理时间
+            long processingTime = 300 + new Random().nextInt(700); // 300-1000ms随机处理时间
+            Thread.sleep(processingTime);
+            
+            // 减少当前活跃请求数
+            activeRequests.decrementAndGet();
+            
+            // 获取当前服务实例信息
+            String serverInfo = String.format("Server[%s][Region:%s][Active:%d]", 
+                System.getProperty("server.port", "8080"), region, current);
+            
+            result.put("success", true);
+            result.put("message", "最小并发数负载均衡测试成功");
+            result.put("serverInfo", serverInfo);
+            result.put("processingTime", processingTime + "ms");
+            result.put("activeRequests", current);
+            
+        } catch (Exception e) {
+            activeRequests.decrementAndGet();
+            log.error("最小并发数负载均衡测试异常", e);
+            
+            result.put("success", false);
+            result.put("message", "最小并发数负载均衡测试异常: " + e.getMessage());
+            result.put("error", e.getClass().getName());
+        }
+        
+        return result;
     }
 }

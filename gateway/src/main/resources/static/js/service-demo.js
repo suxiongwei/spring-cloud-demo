@@ -37,6 +37,10 @@ const app = createApp({
             feignProductId: 1,
             dubboProductId: 1,
             dubboClientRegion: 'hangzhou',
+            dubboConcurrentCount: 10,
+            dubboSleepTime: 1000,
+            dubboActiveCount: 5,
+            dubboRequestCount: 20,
             compareTimes: 5,
 
             // System
@@ -84,6 +88,9 @@ const app = createApp({
                 'dubbo-exception': `/api/order/dubbo/call-exception?productId=${this.dubboProductId}`,
                 'dubbo-async': `/api/order/dubbo/call-async?productId=${this.dubboProductId}`,
                 'dubbo-region': `/api/order/dubbo/call-region?productId=${this.dubboProductId}&clientRegion=${this.dubboClientRegion}`,
+                'dubbo-concurrency': `/api/order/dubbo/concurrency-test-backend?concurrentCount=${this.dubboConcurrentCount}&sleepTime=${this.dubboSleepTime}`,
+                'dubbo-actives': `/api/order/dubbo/actives-test?activeCount=${this.dubboActiveCount}&requestCount=${this.dubboRequestCount}`,
+                'dubbo-leastactive': `/api/order/dubbo/leastactive-test`,
                 'compare-feign': `/api/order/feign/product/1`,
                 'compare-dubbo': `/api/order/dubbo/call-sync?productId=1`,
                 'nacos-services': '/api/order/demo/nacos/services',
@@ -248,6 +255,156 @@ const app = createApp({
         async testDubboException() { await this.callWithResultDisplay(this.endpoint('dubbo-exception'), 'dubbo-exception', 'dubbo-exception') },
         async testDubboAsync() { await this.callWithResultDisplay(this.endpoint('dubbo-async'), 'dubbo-async', 'dubbo-async') },
         async testDubboRegion() { await this.callWithResultDisplay(this.endpoint('dubbo-region'), 'dubbo-region', 'dubbo-region') },
+        async testDubboConcurrency() { 
+            // Update endpoint with current values
+            const url = `/api/order/dubbo/concurrency-test-backend?concurrentCount=${this.dubboConcurrentCount}&sleepTime=${this.dubboSleepTime}`;
+            
+            // 设置加载状态
+            this.setResultDisplay('dubbo-concurrency', {
+                status: 'loading',
+                message: `正在通过后端多线程发送 ${this.dubboConcurrentCount} 个并发请求...`,
+                timestamp: this.formatTime(new Date())
+            });
+            
+            const startTime = performance.now();
+            
+            try {
+                // 发送单个请求到后端，由后端实现多线程并发
+                const response = await axios.get(url);
+                const endTime = performance.now();
+                
+                // 解析后端返回的并发测试结果
+                const result = response.data.data;
+                
+                this.setResultDisplay('dubbo-concurrency', {
+                    status: 'success',
+                    message: `后端多线程并发测试完成: 成功${result.successCount}个, 失败${result.failCount}个, 限流${result.limitedCount}个`,
+                    timestamp: this.formatTime(new Date()),
+                    responseTime: Math.round(endTime - startTime),
+                    code: response.status,
+                    data: result
+                });
+                
+                // 添加到历史记录
+                const item = {
+                    id: Date.now() + Math.random(),
+                    time: this.formatTime(new Date()),
+                    type: 'Dubbo服务端并发控制',
+                    status: result.failCount === 0 ? '成功' : '部分成功',
+                    code: response.status,
+                    msg: `并发数:${this.dubboConcurrentCount}, 成功:${result.successCount}, 失败:${result.failCount}, 限流:${result.limitedCount}`,
+                    data: result,
+                    rt: Math.round(endTime - startTime)
+                };
+                
+                this.history.unshift(item);
+                if (this.history.length > 100) this.history.pop();
+                
+            } catch (error) {
+                console.error('Dubbo 并发测试失败:', error);
+                const endTime = performance.now();
+                
+                this.setResultDisplay('dubbo-concurrency', {
+                    status: 'error',
+                    message: `后端多线程并发测试失败: ${error.response?.data?.message || error.message}`,
+                    timestamp: this.formatTime(new Date()),
+                    responseTime: Math.round(endTime - startTime),
+                    code: error.response?.status || 500
+                });
+                
+                // 添加到历史记录
+                const item = {
+                    id: Date.now() + Math.random(),
+                    time: this.formatTime(new Date()),
+                    type: 'Dubbo服务端并发控制',
+                    status: '失败',
+                    code: error.response?.status || 500,
+                    msg: error.response?.data?.message || error.message,
+                    rt: Math.round(endTime - startTime)
+                };
+                
+                this.history.unshift(item);
+                if (this.history.length > 100) this.history.pop();
+            }
+        },
+        async testDubboActives() { 
+            // Update endpoint with current values
+            const url = `/api/order/dubbo/actives-test?activeCount=${this.dubboActiveCount}&requestCount=${this.dubboRequestCount}`;
+            
+            // 设置加载状态
+            this.setResultDisplay('dubbo-actives', {
+                status: 'loading',
+                message: `正在发送 ${this.dubboRequestCount} 个并发请求(最大并发数: ${this.dubboActiveCount})...`,
+                timestamp: this.formatTime(new Date())
+            });
+            
+            // 创建并发请求数组
+            const tasks = [];
+            const startTime = performance.now();
+            
+            // 同时发起多个并发请求
+            for (let i = 0; i < this.dubboRequestCount; i++) {
+                tasks.push(axios.get(url));
+            }
+            
+            try {
+                // 等待所有请求完成
+                const responses = await Promise.all(tasks);
+                const endTime = performance.now();
+                const totalTime = endTime - startTime;
+                
+                // 统计成功和失败的请求
+                const successCount = responses.filter(res => res.status === 200).length;
+                const failCount = this.dubboRequestCount - successCount;
+                
+                // 分析响应数据，检查是否有并发限制
+                let hasRateLimiting = false;
+                let avgResponseTime = 0;
+                
+                responses.forEach(res => {
+                    if (res.data && res.data.message) {
+                        // 检查响应中是否包含并发限制相关信息
+                        if (res.data.message.includes('并发') || res.data.message.includes('限流') || res.data.message.includes('拒绝')) {
+                            hasRateLimiting = true;
+                        }
+                    }
+                });
+                
+                // 计算平均响应时间
+                if (responses.length > 0) {
+                    const responseTimes = responses.map(res => res.data && res.data.duration ? 
+                        parseInt(res.data.duration) : 0);
+                    avgResponseTime = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+                }
+                
+                // 设置结果
+                this.setResultDisplay('dubbo-actives', {
+                    status: 'success',
+                    message: `消费端并发控制测试完成: 成功 ${successCount}/${this.dubboRequestCount} 个请求，总耗时 ${totalTime.toFixed(2)}ms，平均响应时间 ${avgResponseTime.toFixed(2)}ms`,
+                    data: {
+                        totalRequests: this.dubboRequestCount,
+                        maxConcurrent: this.dubboActiveCount,
+                        successCount: successCount,
+                        failCount: failCount,
+                        totalTime: totalTime.toFixed(2),
+                        avgResponseTime: avgResponseTime.toFixed(2),
+                        hasRateLimiting: hasRateLimiting,
+                        responses: responses.map(res => res.data)
+                    },
+                    timestamp: this.formatTime(new Date())
+                });
+            } catch (error) {
+                // 处理错误
+                this.setResultDisplay('dubbo-actives', {
+                    status: 'error',
+                    message: `消费端并发控制测试失败: ${error.message}`,
+                    timestamp: this.formatTime(new Date())
+                });
+            }
+        },
+        async testDubboLeastActive() { 
+            await this.callWithResultDisplay(this.endpoint('dubbo-leastactive'), 'dubbo-leastactive', 'dubbo-leastactive') 
+        },
         async testFeign() {
             await this.callWithResultDisplay(this.endpoint('feign'), 'feign', 'sca-feign')
         },
@@ -618,7 +775,7 @@ const app = createApp({
             const tests = {
                 sentinel: ['testQps', 'testThread', 'testHotspot', 'testDegrade'],
                 nacos: ['testNacosServices', 'testNacosConfig'],
-                dubbo: ['testDubboSync', 'testDubboBatch', 'testDubboListAll'],
+                dubbo: ['testDubboSync', 'testDubboBatch', 'testDubboListAll', 'testDubboTimeout', 'testDubboException', 'testDubboAsync', 'testDubboRegion', 'testDubboConcurrency', 'testDubboActives', 'testDubboLeastActive'],
                 seata: ['testTccOk', 'testTccFail'],
                 sca: ['testFeignVsDubbo', 'testLoadBalance', 'testAsync'],
                 higress: ['testGatewayRouting'],

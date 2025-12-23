@@ -165,7 +165,7 @@ body {
     padding: 32px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 5px;
 }
 
 /* 深色模式下的container样式 */
@@ -1061,6 +1061,12 @@ section::after {
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
 }
 
+/* 深色模式下的modal-header */
+.dark .modal-header {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent) 0%, color-mix(in srgb, var(--accent) 5%, transparent) 100%);
+    border-bottom-color: var(--border-default);
+}
+
 .modal-body {
     padding: 0;
     overflow: hidden;
@@ -1080,6 +1086,12 @@ section::after {
     border: 1px solid var(--border-default);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     line-height: 1.6;
+}
+
+/* 深色模式下的code-block */
+.dark .code-block {
+    background: var(--bg-canvas);
+    color: var(--text-primary);
 }
 
 .code-block code {
@@ -1639,7 +1651,7 @@ section::after {
 
 /* Reduce section spacing */
 section {
-    margin-bottom: 24px;
+    margin-bottom: 0px;
 }
 
 /* 深色模式下的section样式 */
@@ -2074,6 +2086,12 @@ section {
     border-bottom: 1px solid #e9ecef;
 }
 
+/* 深色模式下的code-block with-header */
+.dark .code-block.with-header::before {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--muted) 80%, var(--background)) 0%, color-mix(in srgb, var(--muted) 60%, var(--background)) 100%);
+    border-bottom-color: var(--border);
+}
+
 .code-block.with-header pre {
     padding-top: 12px;
 }
@@ -2093,6 +2111,12 @@ section {
     z-index: 1;
 }
 
+/* 深色模式下的language-indicator */
+.dark .code-block .language-indicator {
+    color: color-mix(in srgb, var(--foreground) 70%, transparent);
+    background: color-mix(in srgb, var(--muted) 80%, transparent);
+}
+
 /* Copy button for code blocks */
 .code-block .copy-btn {
     position: absolute;
@@ -2110,6 +2134,13 @@ section {
     z-index: 2;
 }
 
+/* 深色模式下的copy-btn */
+.dark .code-block .copy-btn {
+    background: color-mix(in srgb, var(--muted) 90%, transparent);
+    border-color: var(--border);
+    color: var(--foreground);
+}
+
 .code-block:hover .copy-btn {
     opacity: 1;
 }
@@ -2120,10 +2151,23 @@ section {
     color: #111827;
 }
 
+/* 深色模式下的copy-btn hover */
+.dark .code-block .copy-btn:hover {
+    background: color-mix(in srgb, var(--muted) 70%, transparent);
+    border-color: color-mix(in srgb, var(--border) 80%, transparent);
+}
+
 .code-block .copy-btn.copied {
     background: #10b981;
     border-color: #10b981;
-    color: #ffffff;
+    color: white;
+}
+
+/* 深色模式下的copy-btn.copied */
+.dark .code-block .copy-btn.copied {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--background);
 }
 
 /* Scrollbar styling for code blocks */
@@ -2143,6 +2187,19 @@ section {
 
 .code-block pre::-webkit-scrollbar-thumb:hover {
     background: #a8b0b5;
+}
+
+/* 深色模式下的滚动条 */
+.dark .code-block pre::-webkit-scrollbar-track {
+    background: color-mix(in srgb, var(--muted) 50%, transparent);
+}
+
+.dark .code-block pre::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.dark .code-block pre::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--border) 60%, transparent);
 }
 
 /* Responsive code blocks */
