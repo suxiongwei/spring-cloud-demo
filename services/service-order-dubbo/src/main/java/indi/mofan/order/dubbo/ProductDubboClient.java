@@ -108,18 +108,16 @@ public class ProductDubboClient {
     @DubboReference(
             version = "1.0.0",
             group = "product",
-            retries = 0,  // 禁用重试，避免重试干扰并发控制测试
-            // 消费端并发控制：限制每个消费端的并发调用数为3
+            protocol = "dubbo",
+            retries = 0,
             actives = 3,
-            // 添加更多配置确保并发控制生效
             check = false,
-            lazy = true,
+            lazy = false,
+            timeout = 5000,
             methods = {
-                    @Method(name = "simulateTimeout", timeout = 2400, retries = 2),// 在nacos全局配置了超时时间后会覆盖此处的配置
+                    @Method(name = "simulateTimeout", timeout = 2400, retries = 2),
                     @Method(name = "listAllProducts", timeout = 5000, retries = 1),
-                    // 方法级别的消费端并发控制：限制testConcurrencyControl方法的并发调用数为3
-                    @Method(name = "testConcurrencyControl", actives = 3, retries = 0),
-                    // 最小并发数负载均衡配置
+                    @Method(name = "testConcurrencyControl", actives = 3, retries = 0, timeout = 5000),
                     @Method(name = "testLeastActiveLoadBalance", loadbalance = "leastactive")
             }
     )
@@ -248,43 +246,46 @@ public class ProductDubboClient {
      */
     public Map<String, Object> testConcurrencyControlWithThreads(Integer concurrentCount, Long sleepTime) {
         log.info("开始Dubbo并发控制测试（消费端actives+服务端executes），并发数: {}, 休眠时间: {}ms", concurrentCount, sleepTime);
+        log.info("消费端actives配置: 3，服务端executes配置: 需要在服务端配置");
+        log.info("Dubbo引用: {}", productDubboService.getClass().getName());
+        log.info("Dubbo引用Hash: {}", System.identityHashCode(productDubboService));
+        log.warn("注意：Nacos中的service-order-dubbo.configurators配置会覆盖@DubboReference注解中的actives配置");
 
         Map<String, Object> result = new HashMap<>();
         List<CompletableFuture<Map<String, Object>>> futures = new ArrayList<>();
         AtomicInteger successCount = new AtomicInteger(0);
         AtomicInteger failCount = new AtomicInteger(0);
-        AtomicInteger serverLimitedCount = new AtomicInteger(0); // 记录被服务端executes限制的请求数
-        AtomicInteger clientLimitedCount = new AtomicInteger(0); // 记录被消费端actives限制的请求数
+        AtomicInteger serverLimitedCount = new AtomicInteger(0);
+        AtomicInteger clientLimitedCount = new AtomicInteger(0);
         List<Long> responseTimes = new ArrayList<>();
+        List<Long> startTimes = new ArrayList<>();
 
-        // 创建线程池，使用更大的线程池确保足够的并发压力
-        ExecutorService executor = Executors.newFixedThreadPool(Math.max(concurrentCount, 20));
+        ExecutorService executor = Executors.newFixedThreadPool(concurrentCount);
 
         try {
-            // 使用CountDownLatch确保所有线程同时开始
-            CountDownLatch startLatch = new CountDownLatch(1);
             CountDownLatch readyLatch = new CountDownLatch(concurrentCount);
+            CountDownLatch startLatch = new CountDownLatch(1);
 
-            // 使用多线程同时发起多个请求
             for (int i = 0; i < concurrentCount; i++) {
                 final int requestId = i;
                 CompletableFuture<Map<String, Object>> future = CompletableFuture.supplyAsync(() -> {
                     try {
-                        // 线程准备就绪
                         readyLatch.countDown();
-                        // 等待所有线程准备就绪后同时开始
                         startLatch.await();
 
-                        log.debug("线程 {} 开始发起Dubbo请求", requestId);
                         long requestStart = System.currentTimeMillis();
+                        synchronized (startTimes) {
+                            startTimes.add(requestStart);
+                        }
 
-                        // 方法1：使用原始的Dubbo引用
+                        log.info("线程 {} 开始发起Dubbo请求，时间: {}, Dubbo引用: {}", requestId, requestStart, System.identityHashCode(productDubboService));
+                        
                         Map<String, Object> response = productDubboService.testConcurrencyControl(sleepTime);
 
                         long requestEnd = System.currentTimeMillis();
                         long responseTime = requestEnd - requestStart;
 
-                        log.debug("线程 {} 完成Dubbo请求，响应时间: {}ms", requestId, responseTime);
+                        log.info("线程 {} 完成Dubbo请求，响应时间: {}ms，结束时间: {}", requestId, responseTime, requestEnd);
 
                         synchronized (responseTimes) {
                             responseTimes.add(responseTime);
@@ -294,12 +295,14 @@ public class ProductDubboClient {
                         requestResult.put("requestId", requestId);
                         requestResult.put("success", true);
                         requestResult.put("responseTime", responseTime);
+                        requestResult.put("startTime", requestStart);
+                        requestResult.put("endTime", requestEnd);
                         requestResult.put("message", "请求成功,结果:" + response.toString());
 
                         successCount.incrementAndGet();
                         return requestResult;
                     } catch (Exception e) {
-                        log.warn("线程 {} 请求失败: {}", requestId, e.getMessage());
+                        log.error("线程 {} 请求失败: {}", requestId, e.getMessage(), e);
 
                         Map<String, Object> requestResult = new HashMap<>();
                         requestResult.put("requestId", requestId);
@@ -307,34 +310,32 @@ public class ProductDubboClient {
                         requestResult.put("responseTime", 0L);
                         requestResult.put("message", e.getMessage());
 
-                        // 判断限流类型
                         if (e instanceof RpcException && e.getMessage() != null) {
-                            // 服务端限流：服务端线程池满载
-                            if (e.getMessage().contains("The service using threads greater than")) {
-                                log.warn("线程 {} 触发服务端限流", requestId);
+                            String errorMsg = e.getMessage();
+                            
+                            if (errorMsg.contains("The service using threads greater than") ||
+                                errorMsg.contains("Server side") ||
+                                errorMsg.contains("Thread pool is exhausted")) {
                                 serverLimitedCount.incrementAndGet();
+                                log.info("线程 {} 被服务端限流", requestId);
                             }
-                            // 消费端限流：消费端并发调用数超过actives限制
-                            else if (e.getMessage().contains("actives") ||
-                                    e.getMessage().contains("rejected") ||
-                                    e.getMessage().contains("Failed to invoke remote") ||
-                                    e.getMessage().contains("No provider") ||
-                                    e.getMessage().contains("timeout") ||
-                                    e.getMessage().contains("Thread pool is exhausted") ||
-                                    e.getMessage().contains("Server side") ||
-                                    e.getMessage().contains("Too many active")) {
-                                log.warn("线程 {} 触发消费端限流: {}", requestId, e.getMessage());
+                            else if (errorMsg.contains("actives") ||
+                                    errorMsg.contains("rejected") ||
+                                    errorMsg.contains("Failed to invoke remote") ||
+                                    errorMsg.contains("No provider") ||
+                                    errorMsg.contains("timeout") ||
+                                    errorMsg.contains("Too many active") ||
+                                    errorMsg.contains("Waiting concurrent invoke")) {
                                 clientLimitedCount.incrementAndGet();
+                                log.info("线程 {} 被消费端限流: {}", requestId, errorMsg);
                             }
-                            // 其他RpcException
                             else {
-                                log.warn("线程 {} 发生其他RpcException: {}", requestId, e.getMessage());
                                 failCount.incrementAndGet();
+                                log.info("线程 {} 其他RpcException: {}", requestId, errorMsg);
                             }
                         } else {
-                            // 非RpcException
-                            log.warn("线程 {} 发生非RpcException: {}", requestId, e.getMessage());
                             failCount.incrementAndGet();
+                            log.info("线程 {} 非RpcException: {}", requestId, e.getClass().getName());
                         }
 
                         return requestResult;
@@ -344,23 +345,21 @@ public class ProductDubboClient {
                 futures.add(future);
             }
 
-            // 等待所有线程准备就绪
             readyLatch.await();
-            // 同时开始所有请求
+            log.info("所有线程已准备就绪，同时开始Dubbo请求");
             startLatch.countDown();
-            log.info("所有线程同时开始发起Dubbo请求");
 
-            // 等待所有请求完成
             CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-
-            // 设置超时时间
-            allFutures.get(60, TimeUnit.SECONDS);
+            allFutures.get(120, TimeUnit.SECONDS);
+            
+            log.info("所有请求完成");
 
             // 计算统计信息
             result.put("successCount", successCount.get());
             result.put("failCount", failCount.get());
             result.put("serverLimitedCount", serverLimitedCount.get());
             result.put("clientLimitedCount", clientLimitedCount.get());
+            result.put("limitedCount", serverLimitedCount.get() + clientLimitedCount.get());
             result.put("totalCount", concurrentCount);
 
             if (!responseTimes.isEmpty()) {
@@ -371,6 +370,17 @@ public class ProductDubboClient {
                 result.put("minResponseTime", minTime);
                 result.put("maxResponseTime", maxTime);
                 result.put("avgResponseTime", Math.round(avgTime));
+                
+                int actives = 3;
+                int expectedBatches = (int) Math.ceil((double) concurrentCount / actives);
+                long expectedMaxTime = expectedBatches * sleepTime;
+                
+                result.put("actives", actives);
+                result.put("expectedBatches", expectedBatches);
+                result.put("expectedMaxTime", expectedMaxTime);
+                
+                List<Long> sortedResponseTimes = responseTimes.stream().sorted().collect(Collectors.toList());
+                result.put("sortedResponseTimes", sortedResponseTimes);
             }
 
             // 获取所有请求的详细结果
@@ -402,18 +412,6 @@ public class ProductDubboClient {
         } catch (Exception e) {
             log.error("消费端并发控制测试（后端多线程）失败: {}", e.getMessage());
             throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 消费端并发控制测试
-     */
-    public Map<String, Object> testActivesControl() {
-        try {
-            return productDubboService.testActivesControl();
-        } catch (Exception e) {
-            log.error("消费端并发控制测试失败: {}", e.getMessage());
-            throw e;
         }
     }
 

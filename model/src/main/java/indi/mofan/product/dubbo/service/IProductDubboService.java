@@ -70,12 +70,6 @@ public interface IProductDubboService {
      */
     Map<String, Object> testConcurrencyControl(Long sleepTime);
 
-    /**
-     * 消费端并发控制测试
-     * 
-     * @return 测试结果
-     */
-    Map<String, Object> testActivesControl();
 
     /**
      * 最小并发数负载均衡测试

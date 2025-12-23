@@ -62,7 +62,14 @@ const app = createApp({
     },
     watch: {
         activePanoramaTab(val) { localStorage.setItem('service-demo-tab', val) },
-        activeComponent(val) { localStorage.setItem('service-demo-component', val) }
+        activeComponent(val) { localStorage.setItem('service-demo-component', val) },
+        showDetailModal(val) {
+            if (val) {
+                document.body.style.overflow = 'hidden'
+            } else {
+                document.body.style.overflow = ''
+            }
+        }
     },
     methods: {
         selectComponent(id) {
@@ -500,14 +507,19 @@ const app = createApp({
         },
         showResultDetail(testId) {
             const result = this.resultDisplays[testId]
-            if (result && result.rawData) {
+            if (result && result.data) {
+                this.detailView = JSON.stringify(result.data, null, 2)
+                this.showDetailModal = true
+                this.$nextTick(() => {
+                    this.highlightCode()
+                })
+            } else if (result && result.rawData) {
                 this.detailView = JSON.stringify(result.rawData, null, 2)
                 this.showDetailModal = true
                 this.$nextTick(() => {
                     this.highlightCode()
                 })
             } else if (result && result.message) {
-                // 如果没有rawData，显示基本信息
                 const detailInfo = {
                     testId: testId,
                     status: result.status,

@@ -219,8 +219,7 @@ public class OrderDubboController {
             long startTime = System.currentTimeMillis();
             
             // 使用后端多线程并发调用测试
-//            Map<String, Object> result = productDubboClient.testConcurrencyControlWithThreads(concurrentCount, sleepTime);
-            Map<String, Object> result = productDubboClient.testActivesControl();
+            Map<String, Object> result = productDubboClient.testConcurrencyControlWithThreads(concurrentCount, sleepTime);
 
             long duration = System.currentTimeMillis() - startTime;
 
@@ -258,4 +257,6 @@ public class OrderDubboController {
             return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 最小并发数负载均衡测试失败: " + e.getMessage());
         }
     }
+
+    // TODO 待测试Rest协议和Dubbo协议对比
 }

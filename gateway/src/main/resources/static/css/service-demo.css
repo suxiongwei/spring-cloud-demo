@@ -1037,6 +1037,7 @@ section::after {
     justify-content: center;
     z-index: 1000;
     animation: fadeIn 0.2s ease;
+    overflow: hidden;
 }
 
 .modal {
@@ -1069,9 +1070,9 @@ section::after {
 
 .modal-body {
     padding: 0;
-    overflow: hidden;
-    flex: 1;
-    display: flex;
+    overflow-y: auto;
+    max-height: calc(85vh - 60px);
+    display: block;
 }
 
 .code-block {
@@ -1079,13 +1080,18 @@ section::after {
     color: #2c3e50;
     padding: 24px;
     margin: 0;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     font-family: var(--font-code);
     font-size: 12px;
     width: 100%;
     border: 1px solid var(--border-default);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     line-height: 1.6;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 /* 深色模式下的code-block */
