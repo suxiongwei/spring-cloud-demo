@@ -548,6 +548,8 @@ section::after {
 
 .console-layout-single {
     min-height: 500px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* 深色模式下的console-layout-single样式 */

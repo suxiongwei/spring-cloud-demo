@@ -11,19 +11,227 @@ const app = createApp({
             activePanoramaTab: localStorage.getItem('service-demo-tab') || 'communication',
             activeComponent: localStorage.getItem('service-demo-component') || 'dubbo',
             componentData: {
-                sentinel: { title: 'Sentinel', github: 'https://github.com/alibaba/Sentinel', website: 'https://sentinelguard.io' },
-                nacos: { title: 'Nacos', github: 'https://github.com/alibaba/nacos', website: 'https://nacos.io' },
-                dubbo: { title: 'Dubbo', github: 'https://github.com/apache/dubbo', website: 'https://dubbo.apache.org' },
-                seata: { title: 'Seata', github: 'https://github.com/seata/seata', website: 'https://seata.io' },
-                higress: { title: 'Higress', github: 'https://github.com/alibaba/higress', website: 'https://higress.io' },
-                sca: { title: 'Spring Cloud', github: 'https://github.com/alibaba/spring-cloud-alibaba', website: 'https://spring.io/projects/spring-cloud-alibaba' },
-                opensergo: { title: 'OpenSergo', github: 'https://github.com/opensergo/opensergo-specification', website: 'https://opensergo.io' },
-                chaosblade: { title: 'ChaosBlade', github: 'https://github.com/chaosblade-io/chaosblade', website: 'https://chaosblade.io' },
-                appactive: { title: 'AppActive', github: 'https://github.com/alibaba/AppActive', website: 'https://doc.appactive.io' },
-                rocketmq: { title: 'RocketMQ', github: 'https://github.com/apache/rocketmq', website: 'https://rocketmq.apache.org' },
-                schedulerx: { title: 'SchedulerX', github: 'https://github.com/alibaba/SchedulerX', website: 'https://www.aliyun.com/aliware/schedulerx' },
-                k8s: { title: 'Kubernetes', github: 'https://github.com/kubernetes/kubernetes', website: 'https://kubernetes.io' },
-                opentelemetry: { title: 'OpenTelemetry', github: 'https://github.com/open-telemetry', website: 'https://opentelemetry.io' }
+                sentinel: {
+                    title: 'Sentinel',
+                    name: 'Sentinel',
+                    subtitle: '流量防卫兵',
+                    description: '面向分布式服务架构的流量控制组件,提供熔断降级、系统负载保护。',
+                    icon: 'sentinel.png',
+                    features: [
+                        { name: '流量控制', description: '基于 QPS、并发线程数等维度进行流量控制' },
+                        { name: '熔断降级', description: '自动检测服务异常并触发熔断保护' },
+                        { name: '系统负载保护', description: '保护系统不被过载流量压垮' },
+                        { name: '实时监控', description: '提供实时的流量监控和统计功能' }
+                    ],
+                    actions: ['流量控制测试', '并发控制测试', '热点参数限流', '熔断降级测试'],
+                    docs: 'https://sentinelguard.io',
+                    github: 'https://github.com/alibaba/Sentinel',
+                    website: 'https://sentinelguard.io'
+                },
+                nacos: {
+                    title: 'Nacos',
+                    name: 'Nacos',
+                    subtitle: '配置管理、服务发现、服务管理',
+                    description: '⼀个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台',
+                    icon: 'nacos.png',
+                    features: [
+                        { name: '服务发现', description: '支持 DNS 和 RPC 服务发现' },
+                        { name: '配置管理', description: '动态配置管理，支持配置版本管理和回滚' },
+                        { name: '健康检查', description: '支持多种健康检查模式' },
+                        { name: '命名空间', description: '支持多租户和多环境隔离' }
+                    ],
+                    actions: ['服务注册发现', '配置管理', '健康检查', '命名空间管理'],
+                    docs: 'https://nacos.io',
+                    github: 'https://github.com/alibaba/nacos',
+                    website: 'https://nacos.io'
+                },
+                dubbo: {
+                    title: 'Dubbo',
+                    name: 'Dubbo',
+                    subtitle: 'RPC 框架',
+                    description: '高性能、轻量级的开源 Java RPC 框架,提供面向接口的远程方法调用。',
+                    icon: 'dubbo.png',
+                    features: [
+                        { name: '远程调用', description: '基于接口的高性能 RPC 调用' },
+                        { name: '负载均衡', description: '支持多种负载均衡策略' },
+                        { name: '服务治理', description: '提供完整的服务治理能力' },
+                        { name: '多协议支持', description: '支持 Dubbo、REST、gRPC 等协议' }
+                    ],
+                    actions: ['同步调用', '异步调用', '批量调用', '服务列表查询'],
+                    docs: 'https://dubbo.apache.org',
+                    github: 'https://github.com/apache/dubbo',
+                    website: 'https://dubbo.apache.org'
+                },
+                seata: {
+                    title: 'Seata',
+                    name: 'Seata',
+                    subtitle: '分布式事务',
+                    description: '致力于提供高性能和简单易用的分布式事务服务,支持 AT、TCC、SAGA 等模式。',
+                    icon: 'seata.png',
+                    features: [
+                        { name: 'AT 模式', description: '两阶段提交，无侵入式事务控制' },
+                        { name: 'TCC 模式', description: 'Try-Confirm-Cancel 三阶段事务' },
+                        { name: 'SAGA 模式', description: '长事务解决方案' },
+                        { name: 'XA 模式', description: '标准 XA 协议支持' }
+                    ],
+                    actions: ['TCC 提交测试', 'TCC 回滚测试', '事务查询', '分布式事务示例'],
+                    docs: 'https://seata.io',
+                    github: 'https://github.com/seata/seata',
+                    website: 'https://seata.io'
+                },
+                higress: {
+                    title: 'Higress',
+                    name: 'Higress',
+                    subtitle: '云原生网关',
+                    description: '基于 Envoy 的云原生网关,实现了流量网关、微服务网关、安全网关三合一。',
+                    icon: 'Higress.png',
+                    features: [
+                        { name: '流量网关', description: '统一的流量入口管理' },
+                        { name: '微服务网关', description: '服务路由和负载均衡' },
+                        { name: '安全网关', description: '认证授权和安全防护' },
+                        { name: '插件生态', description: '丰富的插件扩展能力' }
+                    ],
+                    actions: ['路由配置', '认证测试', '流量控制', '插件管理'],
+                    docs: 'https://higress.io',
+                    github: 'https://github.com/alibaba/higress',
+                    website: 'https://higress.io'
+                },
+                sca: {
+                    title: 'Spring Cloud',
+                    name: 'Spring Cloud',
+                    subtitle: '微服务标准',
+                    description: '整合 OpenFeign、LoadBalancer 等标准组件,提供一站式解决方案。',
+                    icon: 'sca.svg',
+                    features: [
+                        { name: '服务注册发现', description: '基于 Nacos 的服务注册与发现' },
+                        { name: '声明式调用', description: 'OpenFeign 声明式 HTTP 客户端' },
+                        { name: '负载均衡', description: 'Spring Cloud LoadBalancer' },
+                        { name: '配置中心', description: 'Nacos Config 配置管理' }
+                    ],
+                    actions: ['Feign 调用测试', '负载均衡测试', '配置刷新', '健康检查'],
+                    docs: 'https://spring.io/projects/spring-cloud-alibaba',
+                    github: 'https://github.com/alibaba/spring-cloud-alibaba',
+                    website: 'https://spring.io/projects/spring-cloud-alibaba'
+                },
+                opensergo: {
+                    title: 'OpenSergo',
+                    name: 'OpenSergo',
+                    subtitle: '治理标准',
+                    description: '开放通用的微服务治理标准,覆盖流量治理、服务容错等。',
+                    icon: 'opensergo.png',
+                    features: [
+                        { name: '流量治理', description: '统一的流量治理标准' },
+                        { name: '服务容错', description: '标准化的容错机制' },
+                        { name: '治理规范', description: '跨语言的治理规范' },
+                        { name: '生态集成', description: '与主流框架无缝集成' }
+                    ],
+                    actions: ['流量规则配置', '容错策略配置', '治理规则查询', '生态集成测试'],
+                    docs: 'https://opensergo.io',
+                    github: 'https://github.com/opensergo/opensergo-specification',
+                    website: 'https://opensergo.io'
+                },
+                chaosblade: {
+                    title: 'ChaosBlade',
+                    name: 'ChaosBlade',
+                    subtitle: '混沌工程',
+                    description: '故障注入、混沌实验、系统韧性验证工具。',
+                    icon: 'ChaosBlade.png',
+                    features: [
+                        { name: '故障注入', description: '支持多种故障场景模拟' },
+                        { name: '混沌实验', description: '自动化混沌实验执行' },
+                        { name: '韧性验证', description: '系统韧性评估和验证' },
+                        { name: '多平台支持', description: '支持 Kubernetes、Docker 等平台' }
+                    ],
+                    actions: ['CPU 故障注入', '内存故障注入', '网络故障注入', '磁盘故障注入'],
+                    docs: 'https://chaosblade.io',
+                    github: 'https://github.com/chaosblade-io/chaosblade',
+                    website: 'https://chaosblade.io'
+                },
+                appactive: {
+                    title: 'AppActive',
+                    name: 'AppActive',
+                    subtitle: '多活容灾',
+                    description: '应用多活架构、异地多活、容灾切换解决方案。',
+                    icon: 'appactive.svg',
+                    features: [
+                        { name: '应用多活', description: '跨地域的应用多活架构' },
+                        { name: '异地容灾', description: '异地容灾和故障切换' },
+                        { name: '流量路由', description: '智能流量路由和调度' },
+                        { name: '数据同步', description: '跨地域数据同步机制' }
+                    ],
+                    actions: ['多活配置', '容灾切换', '流量路由测试', '数据同步验证'],
+                    docs: 'https://doc.appactive.io',
+                    github: 'https://github.com/alibaba/AppActive',
+                    website: 'https://doc.appactive.io'
+                },
+                rocketmq: {
+                    title: 'RocketMQ',
+                    name: 'RocketMQ',
+                    subtitle: '消息队列',
+                    description: '异步消息通信、削峰填谷、事件驱动、流式处理。',
+                    icon: 'rocketmq.svg',
+                    features: [
+                        { name: '消息队列', description: '高可靠的消息传递' },
+                        { name: '削峰填谷', description: '流量削峰和缓冲' },
+                        { name: '事件驱动', description: '事件驱动架构支持' },
+                        { name: '流式处理', description: '流式数据处理能力' }
+                    ],
+                    actions: ['消息发送', '消息消费', '消息查询', '事务消息测试'],
+                    docs: 'https://rocketmq.apache.org',
+                    github: 'https://github.com/apache/rocketmq',
+                    website: 'https://rocketmq.apache.org'
+                },
+                schedulerx: {
+                    title: 'SchedulerX',
+                    name: 'SchedulerX',
+                    subtitle: '任务调度',
+                    description: '分布式任务调度、定时任务、工作流调度、分布式计算。',
+                    icon: 'schedulerx.svg',
+                    features: [
+                        { name: '分布式调度', description: '分布式任务调度和执行' },
+                        { name: '定时任务', description: 'Cron 表达式定时任务' },
+                        { name: '工作流调度', description: '复杂工作流编排' },
+                        { name: '分布式计算', description: '分布式计算框架支持' }
+                    ],
+                    actions: ['定时任务配置', '工作流编排', '任务执行', '任务监控'],
+                    docs: 'https://www.aliyun.com/aliware/schedulerx',
+                    github: 'https://github.com/alibaba/SchedulerX',
+                    website: 'https://www.aliyun.com/aliware/schedulerx'
+                },
+                k8s: {
+                    title: 'Kubernetes',
+                    name: 'Kubernetes',
+                    subtitle: '容器编排',
+                    description: '自动化容器的部署、扩展和管理,云原生应用的基础设施。',
+                    icon: 'k8s.svg',
+                    features: [
+                        { name: '容器编排', description: '自动化容器部署和管理' },
+                        { name: '服务发现', description: '内置服务发现和负载均衡' },
+                        { name: '自动扩缩容', description: '基于负载自动扩缩容' },
+                        { name: '滚动更新', description: '零停机滚动更新' }
+                    ],
+                    actions: ['Pod 管理', '服务配置', '部署应用', '扩缩容操作'],
+                    docs: 'https://kubernetes.io',
+                    github: 'https://github.com/kubernetes/kubernetes',
+                    website: 'https://kubernetes.io'
+                },
+                opentelemetry: {
+                    title: 'OpenTelemetry',
+                    name: 'OpenTelemetry',
+                    subtitle: '可观测性',
+                    description: '云原生可观测性标准,提供 Trace、Metric、Log 的统一采集。',
+                    icon: 'opentelemetry.svg',
+                    features: [
+                        { name: '链路追踪', description: '分布式链路追踪' },
+                        { name: '指标采集', description: '应用和系统指标采集' },
+                        { name: '日志收集', description: '统一日志收集和分析' },
+                        { name: '多语言支持', description: '支持多种编程语言' }
+                    ],
+                    actions: ['链路追踪测试', '指标监控', '日志查询', '可观测性配置'],
+                    docs: 'https://opentelemetry.io',
+                    github: 'https://github.com/open-telemetry',
+                    website: 'https://opentelemetry.io'
+                }
             },
 
             // Test Parameters

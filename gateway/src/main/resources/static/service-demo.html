@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 
 <head>
@@ -276,7 +276,7 @@
 
         .main-body {
             flex: 1;
-            padding: 24px;
+            padding: 12px;
             overflow-y: auto;
         }
 
@@ -451,7 +451,206 @@
 
         .code-block.collapsible.expanded {
             padding-bottom: 40px;
-            /* Space for the button */
+        }
+
+        .component-detail {
+            background: var(--card, #ffffff);
+            border: 1px solid var(--border, #e5e7eb);
+            border-radius: var(--radius-md, 8px);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto 16px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .component-detail-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 5%, transparent) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border, #e5e7eb);
+        }
+
+        .component-detail-header .card-header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0;
+        }
+
+        .component-detail-header .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .component-detail-header .card-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .component-detail-header .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 2px;
+        }
+
+        .component-detail-header .card-subtitle {
+            font-size: 12px;
+            color: var(--muted-foreground);
+            font-weight: 500;
+        }
+
+        .component-detail-desc {
+            padding: 12px 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--foreground);
+        }
+
+        .component-detail-section {
+            padding: 12px 16px;
+        }
+
+        .component-detail-section:last-child {
+            border-bottom: none;
+        }
+
+        .component-detail-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .component-detail-section-title::after {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--primary);
+            margin-top: 4px;
+            border-radius: 1px;
+        }
+
+        .component-detail-desc {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--foreground);
+        }
+
+        .component-detail-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .component-detail-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 0;
+            border-bottom: none;
+        }
+
+        .component-detail-features li::before {
+            content: '●';
+            color: var(--primary);
+            font-size: 8px;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .component-detail-feature-name {
+            font-weight: 600;
+            color: var(--foreground);
+            min-width: 80px;
+            font-size: 13px;
+        }
+
+        .component-detail-feature-desc {
+            color: var(--muted-foreground);
+            font-size: 13px;
+        }
+
+        .component-detail-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .component-detail-link {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .component-detail-link:hover {
+            color: color-mix(in srgb, var(--primary) 80%, black);
+            text-decoration: underline;
+        }
+
+        .dark .component-detail {
+            background: var(--card);
+            border-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+        }
+
+        .dark .component-detail-header {
+            background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 100%);
+            border-bottom-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+        }
+
+        .dark .component-detail-header .card-title {
+            color: var(--foreground);
+        }
+
+        .dark .component-detail-header .card-subtitle {
+            color: var(--muted-foreground);
+        }
+
+        .dark .component-detail-section {
+            border-bottom-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+        }
+
+        .dark .component-detail-features li {
+            border-bottom-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+        }
+
+        .dark .component-detail-feature-name {
+            color: var(--foreground);
+        }
+
+        .dark .component-detail-feature-desc {
+            color: var(--muted-foreground);
+        }
+
+        .dark .component-detail-action-btn {
+            background: color-mix(in srgb, var(--foreground) 10%, transparent);
+            border-color: color-mix(in srgb, var(--foreground) 20%, transparent);
+            color: var(--foreground);
+        }
+
+        .dark .component-detail-action-btn:hover {
+            background: color-mix(in srgb, var(--primary) 20%, transparent);
+            border-color: var(--primary);
+            color: var(--primary);
         }
     </style>
 </head>
@@ -552,204 +751,28 @@
             <div class="main-body">
         <!-- 1. Microservice Panorama -->
         <section>
-            <div class="section-header">
-                <div class="section-line"></div>
-            </div>
-
             <div>
-                <!-- Control Plane Section -->
-                <div class="panorama-section" :class="{ active: activePanoramaTab === 'control' }">
-                    <h3 class="category-title">控制面</h3>
-                    <div class="panorama-grid">
-                        <!-- Nacos -->
-                        <div class="service-card" :class="{ active: activeComponent === 'nacos' }"
-                             @click="selectComponent('nacos')" v-if="activeComponent === 'nacos'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/nacos.png" alt="Nacos"></div>
-                                <div>
-                                    <div class="card-title">Nacos</div>
-                                    <div class="card-subtitle">配置管理、服务发现、服务管理</div>
-                                </div>
+                <div class="component-detail" v-if="activeComponent">
+                    <div class="component-detail-header">
+                        <div class="card-header">
+                            <div class="card-icon"><img :src="'images/logos/' + componentData[activeComponent].icon" :alt="componentData[activeComponent].name"></div>
+                            <div>
+                                <div class="card-title">{{ componentData[activeComponent].name }}</div>
+                                <div class="card-subtitle">{{ componentData[activeComponent].subtitle }}</div>
                             </div>
-                            <div class="card-desc">⼀个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台</div>
                         </div>
-                        <!-- OpenSergo -->
-                        <div class="service-card" :class="{ active: activeComponent === 'opensergo' }"
-                             @click="selectComponent('opensergo')" v-if="activeComponent === 'opensergo'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/opensergo.png" alt="OpenSergo"></div>
-                                <div>
-                                    <div class="card-title">OpenSergo</div>
-                                    <div class="card-subtitle">治理标准</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">开放通用的微服务治理标准,覆盖流量治理、服务容错等。</div>
+                    </div>
+                    <div class="component-detail-desc">{{ componentData[activeComponent].description }}</div>
+                    <div class="component-detail-section">
+                        <div class="component-detail-links">
+                            <a class="component-detail-link" :href="componentData[activeComponent].docs" target="_blank">🔗 官方文档</a>
+                            <a class="component-detail-link" :href="componentData[activeComponent].github" target="_blank">🔗 GitHub</a>
                         </div>
                     </div>
                 </div>
-
-                <!-- Governance Plane Section -->
-                <div class="panorama-section" :class="{ active: activePanoramaTab === 'governance' }">
-                    <h3 class="category-title">治理面 - 流量控制与容错保护</h3>
-                    <div class="panorama-grid">
-                        <!-- Sentinel -->
-                        <div class="service-card" :class="{ active: activeComponent === 'sentinel' }"
-                             @click="selectComponent('sentinel')" v-if="activeComponent === 'sentinel'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/sentinel.png" alt="Sentinel"></div>
-                                <div>
-                                    <div class="card-title">Sentinel</div>
-                                    <div class="card-subtitle">流量防卫兵</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">面向分布式服务架构的流量控制组件,提供熔断降级、系统负载保护。</div>
-                        </div>
-                        <!-- ChaosBlade -->
-                        <div class="service-card" :class="{ active: activeComponent === 'chaosblade' }"
-                             @click="selectComponent('chaosblade')" v-if="activeComponent === 'chaosblade'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/ChaosBlade.png" alt="ChaosBlade">
-                                </div>
-                                <div>
-                                    <div class="card-title">ChaosBlade</div>
-                                    <div class="card-subtitle">混沌工程</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">故障注入、混沌实验、系统韧性验证工具。</div>
-                        </div>
-                        <!-- AppActive -->
-                        <div class="service-card" :class="{ active: activeComponent === 'appactive' }"
-                             @click="selectComponent('appactive')" v-if="activeComponent === 'appactive'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/appactive.svg" alt="AppActive"></div>
-                                <div>
-                                    <div class="card-title">AppActive</div>
-                                    <div class="card-subtitle">多活容灾</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">应用多活架构、异地多活、容灾切换解决方案。</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Communication Layer Section -->
-                <div class="panorama-section" :class="{ active: activePanoramaTab === 'communication' }">
-                    <h3 class="category-title">通信层 - 同步与异步通信</h3>
-                    <div class="panorama-grid">
-                        <!-- Dubbo -->
-                        <div class="service-card" :class="{ active: activeComponent === 'dubbo' }"
-                             @click="selectComponent('dubbo')" v-if="activeComponent === 'dubbo'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/dubbo.png" alt="Dubbo"></div>
-                                <div>
-                                    <div class="card-title">Dubbo</div>
-                                    <div class="card-subtitle">RPC 框架</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">高性能、轻量级的开源 Java RPC 框架,提供面向接口的远程方法调用。</div>
-                        </div>
-                        <!-- Spring Cloud -->
-                        <div class="service-card" :class="{ active: activeComponent === 'sca' }"
-                             @click="selectComponent('sca')" v-if="activeComponent === 'sca'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/sca.svg" alt="SCA"></div>
-                                <div>
-                                    <div class="card-title">Spring Cloud</div>
-                                    <div class="card-subtitle">微服务标准</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">整合 OpenFeign、LoadBalancer 等标准组件,提供一站式解决方案。</div>
-                        </div>
-                        <!-- RocketMQ -->
-                        <div class="service-card" :class="{ active: activeComponent === 'rocketmq' }"
-                             @click="selectComponent('rocketmq')" v-if="activeComponent === 'rocketmq'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/rocketmq.svg" alt="RocketMQ"></div>
-                                <div>
-                                    <div class="card-title">RocketMQ</div>
-                                    <div class="card-subtitle">消息队列</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">异步消息通信、削峰填谷、事件驱动、流式处理。</div>
-                        </div>
-                        <!-- Seata -->
-                        <div class="service-card" :class="{ active: activeComponent === 'seata' }"
-                             @click="selectComponent('seata')" v-if="activeComponent === 'seata'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/seata.png" alt="Seata"></div>
-                                <div>
-                                    <div class="card-title">Seata</div>
-                                    <div class="card-subtitle">分布式事务</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">致力于提供高性能和简单易用的分布式事务服务,支持 AT、TCC、SAGA 等模式。
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gateway & Scheduling Section -->
-                <div class="panorama-section" :class="{ active: activePanoramaTab === 'gateway' }">
-                    <h3 class="category-title">网关与调度 - 流量入口与任务管理</h3>
-                    <div class="panorama-grid">
-                        <!-- Higress -->
-                        <div class="service-card" :class="{ active: activeComponent === 'higress' }"
-                             @click="selectComponent('higress')" v-if="activeComponent === 'higress'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/Higress.png" alt="Higress"></div>
-                                <div>
-                                    <div class="card-title">Higress</div>
-                                    <div class="card-subtitle">云原生网关</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">基于 Envoy 的云原生网关,实现了流量网关、微服务网关、安全网关三合一。
-                            </div>
-                        </div>
-                        <!-- SchedulerX -->
-                        <div class="service-card" :class="{ active: activeComponent === 'schedulerx' }"
-                             @click="selectComponent('schedulerx')" v-if="activeComponent === 'schedulerx'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/schedulerx.svg" alt="SchedulerX">
-                                </div>
-                                <div>
-                                    <div class="card-title">SchedulerX</div>
-                                    <div class="card-subtitle">任务调度</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">分布式任务调度、定时任务、工作流调度、分布式计算。</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Data & Ops Section -->
-                <div class="panorama-section" :class="{ active: activePanoramaTab === 'data' }">
-                    <h3 class="category-title">数据与运维 - 容器与可观测性</h3>
-                    <div class="panorama-grid">
-                        <!-- Kubernetes -->
-                        <div class="service-card" :class="{ active: activeComponent === 'k8s' }"
-                             @click="selectComponent('k8s')" v-if="activeComponent === 'k8s'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/k8s.svg" alt="K8s"></div>
-                                <div>
-                                    <div class="card-title">Kubernetes</div>
-                                    <div class="card-subtitle">容器编排</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">自动化容器的部署、扩展和管理,云原生应用的基础设施。</div>
-                        </div>
-                        <!-- OpenTelemetry -->
-                        <div class="service-card" :class="{ active: activeComponent === 'opentelemetry' }"
-                             @click="selectComponent('opentelemetry')" v-if="activeComponent === 'opentelemetry'">
-                            <div class="card-header">
-                                <div class="card-icon"><img src="images/logos/opentelemetry.svg" alt="OTel"></div>
-                                <div>
-                                    <div class="card-title">OpenTelemetry</div>
-                                    <div class="card-subtitle">可观测性</div>
-                                </div>
-                            </div>
-                            <div class="card-desc">云原生可观测性标准,提供 Trace、Metric、Log 的统一采集。</div>
-                        </div>
-                    </div>
+                <div v-else style="text-align: center; padding: 40px; color: var(--muted-foreground);">
+                    <div style="font-size: 36px; margin-bottom: 12px;">👈</div>
+                    <div>请从左侧菜单选择一个组件查看详情</div>
                 </div>
             </div>
         </section>
