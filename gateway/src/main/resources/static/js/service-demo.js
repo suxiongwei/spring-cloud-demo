@@ -56,6 +56,15 @@ const app = createApp({
             isDarkMode: localStorage.getItem('theme-mode') === 'dark' || 
                         (!localStorage.getItem('theme-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches),
 
+            // 侧边栏菜单展开状态
+            expandedMenus: {
+                control: true,
+                governance: true,
+                communication: true,
+                gateway: true,
+                data: true
+            },
+
             // Individual result displays for each test scenario
             resultDisplays: {}
         }
@@ -74,6 +83,31 @@ const app = createApp({
     methods: {
         selectComponent(id) {
             this.activeComponent = id
+            this.updateActivePanoramaTab(id)
+        },
+        updateActivePanoramaTab(componentId) {
+            const componentMap = {
+                'nacos': 'control',
+                'opensergo': 'control',
+                'sentinel': 'governance',
+                'chaosblade': 'governance',
+                'appactive': 'governance',
+                'dubbo': 'communication',
+                'sca': 'communication',
+                'rocketmq': 'communication',
+                'seata': 'communication',
+                'higress': 'gateway',
+                'schedulerx': 'gateway',
+                'gateway': 'gateway',
+                'k8s': 'data',
+                'opentelemetry': 'data',
+                'arctic': 'data',
+                'redis': 'data'
+            }
+            this.activePanoramaTab = componentMap[componentId] || 'communication'
+        },
+        toggleMenu(menuKey) {
+            this.expandedMenus[menuKey] = !this.expandedMenus[menuKey]
         },
         formatTime(date) {
             return date.toLocaleTimeString('zh-CN', { hour12: false }) + '.' +
