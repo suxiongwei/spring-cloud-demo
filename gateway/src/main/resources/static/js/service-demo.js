@@ -266,12 +266,15 @@ const app = createApp({
 
             // 侧边栏菜单展开状态
             expandedMenus: {
-                control: true,
-                governance: true,
-                communication: true,
-                gateway: true,
-                data: true
+                control: false,
+                governance: false,
+                communication: false,
+                gateway: false,
+                data: false
             },
+
+            // 侧边栏宽度
+            sidebarWidth: localStorage.getItem('sidebar-width') || 240,
 
             // Individual result displays for each test scenario
             resultDisplays: {}
@@ -312,10 +315,44 @@ const app = createApp({
                 'arctic': 'data',
                 'redis': 'data'
             }
-            this.activePanoramaTab = componentMap[componentId] || 'communication'
+            const menuKey = componentMap[componentId] || 'communication'
+            this.activePanoramaTab = menuKey
+            this.expandedMenus[menuKey] = true
         },
         toggleMenu(menuKey) {
             this.expandedMenus[menuKey] = !this.expandedMenus[menuKey]
+        },
+        startResize(e) {
+            e.preventDefault()
+            const startX = e.clientX
+            const startWidth = this.sidebarWidth
+            const resizer = e.target
+            resizer.classList.add('resizing')
+            
+            const onMouseMove = (moveEvent) => {
+                const deltaX = moveEvent.clientX - startX
+                const newWidth = Math.max(180, Math.min(400, startWidth + deltaX))
+                this.sidebarWidth = newWidth
+                this.updateSidebarWidth()
+            }
+            
+            const onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove)
+                document.removeEventListener('mouseup', onMouseUp)
+                resizer.classList.remove('resizing')
+                localStorage.setItem('sidebar-width', this.sidebarWidth)
+            }
+            
+            document.addEventListener('mousemove', onMouseMove)
+            document.addEventListener('mouseup', onMouseUp)
+        },
+        updateSidebarWidth() {
+            const sidebar = document.querySelector('.sidebar')
+            const mainContent = document.querySelector('.main-content')
+            if (sidebar && mainContent) {
+                sidebar.style.width = this.sidebarWidth + 'px'
+                mainContent.style.marginLeft = this.sidebarWidth + 'px'
+            }
         },
         formatTime(date) {
             return date.toLocaleTimeString('zh-CN', { hour12: false }) + '.' +
@@ -1105,6 +1142,14 @@ const app = createApp({
     mounted() {
         // 初始化主题
         this.applyTheme();
+        
+        // 初始化侧边栏宽度 - 延迟执行确保 DOM 完全渲染
+        this.$nextTick(() => {
+            this.updateSidebarWidth();
+        });
+        
+        // 根据当前选中的组件展开对应的菜单组
+        this.updateActivePanoramaTab(this.activeComponent);
         
         // 初始化代码高亮 - 延迟执行确保 DOM 完全渲染
         setTimeout(() => {
