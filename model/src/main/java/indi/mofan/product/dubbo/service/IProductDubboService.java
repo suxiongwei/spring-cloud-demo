@@ -62,13 +62,18 @@ public interface IProductDubboService {
     Product getProductRegionDetails(Long id);
 
     /**
-     * 服务端并发控制测试
-     * 
-     * @param concurrentCount 并发数量
+     *
      * @param sleepTime 休眠时间(ms)
      * @return 测试结果
      */
-    Map<String, Object> testConcurrencyControl(Long sleepTime);
+    Map<String, Object> testConcurrencyControlV1(Long sleepTime);
+
+    /**
+     *
+     * @param sleepTime 休眠时间(ms)
+     * @return 测试结果
+     */
+    Map<String, Object> testConcurrencyControlV2(Long sleepTime);
 
 
     /**
@@ -77,4 +82,12 @@ public interface IProductDubboService {
      * @return 测试结果
      */
     Map<String, Object> testLeastActiveLoadBalance();
+
+    /**
+     * Filter拦截测试
+     * 
+     * @param message 测试消息
+     * @return 测试结果
+     */
+    Map<String, Object> testFilter(String message);
 }

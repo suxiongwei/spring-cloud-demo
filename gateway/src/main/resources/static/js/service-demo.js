@@ -246,9 +246,13 @@ const app = createApp({
             dubboProductId: 1,
             dubboClientRegion: 'hangzhou',
             dubboConcurrentCount: 10,
-            dubboSleepTime: 1000,
+            dubboSleepTime: 3000,
+            dubboConcurrencyType: 'executes',
             dubboActiveCount: 5,
             dubboRequestCount: 20,
+            dubboFilterMessage: 'Hello Dubbo Filter',
+            dubboVersionGroupName: 'World',
+            dubboVersionGroupType: 'v1-default',
             compareTimes: 5,
 
             // System
@@ -374,9 +378,16 @@ const app = createApp({
                 'dubbo-exception': `/api/order/dubbo/call-exception?productId=${this.dubboProductId}`,
                 'dubbo-async': `/api/order/dubbo/call-async?productId=${this.dubboProductId}`,
                 'dubbo-region': `/api/order/dubbo/call-region?productId=${this.dubboProductId}&clientRegion=${this.dubboClientRegion}`,
-                'dubbo-concurrency': `/api/order/dubbo/concurrency-test-backend?concurrentCount=${this.dubboConcurrentCount}&sleepTime=${this.dubboSleepTime}`,
+                'dubbo-concurrency': `/api/order/dubbo/concurrency?concurrentCount=${this.dubboConcurrentCount}&sleepTime=${this.dubboSleepTime}`,
                 'dubbo-actives': `/api/order/dubbo/actives-test?activeCount=${this.dubboActiveCount}&requestCount=${this.dubboRequestCount}`,
                 'dubbo-leastactive': `/api/order/dubbo/leastactive-test`,
+                'dubbo-filter': `/api/order/dubbo/filter-test?message=${this.dubboFilterMessage}`,
+                'dubbo-version-group-v1-default': `/api/order/dubbo/version-group/v1-default?name=${this.dubboVersionGroupName}`,
+                'dubbo-version-group-v2-default': `/api/order/dubbo/version-group/v2-default?name=${this.dubboVersionGroupName}`,
+                'dubbo-version-group-v1-groupA': `/api/order/dubbo/version-group/v1-groupA?name=${this.dubboVersionGroupName}`,
+                'dubbo-version-group-v1-groupB': `/api/order/dubbo/version-group/v1-groupB?name=${this.dubboVersionGroupName}`,
+                'dubbo-version-group-v2-groupA': `/api/order/dubbo/version-group/v2-groupA?name=${this.dubboVersionGroupName}`,
+                'dubbo-version-group-compare': `/api/order/dubbo/version-group/compare?name=${this.dubboVersionGroupName}`,
                 'compare-feign': `/api/order/feign/product/1`,
                 'compare-dubbo': `/api/order/dubbo/call-sync?productId=1`,
                 'nacos-services': '/api/order/demo/nacos/services',
@@ -542,10 +553,8 @@ const app = createApp({
         async testDubboAsync() { await this.callWithResultDisplay(this.endpoint('dubbo-async'), 'dubbo-async', 'dubbo-async') },
         async testDubboRegion() { await this.callWithResultDisplay(this.endpoint('dubbo-region'), 'dubbo-region', 'dubbo-region') },
         async testDubboConcurrency() { 
-            // Update endpoint with current values
-            const url = `/api/order/dubbo/concurrency-test-backend?concurrentCount=${this.dubboConcurrentCount}&sleepTime=${this.dubboSleepTime}`;
+            const url = `/api/order/dubbo/concurrency?concurrentCount=${this.dubboConcurrentCount}&sleepTime=${this.dubboSleepTime}&type=${this.dubboConcurrencyType}`;
             
-            // 设置加载状态
             this.setResultDisplay('dubbo-concurrency', {
                 status: 'loading',
                 message: `正在通过后端多线程发送 ${this.dubboConcurrentCount} 个并发请求...`,
@@ -690,6 +699,36 @@ const app = createApp({
         },
         async testDubboLeastActive() { 
             await this.callWithResultDisplay(this.endpoint('dubbo-leastactive'), 'dubbo-leastactive', 'dubbo-leastactive') 
+        },
+        async testDubboFilter() {
+            const url = `/api/order/dubbo/filter-test?message=${encodeURIComponent(this.dubboFilterMessage)}`;
+            await this.callWithResultDisplay(url, 'dubbo-filter', 'dubbo-filter')
+        },
+        async testDubboVersionGroup() {
+            let url;
+            switch(this.dubboVersionGroupType) {
+                case 'v1-default':
+                    url = `/api/order/dubbo/version-group/v1-default?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
+                    break;
+                case 'v2-default':
+                    url = `/api/order/dubbo/version-group/v2-default?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
+                    break;
+                case 'v1-groupA':
+                    url = `/api/order/dubbo/version-group/v1-groupA?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
+                    break;
+                case 'v1-groupB':
+                    url = `/api/order/dubbo/version-group/v1-groupB?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
+                    break;
+                case 'v2-groupA':
+                    url = `/api/order/dubbo/version-group/v2-groupA?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
+                    break;
+                case 'compare':
+                    url = `/api/order/dubbo/version-group/compare?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
+                    break;
+                default:
+                    url = `/api/order/dubbo/version-group/v1-default?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
+            }
+            await this.callWithResultDisplay(url, `dubbo-version-group-${this.dubboVersionGroupType}`, 'dubbo-version-group')
         },
         async testFeign() {
             await this.callWithResultDisplay(this.endpoint('feign'), 'feign', 'sca-feign')

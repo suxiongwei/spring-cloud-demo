@@ -2,6 +2,7 @@ package indi.mofan.order.dubbo;
 
 import indi.mofan.product.bean.Product;
 import indi.mofan.product.dubbo.service.IProductDubboService;
+import indi.mofan.product.dubbo.service.IVersionGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.Method;
@@ -110,14 +111,14 @@ public class ProductDubboClient {
             group = "product",
             protocol = "dubbo",
             retries = 0,
-            actives = 3,
+//            actives = 3,
             check = false,
             lazy = false,
             timeout = 5000,
             methods = {
                     @Method(name = "simulateTimeout", timeout = 2400, retries = 2),
                     @Method(name = "listAllProducts", timeout = 5000, retries = 1),
-                    @Method(name = "testConcurrencyControl", actives = 3, retries = 0, timeout = 5000),
+                    @Method(name = "testConcurrencyControlV1", actives = 3, retries = 0, timeout = 5000),
                     @Method(name = "testLeastActiveLoadBalance", loadbalance = "leastactive")
             }
     )
@@ -244,7 +245,7 @@ public class ProductDubboClient {
      * @param sleepTime       每个请求的休眠时间（毫秒）
      * @return 测试结果
      */
-    public Map<String, Object> testConcurrencyControlWithThreads(Integer concurrentCount, Long sleepTime) {
+    public Map<String, Object> testConcurrencyControlWithThreads(Integer concurrentCount, Long sleepTime, String type) {
         log.info("开始Dubbo并发控制测试（消费端actives+服务端executes），并发数: {}, 休眠时间: {}ms", concurrentCount, sleepTime);
         log.info("消费端actives配置: 3，服务端executes配置: 需要在服务端配置");
         log.info("Dubbo引用: {}", productDubboService.getClass().getName());
@@ -279,8 +280,13 @@ public class ProductDubboClient {
                         }
 
                         log.info("线程 {} 开始发起Dubbo请求，时间: {}, Dubbo引用: {}", requestId, requestStart, System.identityHashCode(productDubboService));
-                        
-                        Map<String, Object> response = productDubboService.testConcurrencyControl(sleepTime);
+
+                        Map<String, Object> response;
+                        if (type.equals("executes")){
+                            response = productDubboService.testConcurrencyControlV2(sleepTime);
+                        }else {
+                            response = productDubboService.testConcurrencyControlV1(sleepTime);
+                        }
 
                         long requestEnd = System.currentTimeMillis();
                         long responseTime = requestEnd - requestStart;
@@ -426,5 +432,120 @@ public class ProductDubboClient {
             log.error("最小并发数负载均衡测试失败: {}", e.getMessage());
             throw e;
         }
+    }
+
+    /**
+     * Filter拦截测试
+     */
+    public Map<String, Object> testFilter(String message) {
+        try {
+            log.info("开始Filter拦截测试，消息: {}", message);
+            return productDubboService.testFilter(message);
+        } catch (Exception e) {
+            log.error("Filter拦截测试失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    @DubboReference(version = "1.0.0", group = "default", check = false)
+    private IVersionGroupService versionGroupServiceV1Default;
+
+    @DubboReference(version = "2.0.0", group = "default", check = false)
+    private IVersionGroupService versionGroupServiceV2Default;
+
+    @DubboReference(version = "1.0.0", group = "groupA", check = false)
+    private IVersionGroupService versionGroupServiceV1GroupA;
+
+    @DubboReference(version = "1.0.0", group = "groupB", check = false)
+    private IVersionGroupService versionGroupServiceV1GroupB;
+
+    @DubboReference(version = "2.0.0", group = "groupA", check = false)
+    private IVersionGroupService versionGroupServiceV2GroupA;
+
+    /**
+     * 测试版本 1.0.0 默认分组
+     */
+    public Map<String, Object> testVersion1Default(String name) {
+        try {
+            log.info("调用版本 1.0.0 默认分组服务，name: {}", name);
+            return versionGroupServiceV1Default.sayHello(name);
+        } catch (Exception e) {
+            log.error("版本 1.0.0 默认分组调用失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * 测试版本 2.0.0 默认分组
+     */
+    public Map<String, Object> testVersion2Default(String name) {
+        try {
+            log.info("调用版本 2.0.0 默认分组服务，name: {}", name);
+            return versionGroupServiceV2Default.sayHello(name);
+        } catch (Exception e) {
+            log.error("版本 2.0.0 默认分组调用失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * 测试版本 1.0.0 分组 A
+     */
+    public Map<String, Object> testVersion1GroupA(String name) {
+        try {
+            log.info("调用版本 1.0.0 分组 A 服务，name: {}", name);
+            return versionGroupServiceV1GroupA.sayHello(name);
+        } catch (Exception e) {
+            log.error("版本 1.0.0 分组 A 调用失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * 测试版本 1.0.0 分组 B
+     */
+    public Map<String, Object> testVersion1GroupB(String name) {
+        try {
+            log.info("调用版本 1.0.0 分组 B 服务，name: {}", name);
+            return versionGroupServiceV1GroupB.sayHello(name);
+        } catch (Exception e) {
+            log.error("版本 1.0.0 分组 B 调用失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * 测试版本 2.0.0 分组 A
+     */
+    public Map<String, Object> testVersion2GroupA(String name) {
+        try {
+            log.info("调用版本 2.0.0 分组 A 服务，name: {}", name);
+            return versionGroupServiceV2GroupA.sayHello(name);
+        } catch (Exception e) {
+            log.error("版本 2.0.0 分组 A 调用失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * 获取所有版本和分组的服务信息
+     */
+    public Map<String, Object> getAllVersionGroupServicesInfo() {
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            result.put("v1-default", versionGroupServiceV1Default.getServerInfo());
+            result.put("v2-default", versionGroupServiceV2Default.getServerInfo());
+            result.put("v1-groupA", versionGroupServiceV1GroupA.getServerInfo());
+            result.put("v1-groupB", versionGroupServiceV1GroupB.getServerInfo());
+            result.put("v2-groupA", versionGroupServiceV2GroupA.getServerInfo());
+            
+            log.info("成功获取所有版本和分组的服务信息");
+        } catch (Exception e) {
+            log.error("获取服务信息失败: {}", e.getMessage());
+            throw e;
+        }
+        
+        return result;
     }
 }

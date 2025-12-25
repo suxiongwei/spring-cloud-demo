@@ -211,15 +211,16 @@ public class OrderDubboController {
     /**
      * Dubbo 并发控制测试（同时测试消费端actives和服务端executes限流）
      */
-    @GetMapping("/concurrency-test-backend")
-    public ApiResponse<Map<String, Object>> dubboConcurrencyTestBackend(
+    @GetMapping("/concurrency")
+    public ApiResponse<Map<String, Object>> dubboConcurrency(
             @RequestParam(value = "concurrentCount", defaultValue = "20") Integer concurrentCount,
-            @RequestParam(value = "sleepTime", defaultValue = "1000") Long sleepTime) {
+            @RequestParam(value = "sleepTime", defaultValue = "1000") Long sleepTime,
+            @RequestParam(value = "type", defaultValue = "executes") String type) {
         try {
             long startTime = System.currentTimeMillis();
             
             // 使用后端多线程并发调用测试
-            Map<String, Object> result = productDubboClient.testConcurrencyControlWithThreads(concurrentCount, sleepTime);
+            Map<String, Object> result = productDubboClient.testConcurrencyControlWithThreads(concurrentCount, sleepTime, type);
 
             long duration = System.currentTimeMillis() - startTime;
 
@@ -255,6 +256,174 @@ public class OrderDubboController {
         } catch (Exception e) {
             log.error("Dubbo 最小并发数负载均衡测试失败", e);
             return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 最小并发数负载均衡测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo Filter拦截测试
+     */
+    @GetMapping("/filter-test")
+    public ApiResponse<Map<String, Object>> dubboFilterTest(
+            @RequestParam(value = "message", defaultValue = "Hello Dubbo Filter") String message) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            // Filter拦截测试
+            Map<String, Object> result = productDubboClient.testFilter(message);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC Filter拦截测试");
+
+            return ApiResponse.success("Dubbo Filter拦截测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo Filter拦截测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo Filter拦截测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 版本 1.0.0 默认分组测试
+     */
+    @GetMapping("/version-group/v1-default")
+    public ApiResponse<Map<String, Object>> dubboVersion1Default(
+            @RequestParam(value = "name", defaultValue = "World") String name) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testVersion1Default(name);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 版本 1.0.0 默认分组测试");
+
+            return ApiResponse.success("Dubbo 版本 1.0.0 默认分组测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 版本 1.0.0 默认分组测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 版本 1.0.0 默认分组测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 版本 2.0.0 默认分组测试
+     */
+    @GetMapping("/version-group/v2-default")
+    public ApiResponse<Map<String, Object>> dubboVersion2Default(
+            @RequestParam(value = "name", defaultValue = "World") String name) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testVersion2Default(name);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 版本 2.0.0 默认分组测试");
+
+            return ApiResponse.success("Dubbo 版本 2.0.0 默认分组测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 版本 2.0.0 默认分组测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 版本 2.0.0 默认分组测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 版本 1.0.0 分组A测试
+     */
+    @GetMapping("/version-group/v1-groupA")
+    public ApiResponse<Map<String, Object>> dubboVersion1GroupA(
+            @RequestParam(value = "name", defaultValue = "World") String name) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testVersion1GroupA(name);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 版本 1.0.0 分组A测试");
+
+            return ApiResponse.success("Dubbo 版本 1.0.0 分组A测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 版本 1.0.0 分组A测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 版本 1.0.0 分组A测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 版本 1.0.0 分组B测试
+     */
+    @GetMapping("/version-group/v1-groupB")
+    public ApiResponse<Map<String, Object>> dubboVersion1GroupB(
+            @RequestParam(value = "name", defaultValue = "World") String name) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testVersion1GroupB(name);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 版本 1.0.0 分组B测试");
+
+            return ApiResponse.success("Dubbo 版本 1.0.0 分组B测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 版本 1.0.0 分组B测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 版本 1.0.0 分组B测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 版本 2.0.0 分组A测试
+     */
+    @GetMapping("/version-group/v2-groupA")
+    public ApiResponse<Map<String, Object>> dubboVersion2GroupA(
+            @RequestParam(value = "name", defaultValue = "World") String name) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testVersion2GroupA(name);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 版本 2.0.0 分组A测试");
+
+            return ApiResponse.success("Dubbo 版本 2.0.0 分组A测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 版本 2.0.0 分组A测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 版本 2.0.0 分组A测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 版本与分组对比测试（同时调用多个版本和分组）
+     */
+    @GetMapping("/version-group/compare")
+    public ApiResponse<Map<String, Object>> dubboVersionGroupCompare(
+            @RequestParam(value = "name", defaultValue = "World") String name) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = new HashMap<>();
+            
+            result.put("v1Default", productDubboClient.testVersion1Default(name));
+            result.put("v2Default", productDubboClient.testVersion2Default(name));
+            result.put("v1GroupA", productDubboClient.testVersion1GroupA(name));
+            result.put("v1GroupB", productDubboClient.testVersion1GroupB(name));
+            result.put("v2GroupA", productDubboClient.testVersion2GroupA(name));
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 版本与分组对比测试");
+
+            return ApiResponse.success("Dubbo 版本与分组对比测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 版本与分组对比测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 版本与分组对比测试失败: " + e.getMessage());
         }
     }
 

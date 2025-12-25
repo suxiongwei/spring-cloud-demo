@@ -1,5 +1,5 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
-<html lang="zh-CN">
+﻿﻿﻿﻿﻿
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="utf-8"/>
@@ -42,7 +42,7 @@
             min-width: 180px;
             max-width: 400px;
             background: linear-gradient(180deg, var(--card) 0%, color-mix(in srgb, var(--card) 98%, var(--background)) 100%);
-            border-right: 1px solid var(--border, #e5e7eb);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -91,7 +91,7 @@
 
         .sidebar-header {
             padding: 16px 12px;
-            border-bottom: 1px solid var(--border, #e5e7eb);
+            border-bottom: 1px solid var(--border);
             background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 3%, transparent) 0%, transparent 100%);
             display: flex;
             justify-content: center;
@@ -154,7 +154,7 @@
         }
 
         .sidebar-bottom {
-            border-top: 1px solid var(--border, #e5e7eb);
+            border-top: 1px solid var(--border);
             padding: 12px;
             background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--muted) 30%, transparent) 100%);
             flex-shrink: 0;
@@ -391,8 +391,8 @@
 
         .main-header {
             padding: 16px 24px;
-            background: var(--card, #ffffff);
-            border-bottom: 1px solid var(--border, #e5e7eb);
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -433,12 +433,12 @@
 
         .dark .sidebar {
             background: var(--card);
-            border-right-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+            border-right-color: var(--border);
         }
 
         .dark .sidebar-bottom {
             background: var(--card);
-            border-top-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+            border-top-color: var(--border);
         }
 
         .dark .user-info {
@@ -477,7 +477,7 @@
 
         .dark .main-header {
             background: var(--card);
-            border-bottom-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+            border-bottom-color: var(--border);
         }
 
         .dark .main-header .brand-title {
@@ -492,50 +492,7 @@
             background: color-mix(in srgb, var(--chart-3) 30%, transparent);
         }
 
-        /* 应用新主题变量到现有样式 */
-        :root {
-            /* 将新主题的颜色映射到现有变量 */
-            --bg-canvas: var(--background);
-            --bg-surface: var(--card);
-            --bg-surface-hover: var(--accent);
-            --border-default: var(--border);
-            --border-active: var(--primary);
 
-            --text-primary: var(--foreground);
-            --text-secondary: var(--muted-foreground);
-            --text-inverse: var(--card-foreground);
-
-            --accent-primary: var(--primary);
-            --accent-success: var(--chart-3);
-            --accent-warning: var(--chart-5);
-            --accent-danger: var(--destructive);
-
-            /* 字体映射 */
-            --font-ui: var(--font-sans);
-            --font-code: var(--font-mono);
-
-            /* 圆角映射 */
-            --radius-sm: var(--radius-sm);
-            --radius-md: var(--radius-md);
-            --radius-lg: var(--radius-lg);
-
-            /* 阴影映射 */
-            --shadow-sm: var(--shadow-sm);
-            --shadow-md: var(--shadow-md);
-            --shadow-lg: var(--shadow-lg);
-            --shadow-xl: var(--shadow-xl);
-
-            /* 渐变映射 */
-            --gradient-bg: linear-gradient(180deg, var(--background) 0%, var(--muted) 100%);
-            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, black) 100%);
-            --gradient-success: linear-gradient(135deg, var(--chart-3) 0%, color-mix(in srgb, var(--chart-3) 85%, black) 100%);
-            --gradient-warning: linear-gradient(135deg, var(--chart-5) 0%, color-mix(in srgb, var(--chart-5) 85%, black) 100%);
-
-            /* 彩色阴影映射 */
-            --shadow-colored-primary: var(--shadow-md);
-            --shadow-colored-success: var(--shadow-md);
-            --shadow-colored-warning: var(--shadow-md);
-        }
 
         /* Collapsible Code Block Styles */
         .code-block.collapsible {
@@ -555,13 +512,13 @@
             left: 0;
             width: 100%;
             height: 60px;
-            background: linear-gradient(to bottom, rgba(248, 249, 250, 0), rgba(248, 249, 250, 0.95) 40%, #f8f9fa 100%);
+            background: linear-gradient(to bottom, color-mix(in srgb, var(--background) 0%, transparent), color-mix(in srgb, var(--background) 95%, transparent) 40%, var(--background) 100%);
             pointer-events: none;
         }
 
         /* 深色模式下的折叠渐变效果 */
         .dark .code-block.collapsible.collapsed::after {
-            background: linear-gradient(to bottom, rgba(15, 23, 42, 0), rgba(15, 23, 42, 0.95) 40%, rgba(15, 23, 42, 1) 100%);
+            background: linear-gradient(to bottom, color-mix(in srgb, var(--background) 0%, transparent), color-mix(in srgb, var(--background) 95%, transparent) 40%, var(--background) 100%);
         }
 
         .collapse-btn {
@@ -573,9 +530,9 @@
             padding: 4px 16px;
             font-size: 12px;
             border-radius: 15px;
-            background: rgba(0, 0, 0, 0.05);
-            color: var(--text-secondary, #666);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: color-mix(in srgb, var(--foreground) 5%, transparent);
+            color: var(--muted-foreground);
+            border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
@@ -584,8 +541,8 @@
         }
 
         .collapse-btn:hover {
-            background: rgba(0, 0, 0, 0.1);
-            color: var(--text-primary, #333);
+            background: color-mix(in srgb, var(--foreground) 10%, transparent);
+            color: var(--foreground);
         }
 
         /* 深色模式下的collapse-btn样式 */
@@ -605,9 +562,9 @@
         }
 
         .component-detail {
-            background: var(--card, #ffffff);
-            border: 1px solid var(--border, #e5e7eb);
-            border-radius: var(--radius-md, 8px);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
             overflow: hidden;
             width: 100%;
             margin: 0 auto 16px auto;
@@ -619,7 +576,7 @@
         .component-detail-header {
             padding: 12px 16px;
             background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 5%, transparent) 0%, transparent 100%);
-            border-bottom: 1px solid var(--border, #e5e7eb);
+            border-bottom: 1px solid var(--border);
         }
 
         .component-detail-header .card-header {
@@ -760,12 +717,12 @@
 
         .dark .component-detail {
             background: var(--card);
-            border-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+            border-color: var(--border);
         }
 
         .dark .component-detail-header {
             background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 100%);
-            border-bottom-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+            border-bottom-color: var(--border);
         }
 
         .dark .component-detail-header .card-title {
@@ -777,11 +734,11 @@
         }
 
         .dark .component-detail-section {
-            border-bottom-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+            border-bottom-color: var(--border);
         }
 
         .dark .component-detail-features li {
-            border-bottom-color: color-mix(in srgb, var(--border) 70%, rgba(255, 255, 255, 0.1));
+            border-bottom-color: var(--border);
         }
 
         .dark .component-detail-feature-name {
@@ -1556,7 +1513,7 @@ public class DemoServiceImpl implements DemoService{}
                                 <div class="config-item api-address-item">
                                     <span class="config-label">📍 API 地址:</span>
                                     <span class="config-value api-address-value">GET
-                                            /api/order/dubbo/concurrency-test-backend?concurrentCount=20&sleepTime=1000</span>
+                                            /api/order/dubbo/concurrency?concurrentCount=10&sleepTime=3000</span>
                                 </div>
                             </div>
 
@@ -1565,31 +1522,105 @@ public class DemoServiceImpl implements DemoService{}
                                        placeholder="并发数量" style="width:120px">
                                 <input class="input" v-model.number="dubboSleepTime" type="number"
                                        placeholder="延迟(ms)" style="width:120px">
+                                <select class="input" v-model="dubboConcurrencyType" style="width:200px">
+                                    <option value="executes">Provider端-executes</option>
+                                    <option value="actives">Consumer端-actives</option>
+                                </select>
                                 <button class="btn btn-primary" @click="testDubboConcurrency()"><span>▶</span> 并发测试
                                 </button>
                             </div>
 
                             <div class="config-panel">
                                 <div class="config-item">
-                                    <span class="config-label">服务端并发控制 (executes):</span>
+                                    <span class="config-label" style="font-weight: 700;">1. 服务提供端限流：executes（侧重"自我保护"）</span>
+                                </div>
+                                <div class="config-item">
                                     <span class="config-value">
-                                        限制服务器端并发执行数(服务粒度)，控制某些服务的最大并发请求数，确保其他服务的资源可用性。
+                                        这是最常用的服务端限流手段，用于限制 Provider 某个接口或方法能同时处理的请求线程数。
                                     </span>
                                 </div>
+                                <div class="config-item">
+                                    <span class="config-label">应用场景：</span>
+                                    <span class="config-value">
+                                        基于<strong>资源确定性</strong>的保护。例如，已知数据库连接池上限为 20，可设置 executes="20"，确保涌入的流量不会击穿后端数据库。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">触发效果：</span>
+                                    <span class="config-value">
+                                        当并发数达到阈值时，Provider 将拒绝新请求。此时 Consumer 端通常会感知到<strong>服务端线程池溢出</strong>（TaskPool overflow）或<strong>调用超时</strong>（Timeout）。
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label" style="font-weight: 700;">2. 服务消费端限流：actives（侧重"故障隔离"）</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-value">
+                                        该参数限制的是当前 Consumer 实例对目标服务发起的最大并发调用数。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">应用场景：</span>
+                                    <span class="config-value">
+                                        防止<strong>慢服务拖垮调用者</strong>。例如，Consumer 同时调用 Service A 和 B，若 A 响应变慢且未设 actives 限制，Consumer 的所有线程可能被 A 占满，导致原本健康的 Service B 遭遇"饥饿"无法被调用。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">触发效果：</span>
+                                    <span class="config-value">
+                                        当并发数达到上限，新请求将在 <strong>Consumer 本地阻塞等待</strong>。直到之前的请求返回并释放信号量，后续请求才会发出。
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label" style="font-weight: 700;">3. 最佳实践建议</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">重点防御方向：</span>
+                                    <span class="config-value">
+                                        应优先配置 executes来重点防御Provider，作为服务提供方，你最清楚自身的"水位"（容量），这是系统稳健性的第一道、也是最重要的一道防线。<br>
+                                        谨慎配置Consumer限流，消费端限流会导致请求在本地堆积，增加系统排队的复杂性。除非是针对极耗时的长连接任务，否则通常建议优先通过设置合理的 timeout（超时机制）来快速失败，而非盲目阻塞。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">配合负载均衡：</span>
+                                    <span class="config-value">
+                                        推荐将限流与 loadbalance="leastactive"（最小活跃数负载均衡）配合使用。Dubbo 会自动将请求倾斜分配给并发数较低的节点，从而在集群维度实现流量的自适应调度。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">进阶治理方案：</span>
+                                    <span class="config-value">
+                                        对于复杂的生产环境（如热点参数限流、集群自适应保护），Dubbo 内置的静态配置可能略显单薄。建议集成 <strong>Sentinel</strong>（官方推荐），实现动态、细粒度且支持可视化监控的流量治理。
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">配置示例:</span>
                                     <span class="config-value">
                                         <div class="code-block no-copy collapsible">
-                                            <pre><code class="language-java">// 注解方式：限制服务端并发执行数不能超过 10 个
-@DubboService(executes=10)
-private DemoServiceImpl implements DemoService{}
-
-// 方法级别限制
-@DubboService(methods = {@Method(name="sayHello", executes=10)})
-private DemoServiceImpl implements DemoService{}
-
-// XML方式：
-&lt;dubbo:service interface="com.foo.BarService" executes="10" /&gt;</code></pre>
+                                            <pre><code class="language-java">// Consumer端配置:
+@DubboReference(
+    version = "1.0.0",
+    group = "product",
+    protocol = "dubbo",
+    methods = {@Method(name = "testConcurrencyControlV1", actives = 3, retries = 0, timeout = 5000)}
+)
+// Provider端配置:
+@DubboService(
+    version = "1.0.0",
+    group = "product",
+    retries = 2,
+    methods = {@Method(name = "testConcurrencyControlV2", executes = 5)}
+)
+</code></pre>
                                         </div>
                                     </span>
                                 </div>
@@ -1683,6 +1714,211 @@ private DemoService demoService;
                                             getResultDisplay('dubbo-leastactive')?.responseTime }}ms</span>
                                     <span v-if="getResultDisplay('dubbo-leastactive')?.code">HTTP {{
                                             getResultDisplay('dubbo-leastactive')?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+
+                        <!-- 8. Filter Interceptor Test -->
+                        <div class="control-group">
+                            <div class="control-label">Filter 拦截器</div>
+                            <div class="test-description">🔹 验证 Dubbo Filter 对请求和响应的动态拦截功能。Filter 可以在服务调用前后执行自定义逻辑，如日志记录、权限验证、参数校验等。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/filter-test?message={{dubboFilterMessage}}</span>
+                                </div>
+                            </div>
+                            <div class="input-row">
+                                <input class="input" v-model="dubboFilterMessage" type="text"
+                                       placeholder="测试消息" style="width:200px">
+                                <button class="btn btn-primary" @click="testDubboFilter()"><span>▶</span> Filter测试
+                                </button>
+                            </div>
+
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">Filter 工作原理:</span>
+                                    <span class="config-value">
+                                        Dubbo Filter 是基于责任链模式的拦截器机制，在服务调用前后执行自定义逻辑。每个 Filter 都可以访问请求参数、返回值、异常信息等。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">拦截时机:</span>
+                                    <span class="config-value">
+                                        <strong>请求拦截:</strong> 在方法调用前，可以获取接口名、方法名、参数类型、参数值、远程地址等信息。<br>
+                                        <strong>响应拦截:</strong> 在方法返回后，可以获取返回值、执行时间、异常信息等。
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">应用场景:</span>
+                                    <span class="config-value">
+                                        1. <strong>日志记录:</strong> 记录所有 RPC 调用的请求和响应信息<br>
+                                        2. <strong>权限验证:</strong> 验证调用方是否有权限访问服务<br>
+                                        3. <strong>参数校验:</strong> 在方法调用前校验参数合法性<br>
+                                        4. <strong>性能监控:</strong> 统计方法调用时间和成功率<br>
+                                        5. <strong>限流熔断:</strong> 实现自定义的限流和熔断逻辑
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">配置示例:</span>
+                                    <span class="config-value">
+                                        <div class="code-block no-copy collapsible">
+                                            <pre><code class="language-java">// 自定义Filter实现类
+@Slf4j
+@Component
+@Activate(group = {"provider", "consumer"})
+public class DemoFilter implements Filter {
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation invocation) {
+        long startTime = System.currentTimeMillis();
+        
+        // 请求拦截
+        String interfaceName = invoker.getInterface().getName();
+        String methodName = invocation.getMethodName();
+        log.info("调用接口: {}, 方法: {}", interfaceName, methodName);
+        
+        try {
+            // 执行实际调用
+            Result result = invoker.invoke(invocation);
+            
+            // 响应拦截
+            long duration = System.currentTimeMillis() - startTime;
+            log.info("执行时间: {}ms, 返回值: {}", duration, result.getValue());
+            
+            return result;
+        } catch (Exception e) {
+            log.error("调用异常: {}", e.getMessage());
+            throw e;
+        }
+    }
+}</code></pre>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-filter')?.status"
+                                 v-if="getResultDisplay('dubbo-filter')"
+                                 @click="showResultDetail('dubbo-filter')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">Filter拦截测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-filter')?.status">
+                                            {{ getResultDisplay('dubbo-filter')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-filter')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-filter')?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-filter')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-filter')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('dubbo-filter')?.code">HTTP {{
+                                            getResultDisplay('dubbo-filter')?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Version and Group Test -->
+                        <div class="control-group">
+                            <div class="control-label">版本与分组</div>
+                            <div class="test-description">🔹 验证 Dubbo 版本与分组功能。通过版本号和分组可以实现服务的灰度发布、多版本共存、环境隔离等功能。</div>
+                            
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">版本管理:</span>
+                                    <span class="config-value">
+                                        <strong>版本号:</strong> 通过 version 属性标识服务的不同版本，如 "1.0.0"、"2.0.0"<br>
+                                        <strong>分组:</strong> 通过 group 属性将服务分组，如 "default"、"groupA"、"groupB"<br>
+                                        <strong>组合使用:</strong> 版本号和分组可以组合使用，实现更精细的服务隔离
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">应用场景:</span>
+                                    <span class="config-value">
+                                        1. <strong>灰度发布:</strong> 新版本服务先部署到小部分节点，验证稳定后全量发布<br>
+                                        2. <strong>多版本共存:</strong> 不同业务线使用不同版本的服务，互不影响<br>
+                                        3. <strong>环境隔离:</strong> 开发、测试、生产环境使用不同的分组<br>
+                                        4. <strong>A/B测试:</strong> 不同分组提供不同的服务实现，对比效果
+                                    </span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">配置示例:</span>
+                                    <span class="config-value">
+                                        <div class="code-block no-copy collapsible">
+                                            <pre><code class="language-java">// 服务提供者 - 不同版本和分组
+@DubboService(interfaceClass = IVersionGroupService.class, version = "1.0.0", group = "default")
+public class VersionGroupServiceImplV1 implements IVersionGroupService { }
+
+@DubboService(interfaceClass = IVersionGroupService.class, version = "2.0.0", group = "default")
+public class VersionGroupServiceImplV2 implements IVersionGroupService { }
+
+@DubboService(interfaceClass = IVersionGroupService.class, version = "1.0.0", group = "groupA")
+public class VersionGroupServiceImplGroupA implements IVersionGroupService { }
+
+// 服务消费者 - 引用特定版本和分组
+@DubboReference(version = "1.0.0", group = "default", check = false)
+private IVersionGroupService versionGroupServiceV1Default;
+
+@DubboReference(version = "2.0.0", group = "default", check = false)
+private IVersionGroupService versionGroupServiceV2Default;
+
+@DubboReference(version = "1.0.0", group = "groupA", check = false)
+private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <input class="input" v-model="dubboVersionGroupName" type="text"
+                                       placeholder="测试名称" style="width:200px">
+                                <select class="input" v-model="dubboVersionGroupType" style="width:250px">
+                                    <option value="v1-default">v1.0.0 - 默认分组</option>
+                                    <option value="v2-default">v2.0.0 - 默认分组</option>
+                                    <option value="v1-groupA">v1.0.0 - 分组A</option>
+                                    <option value="v1-groupB">v1.0.0 - 分组B</option>
+                                    <option value="v2-groupA">v2.0.0 - 分组A</option>
+                                    <option value="compare">对比所有版本和分组</option>
+                                </select>
+                                <button class="btn btn-primary" @click="testDubboVersionGroup()"><span>▶</span> 测试
+                                </button>
+                            </div>
+
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('dubbo-version-group')?.status"
+                                 v-if="getResultDisplay('dubbo-version-group')"
+                                 @click="showResultDetail('dubbo-version-group')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">版本与分组测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('dubbo-version-group')?.status">
+                                            {{ getResultDisplay('dubbo-version-group')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('dubbo-version-group')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('dubbo-version-group')?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('dubbo-version-group')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('dubbo-version-group')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('dubbo-version-group')?.code">HTTP {{
+                                            getResultDisplay('dubbo-version-group')?.code }}</span>
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
