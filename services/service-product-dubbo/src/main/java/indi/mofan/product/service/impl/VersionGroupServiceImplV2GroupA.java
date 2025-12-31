@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -36,5 +37,10 @@ public class VersionGroupServiceImplV2GroupA implements IVersionGroupService {
         
         log.info("Group A Version 2.0.0 - getServerInfo called");
         return info;
+    }
+
+    @Override
+    public List<Map<String, Object>> getMenuItems() {
+        return List.of();
     }
 }

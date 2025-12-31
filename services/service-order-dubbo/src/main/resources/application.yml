@@ -69,6 +69,9 @@ dubbo:
     loadbalance: random
     # 集群模式：failover、failfast、failsafe、failback、forking
     cluster: failover
+    # 禁用 ScopeClusterWrapper 以解决 group="*" 和 merger="true" 时的 NPE 问题
+    parameters:
+      scope-cluster-wrapper.enabled: false
 
 ---
 spring:

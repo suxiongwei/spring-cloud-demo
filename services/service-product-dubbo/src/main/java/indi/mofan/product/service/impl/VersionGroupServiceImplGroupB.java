@@ -4,7 +4,9 @@ import indi.mofan.product.dubbo.service.IVersionGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -35,5 +37,28 @@ public class VersionGroupServiceImplGroupB implements IVersionGroupService {
         
         log.info("Group B Version 1.0.0 - getServerInfo called");
         return info;
+    }
+
+    @Override
+    public List<Map<String, Object>> getMenuItems() {
+        log.info("Group B Version 1.0.0 - getMenuItems called");
+        
+        List<Map<String, Object>> menuItems = new ArrayList<>();
+        
+        Map<String, Object> item1 = new HashMap<>();
+        item1.put("id", 3);
+        item1.put("name", "库存管理");
+        item1.put("path", "/inventory");
+        item1.put("group", "groupB");
+        menuItems.add(item1);
+        
+        Map<String, Object> item2 = new HashMap<>();
+        item2.put("id", 4);
+        item2.put("name", "供应商管理");
+        item2.put("path", "/suppliers");
+        item2.put("group", "groupB");
+        menuItems.add(item2);
+        
+        return menuItems;
     }
 }

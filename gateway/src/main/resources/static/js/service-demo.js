@@ -353,9 +353,17 @@ const app = createApp({
         updateSidebarWidth() {
             const sidebar = document.querySelector('.sidebar')
             const mainContent = document.querySelector('.main-content')
+            
             if (sidebar && mainContent) {
-                sidebar.style.width = this.sidebarWidth + 'px'
-                mainContent.style.marginLeft = this.sidebarWidth + 'px'
+                const isMobile = window.innerWidth <= 768
+                
+                if (isMobile) {
+                    sidebar.style.width = ''
+                    mainContent.style.marginLeft = ''
+                } else {
+                    sidebar.style.width = this.sidebarWidth + 'px'
+                    mainContent.style.marginLeft = this.sidebarWidth + 'px'
+                }
             }
         },
         formatTime(date) {
@@ -724,6 +732,9 @@ const app = createApp({
                     break;
                 case 'compare':
                     url = `/api/order/dubbo/version-group/compare?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
+                    break;
+                case 'group-merger':
+                    url = `/api/order/dubbo/version-group/group-merger`;
                     break;
                 default:
                     url = `/api/order/dubbo/version-group/v1-default?name=${encodeURIComponent(this.dubboVersionGroupName)}`;
@@ -1176,6 +1187,16 @@ const app = createApp({
                 htmlElement.classList.remove('dark');
                 localStorage.setItem('theme-mode', 'light');
             }
+        },
+
+        // 切换侧边栏显示（移动端）
+        toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar && overlay) {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('open');
+            }
         }
     },
     mounted() {
@@ -1184,6 +1205,11 @@ const app = createApp({
         
         // 初始化侧边栏宽度 - 延迟执行确保 DOM 完全渲染
         this.$nextTick(() => {
+            this.updateSidebarWidth();
+        });
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', () => {
             this.updateSidebarWidth();
         });
         
@@ -1207,6 +1233,9 @@ const app = createApp({
                 }, 50);
             });
         });
+    },
+    beforeUnmount() {
+        window.removeEventListener('resize', this.updateSidebarWidth);
     }
 })
 

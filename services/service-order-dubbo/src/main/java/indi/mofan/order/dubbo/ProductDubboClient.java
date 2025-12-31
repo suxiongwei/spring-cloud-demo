@@ -463,6 +463,24 @@ public class ProductDubboClient {
     private IVersionGroupService versionGroupServiceV2GroupA;
 
     /**
+     * 分组聚合 - 聚合版本 1.0.0 所有分组的菜单项
+     * 使用 group="*" 来聚合版本 1.0.0 的所有分组
+     * 
+     * 临时禁用：Dubbo 3.2.15 版本使用 group="*" 和 merger="true" 会导致 ScopeClusterInvoker NPE
+     */
+//    @DubboReference(version = "1.0.0", group = "*", check = false, merger = "true")
+//    private IVersionGroupService versionGroupServiceMergerV1;
+
+    /**
+     * 分组聚合 - 聚合版本 2.0.0 所有分组的菜单项
+     * 使用 group="*" 来聚合版本 2.0.0 的所有分组
+     * 
+     * 临时禁用：Dubbo 3.2.15 版本使用 group="*" 和 merger="true" 会导致 ScopeClusterInvoker NPE
+     */
+//    @DubboReference(version = "2.0.0", group = "*", check = false, merger = "true")
+//    private IVersionGroupService versionGroupServiceMergerV2;
+
+    /**
      * 测试版本 1.0.0 默认分组
      */
     public Map<String, Object> testVersion1Default(String name) {
@@ -547,5 +565,81 @@ public class ProductDubboClient {
         }
         
         return result;
+    }
+
+    /**
+     * 测试分组聚合 - 聚合所有版本和分组的菜单项
+     * 手动聚合各个分组的结果（替代 group="*" 和 merger="true"）
+     * 注意：由于 Dubbo 3.2.15 版本的 bug，无法使用 group="*" 和 merger="true"，
+     *       因此改为手动调用各个分组的服务并聚合结果
+     */
+    public Map<String, Object> testGroupMerger() {
+        try {
+            log.info("调用分组聚合服务 - 手动聚合所有版本和分组的菜单项");
+            
+            List<Map<String, Object>> mergedMenuItems = new ArrayList<>();
+            
+            try {
+                List<Map<String, Object>> v1DefaultItems = versionGroupServiceV1Default.getMenuItems();
+                if (v1DefaultItems != null) {
+                    mergedMenuItems.addAll(v1DefaultItems);
+                    log.info("版本 1.0.0 default 分组获取了 {} 个菜单项", v1DefaultItems.size());
+                }
+            } catch (Exception e) {
+                log.warn("版本 1.0.0 default 分组调用失败: {}", e.getMessage());
+            }
+            
+            try {
+                List<Map<String, Object>> v1GroupAItems = versionGroupServiceV1GroupA.getMenuItems();
+                if (v1GroupAItems != null) {
+                    mergedMenuItems.addAll(v1GroupAItems);
+                    log.info("版本 1.0.0 groupA 分组获取了 {} 个菜单项", v1GroupAItems.size());
+                }
+            } catch (Exception e) {
+                log.warn("版本 1.0.0 groupA 分组调用失败: {}", e.getMessage());
+            }
+            
+            try {
+                List<Map<String, Object>> v1GroupBItems = versionGroupServiceV1GroupB.getMenuItems();
+                if (v1GroupBItems != null) {
+                    mergedMenuItems.addAll(v1GroupBItems);
+                    log.info("版本 1.0.0 groupB 分组获取了 {} 个菜单项", v1GroupBItems.size());
+                }
+            } catch (Exception e) {
+                log.warn("版本 1.0.0 groupB 分组调用失败: {}", e.getMessage());
+            }
+            
+            try {
+                List<Map<String, Object>> v2DefaultItems = versionGroupServiceV2Default.getMenuItems();
+                if (v2DefaultItems != null) {
+                    mergedMenuItems.addAll(v2DefaultItems);
+                    log.info("版本 2.0.0 default 分组获取了 {} 个菜单项", v2DefaultItems.size());
+                }
+            } catch (Exception e) {
+                log.warn("版本 2.0.0 default 分组调用失败: {}", e.getMessage());
+            }
+            
+            try {
+                List<Map<String, Object>> v2GroupAItems = versionGroupServiceV2GroupA.getMenuItems();
+                if (v2GroupAItems != null) {
+                    mergedMenuItems.addAll(v2GroupAItems);
+                    log.info("版本 2.0.0 groupA 分组获取了 {} 个菜单项", v2GroupAItems.size());
+                }
+            } catch (Exception e) {
+                log.warn("版本 2.0.0 groupA 分组调用失败: {}", e.getMessage());
+            }
+            
+            Map<String, Object> result = new HashMap<>();
+            result.put("mergedMenuItems", mergedMenuItems);
+            result.put("totalItems", mergedMenuItems.size());
+            result.put("description", "这是通过手动聚合各个分组服务获取的所有版本和分组的菜单项");
+            
+            log.info("分组聚合成功，共聚合 {} 个菜单项", mergedMenuItems.size());
+            
+            return result;
+        } catch (Exception e) {
+            log.error("分组聚合调用失败: {}", e.getMessage());
+            throw e;
+        }
     }
 }

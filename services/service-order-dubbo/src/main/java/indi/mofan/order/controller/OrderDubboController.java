@@ -427,5 +427,28 @@ public class OrderDubboController {
         }
     }
 
+    /**
+     * Dubbo 分组聚合测试
+     * 使用 group="*" 和 merger="true" 来聚合所有分组的结果
+     */
+    @GetMapping("/version-group/group-merger")
+    public ApiResponse<Map<String, Object>> dubboGroupMerger() {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testGroupMerger();
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 分组聚合测试");
+
+            return ApiResponse.success("Dubbo 分组聚合测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 分组聚合测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 分组聚合测试失败: " + e.getMessage());
+        }
+    }
+
     // TODO 待测试Rest协议和Dubbo协议对比
 }
