@@ -124,6 +124,40 @@ public class ProductDubboClient {
     )
     private IProductDubboService productDubboService;
 
+    @DubboReference(
+            version = "1.0.0",
+            group = "product",
+            protocol = "triple",
+            retries = 0,
+            check = false,
+            lazy = false,
+            timeout = 5000,
+            methods = {
+                    @Method(name = "simulateTimeout", timeout = 2400, retries = 2),
+                    @Method(name = "listAllProducts", timeout = 5000, retries = 1),
+                    @Method(name = "testConcurrencyControlV1", actives = 3, retries = 0, timeout = 5000),
+                    @Method(name = "testLeastActiveLoadBalance", loadbalance = "leastactive")
+            }
+    )
+    private IProductDubboService productTripleService;
+
+    @DubboReference(
+            version = "1.0.0",
+            group = "product",
+            protocol = "rest",
+            retries = 0,
+            check = false,
+            lazy = false,
+            timeout = 5000,
+            methods = {
+                    @Method(name = "simulateTimeout", timeout = 2400, retries = 2),
+                    @Method(name = "listAllProducts", timeout = 5000, retries = 1),
+                    @Method(name = "testConcurrencyControlV1", actives = 3, retries = 0, timeout = 5000),
+                    @Method(name = "testLeastActiveLoadBalance", loadbalance = "leastactive")
+            }
+    )
+    private IProductDubboService productRestService;
+
     /**
      * 获取产品
      * 策略: failover 失败自动转憻ubbo幻想接点，查被包接戈预预錄
@@ -139,6 +173,56 @@ public class ProductDubboClient {
             return product;
         } catch (Exception e) {
             log.error("============ Dubbo RPC Call End (Failed) ============");
+            log.error("获取产品失败，ID: {}", productId, e);
+            log.warn("返回降级值. 故障: {}", e.getMessage());
+            // 降级处理：返回默认值
+            Product product = new Product();
+            product.setId(productId);
+            product.setProductName("产品模拟值");
+            product.setPrice(new java.math.BigDecimal("0.00"));
+            return product;
+        }
+    }
+
+    /**
+     * 获取产品 - Triple协议
+     */
+    public Product getProductTriple(Long productId) {
+        try {
+            log.info("============ Triple RPC Call Start ============");
+            log.info("通过Triple调用获取产品，ID: {}", productId);
+            log.info("消费端配置: version=1.0.0, group=product, timeout=5000");
+            Product product = productTripleService.getProductById(productId);
+            log.info("Triple调用成功，返回产品: {}", product);
+            log.info("============ Triple RPC Call End (Success) ============");
+            return product;
+        } catch (Exception e) {
+            log.error("============ Triple RPC Call End (Failed) ============");
+            log.error("获取产品失败，ID: {}", productId, e);
+            log.warn("返回降级值. 故障: {}", e.getMessage());
+            // 降级处理：返回默认值
+            Product product = new Product();
+            product.setId(productId);
+            product.setProductName("产品模拟值");
+            product.setPrice(new java.math.BigDecimal("0.00"));
+            return product;
+        }
+    }
+
+    /**
+     * 获取产品 - REST协议
+     */
+    public Product getProductRest(Long productId) {
+        try {
+            log.info("============ REST RPC Call Start ============");
+            log.info("通过REST调用获取产品，ID: {}", productId);
+            log.info("消费端配置: version=1.0.0, group=product, timeout=5000");
+            Product product = productRestService.getProductById(productId);
+            log.info("REST调用成功，返回产品: {}", product);
+            log.info("============ REST RPC Call End (Success) ============");
+            return product;
+        } catch (Exception e) {
+            log.error("============ REST RPC Call End (Failed) ============");
             log.error("获取产品失败，ID: {}", productId, e);
             log.warn("返回降级值. 故障: {}", e.getMessage());
             // 降级处理：返回默认值
@@ -641,5 +725,357 @@ public class ProductDubboClient {
             log.error("分组聚合调用失败: {}", e.getMessage());
             throw e;
         }
+    }
+
+    @DubboReference(
+            version = "1.0.0",
+            group = "product",
+            protocol = "dubbo",
+            loadbalance = "random"
+    )
+    private IProductDubboService productDubboServiceRandom;
+
+    @DubboReference(
+            version = "1.0.0",
+            group = "product",
+            protocol = "dubbo",
+            loadbalance = "roundrobin"
+    )
+    private IProductDubboService productDubboServiceRoundRobin;
+
+    @DubboReference(
+            version = "1.0.0",
+            group = "product",
+            protocol = "dubbo",
+            loadbalance = "consistenthash"
+    )
+    private IProductDubboService productDubboServiceConsistentHash;
+
+    @DubboReference(
+            version = "1.0.0",
+            group = "product",
+            protocol = "dubbo",
+            loadbalance = "leastactive"
+    )
+    private IProductDubboService productDubboServiceLeastActive;
+
+    @DubboReference(
+            version = "1.0.0",
+            group = "product",
+            protocol = "dubbo",
+            loadbalance = "shortestresponse"
+    )
+    private IProductDubboService productDubboServiceShortestResponse;
+
+    public Map<String, Object> testRandomLoadBalance(Integer requestCount) {
+        try {
+            log.info("开始随机负载均衡策略测试，请求次数: {}", requestCount);
+            Map<String, Object> result = new HashMap<>();
+            result.put("strategy", "random");
+            result.put("description", "随机策略：按权重随机选择服务器");
+            result.put("requestCount", requestCount);
+            
+            List<Map<String, Object>> requestResults = new ArrayList<>();
+            Map<String, Integer> serverCount = new HashMap<>();
+            
+            for (int i = 0; i < requestCount; i++) {
+                long startTime = System.currentTimeMillis();
+                Product product = productDubboServiceRandom.getProductById(1L);
+                long duration = System.currentTimeMillis() - startTime;
+                
+                Map<String, Object> requestResult = new HashMap<>();
+                requestResult.put("requestId", i + 1);
+                requestResult.put("productId", product.getId());
+                requestResult.put("productName", product.getProductName());
+                requestResult.put("responseTime", duration + "ms");
+                requestResults.add(requestResult);
+                
+                String serverKey = product.getProductName();
+                serverCount.put(serverKey, serverCount.getOrDefault(serverKey, 0) + 1);
+            }
+            
+            result.put("requestResults", requestResults);
+            result.put("serverDistribution", serverCount);
+            return result;
+        } catch (Exception e) {
+            log.error("随机负载均衡策略测试失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public Map<String, Object> testRoundRobinLoadBalance(Integer requestCount) {
+        try {
+            log.info("开始轮询负载均衡策略测试，请求次数: {}", requestCount);
+            Map<String, Object> result = new HashMap<>();
+            result.put("strategy", "roundrobin");
+            result.put("description", "轮询策略：按权重轮询选择服务器");
+            result.put("requestCount", requestCount);
+            
+            List<Map<String, Object>> requestResults = new ArrayList<>();
+            Map<String, Integer> serverCount = new HashMap<>();
+            
+            for (int i = 0; i < requestCount; i++) {
+                long startTime = System.currentTimeMillis();
+                Product product = productDubboServiceRoundRobin.getProductById(1L);
+                long duration = System.currentTimeMillis() - startTime;
+                
+                Map<String, Object> requestResult = new HashMap<>();
+                requestResult.put("requestId", i + 1);
+                requestResult.put("productId", product.getId());
+                requestResult.put("productName", product.getProductName());
+                requestResult.put("responseTime", duration + "ms");
+                requestResults.add(requestResult);
+                
+                String serverKey = product.getProductName();
+                serverCount.put(serverKey, serverCount.getOrDefault(serverKey, 0) + 1);
+            }
+            
+            result.put("requestResults", requestResults);
+            result.put("serverDistribution", serverCount);
+            return result;
+        } catch (Exception e) {
+            log.error("轮询负载均衡策略测试失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public Map<String, Object> testConsistentHashLoadBalance(Integer requestCount, Long param) {
+        try {
+            log.info("开始一致性哈希负载均衡策略测试，请求次数: {}, 固定ID: {}", requestCount, param);
+            Map<String, Object> result = new HashMap<>();
+            result.put("strategy", "consistenthash");
+            result.put("description", "一致性哈希策略：相同ID的请求总是发送到同一台服务器");
+            result.put("requestCount", requestCount);
+            result.put("fixedParam", param);
+            
+            List<Map<String, Object>> requestResults = new ArrayList<>();
+            Map<String, Integer> serverCount = new HashMap<>();
+            
+            for (int i = 0; i < requestCount; i++) {
+                long startTime = System.currentTimeMillis();
+                Product product = productDubboServiceConsistentHash.getProductById(param);
+                long duration = System.currentTimeMillis() - startTime;
+                
+                Map<String, Object> requestResult = new HashMap<>();
+                requestResult.put("requestId", i + 1);
+                requestResult.put("productId", product.getId());
+                requestResult.put("productName", product.getProductName());
+                requestResult.put("responseTime", duration + "ms");
+                requestResults.add(requestResult);
+                
+                String serverKey = product.getProductName();
+                serverCount.put(serverKey, serverCount.getOrDefault(serverKey, 0) + 1);
+            }
+            
+            result.put("requestResults", requestResults);
+            result.put("serverDistribution", serverCount);
+            result.put("allRequestsToSameServer", serverCount.size() == 1);
+            return result;
+        } catch (Exception e) {
+            log.error("一致性哈希负载均衡策略测试失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public Map<String, Object> testLeastActiveLoadBalanceStrategy(Integer requestCount) {
+        try {
+            log.info("开始最小活跃数负载均衡策略测试，请求次数: {}", requestCount);
+            Map<String, Object> result = new HashMap<>();
+            result.put("strategy", "leastactive");
+            result.put("description", "最小活跃数策略：选择活跃请求数最少的服务器");
+            result.put("requestCount", requestCount);
+            
+            List<Map<String, Object>> requestResults = new ArrayList<>();
+            Map<String, Integer> serverCount = new HashMap<>();
+            
+            for (int i = 0; i < requestCount; i++) {
+                long startTime = System.currentTimeMillis();
+                Product product = productDubboServiceLeastActive.getProductById(1L);
+                long duration = System.currentTimeMillis() - startTime;
+                
+                Map<String, Object> requestResult = new HashMap<>();
+                requestResult.put("requestId", i + 1);
+                requestResult.put("productId", product.getId());
+                requestResult.put("productName", product.getProductName());
+                requestResult.put("responseTime", duration + "ms");
+                requestResults.add(requestResult);
+                
+                String serverKey = product.getProductName();
+                serverCount.put(serverKey, serverCount.getOrDefault(serverKey, 0) + 1);
+            }
+            
+            result.put("requestResults", requestResults);
+            result.put("serverDistribution", serverCount);
+            return result;
+        } catch (Exception e) {
+            log.error("最小活跃数负载均衡策略测试失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public Map<String, Object> testShortestResponseLoadBalance(Integer requestCount) {
+        try {
+            log.info("开始最短响应时间负载均衡策略测试，请求次数: {}", requestCount);
+            Map<String, Object> result = new HashMap<>();
+            result.put("strategy", "shortestresponse");
+            result.put("description", "最短响应时间策略：选择响应时间最短的服务器");
+            result.put("requestCount", requestCount);
+            
+            List<Map<String, Object>> requestResults = new ArrayList<>();
+            Map<String, Integer> serverCount = new HashMap<>();
+            
+            for (int i = 0; i < requestCount; i++) {
+                long startTime = System.currentTimeMillis();
+                Product product = productDubboServiceShortestResponse.getProductById(1L);
+                long duration = System.currentTimeMillis() - startTime;
+                
+                Map<String, Object> requestResult = new HashMap<>();
+                requestResult.put("requestId", i + 1);
+                requestResult.put("productId", product.getId());
+                requestResult.put("productName", product.getProductName());
+                requestResult.put("responseTime", duration + "ms");
+                requestResults.add(requestResult);
+                
+                String serverKey = product.getProductName();
+                serverCount.put(serverKey, serverCount.getOrDefault(serverKey, 0) + 1);
+            }
+            
+            result.put("requestResults", requestResults);
+            result.put("serverDistribution", serverCount);
+            return result;
+        } catch (Exception e) {
+            log.error("最短响应时间负载均衡策略测试失败: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public Map<String, Object> compareProtocols(Long productId, Integer requestCount) {
+        log.info("开始协议对比测试，产品ID: {}, 请求次数: {}", productId, requestCount);
+        Map<String, Object> result = new HashMap<>();
+        result.put("productId", productId);
+        result.put("requestCount", requestCount);
+
+        Map<String, Object> dubboResult = new HashMap<>();
+        Map<String, Object> tripleResult = new HashMap<>();
+        Map<String, Object> restResult = new HashMap<>();
+
+        List<Long> dubboResponseTimes = new ArrayList<>();
+        List<Long> tripleResponseTimes = new ArrayList<>();
+        List<Long> restResponseTimes = new ArrayList<>();
+
+        int dubboSuccess = 0;
+        int tripleSuccess = 0;
+        int restSuccess = 0;
+
+        try {
+            for (int i = 0; i < requestCount; i++) {
+                long startTime;
+
+                startTime = System.currentTimeMillis();
+                try {
+                    productDubboService.getProductById(productId);
+                    dubboSuccess++;
+                    dubboResponseTimes.add(System.currentTimeMillis() - startTime);
+                } catch (Exception e) {
+                    log.warn("Dubbo协议调用失败: {}", e.getMessage());
+                }
+
+                startTime = System.currentTimeMillis();
+                try {
+                    productTripleService.getProductById(productId);
+                    tripleSuccess++;
+                    tripleResponseTimes.add(System.currentTimeMillis() - startTime);
+                } catch (Exception e) {
+                    log.warn("Triple协议调用失败: {}", e.getMessage());
+                }
+
+                startTime = System.currentTimeMillis();
+                try {
+                    productRestService.getProductById(productId);
+                    restSuccess++;
+                    restResponseTimes.add(System.currentTimeMillis() - startTime);
+                } catch (Exception e) {
+                    log.warn("REST协议调用失败: {}", e.getMessage());
+                }
+            }
+
+            dubboResult.put("successCount", dubboSuccess);
+            dubboResult.put("failCount", requestCount - dubboSuccess);
+            dubboResult.put("successRate", String.format("%.2f%%", (double) dubboSuccess / requestCount * 100));
+            if (!dubboResponseTimes.isEmpty()) {
+                dubboResult.put("avgResponseTime", dubboResponseTimes.stream().mapToLong(Long::longValue).average().orElse(0));
+                dubboResult.put("minResponseTime", dubboResponseTimes.stream().mapToLong(Long::longValue).min().orElse(0));
+                dubboResult.put("maxResponseTime", dubboResponseTimes.stream().mapToLong(Long::longValue).max().orElse(0));
+            }
+
+            tripleResult.put("successCount", tripleSuccess);
+            tripleResult.put("failCount", requestCount - tripleSuccess);
+            tripleResult.put("successRate", String.format("%.2f%%", (double) tripleSuccess / requestCount * 100));
+            if (!tripleResponseTimes.isEmpty()) {
+                tripleResult.put("avgResponseTime", tripleResponseTimes.stream().mapToLong(Long::longValue).average().orElse(0));
+                tripleResult.put("minResponseTime", tripleResponseTimes.stream().mapToLong(Long::longValue).min().orElse(0));
+                tripleResult.put("maxResponseTime", tripleResponseTimes.stream().mapToLong(Long::longValue).max().orElse(0));
+            }
+
+            restResult.put("successCount", restSuccess);
+            restResult.put("failCount", requestCount - restSuccess);
+            restResult.put("successRate", String.format("%.2f%%", (double) restSuccess / requestCount * 100));
+            if (!restResponseTimes.isEmpty()) {
+                restResult.put("avgResponseTime", restResponseTimes.stream().mapToLong(Long::longValue).average().orElse(0));
+                restResult.put("minResponseTime", restResponseTimes.stream().mapToLong(Long::longValue).min().orElse(0));
+                restResult.put("maxResponseTime", restResponseTimes.stream().mapToLong(Long::longValue).max().orElse(0));
+            }
+
+            result.put("dubbo", dubboResult);
+            result.put("triple", tripleResult);
+            result.put("rest", restResult);
+            result.put("summary", generateComparisonSummary(dubboResult, tripleResult, restResult));
+
+        } catch (Exception e) {
+            log.error("协议对比测试失败: {}", e.getMessage(), e);
+            result.put("error", e.getMessage());
+        }
+
+        return result;
+    }
+
+    private Map<String, Object> generateComparisonSummary(Map<String, Object> dubbo, Map<String, Object> triple, Map<String, Object> rest) {
+        Map<String, Object> summary = new HashMap<>();
+
+        Double dubboAvg = (Double) dubbo.get("avgResponseTime");
+        Double tripleAvg = (Double) triple.get("avgResponseTime");
+        Double restAvg = (Double) rest.get("avgResponseTime");
+
+        if (dubboAvg != null && tripleAvg != null && restAvg != null) {
+            Double fastest = Math.min(dubboAvg, Math.min(tripleAvg, restAvg));
+            String fastestProtocol;
+            if (fastest.equals(dubboAvg)) {
+                fastestProtocol = "Dubbo";
+            } else if (fastest.equals(tripleAvg)) {
+                fastestProtocol = "Triple";
+            } else {
+                fastestProtocol = "REST";
+            }
+            summary.put("fastestProtocol", fastestProtocol);
+            summary.put("fastestAvgTime", fastest);
+        }
+
+        Integer dubboSuccess = (Integer) dubbo.get("successCount");
+        Integer tripleSuccess = (Integer) triple.get("successCount");
+        Integer restSuccess = (Integer) rest.get("successCount");
+
+        Integer highestSuccess = Math.max(dubboSuccess, Math.max(tripleSuccess, restSuccess));
+        String mostReliableProtocol;
+        if (highestSuccess.equals(dubboSuccess)) {
+            mostReliableProtocol = "Dubbo";
+        } else if (highestSuccess.equals(tripleSuccess)) {
+            mostReliableProtocol = "Triple";
+        } else {
+            mostReliableProtocol = "REST";
+        }
+        summary.put("mostReliableProtocol", mostReliableProtocol);
+        summary.put("highestSuccessCount", highestSuccess);
+
+        return summary;
     }
 }

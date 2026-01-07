@@ -21,12 +21,7 @@ public class DemoFilter implements Filter {
         String methodName = invocation.getMethodName();
         String remoteAddress = rpcContext.getRemoteHost() + ":" + rpcContext.getRemotePort();
 
-        log.info("=== Dubbo Filter 拦截开始 ===");
-        log.info("接口: {}", interfaceName);
-        log.info("方法: {}", methodName);
-        log.info("远程地址: {}", remoteAddress);
-        log.info("参数类型: {}", Arrays.toString(invocation.getParameterTypes()));
-        log.info("参数值: {}", Arrays.toString(invocation.getArguments()));
+        log.info("=== Dubbo Filter 拦截开始 === 接口: {}, 方法: {}, 远程地址: {}, 参数类型: {}, 参数值: {}", interfaceName, methodName, remoteAddress, Arrays.toString(invocation.getParameterTypes()), Arrays.toString(invocation.getArguments()));
 
         Map<String, Object> requestInfo = new HashMap<>();
         requestInfo.put("interfaceName", interfaceName);
@@ -43,10 +38,7 @@ public class DemoFilter implements Filter {
 
             long duration = System.currentTimeMillis() - startTime;
 
-            log.info("=== Dubbo Filter 拦截结束 ===");
-            log.info("执行时间: {}ms", duration);
-            log.info("返回值: {}", result.getValue());
-            log.info("异常: {}", result.getException());
+            log.info("=== Dubbo Filter 拦截结束 === 执行时间: {}ms, 返回值: {}, 异常: {}", duration, result.getValue(), result.getException());
 
             Map<String, Object> responseInfo = new HashMap<>();
             responseInfo.put("duration", duration);

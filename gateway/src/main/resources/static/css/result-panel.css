@@ -220,3 +220,81 @@
         gap: 4px;
     }
 }
+
+/* 负载均衡策略详情模态框样式 */
+.strategy-modal {
+    width: 800px;
+    max-width: 90vw;
+}
+
+.strategy-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.strategy-section {
+    padding: 16px;
+    background: var(--bg-canvas);
+    border-radius: 8px;
+    border: 1px solid var(--border-default);
+}
+
+.dark .strategy-section {
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+    border-color: var(--border-default);
+}
+
+.strategy-section-title {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border-default);
+}
+
+.dark .strategy-section-title {
+    color: var(--primary);
+    border-bottom-color: var(--border-default);
+}
+
+.strategy-section-content {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-primary);
+}
+
+.dark .strategy-section-content {
+    color: var(--text-primary);
+}
+
+.strategy-section-content strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.dark .strategy-section-content strong {
+    color: var(--primary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .strategy-modal {
+        width: 95vw;
+        max-width: none;
+        margin: 20px;
+    }
+    
+    .strategy-section {
+        padding: 12px;
+    }
+    
+    .strategy-section-title {
+        font-size: 14px;
+    }
+    
+    .strategy-section-content {
+        font-size: 13px;
+    }
+}

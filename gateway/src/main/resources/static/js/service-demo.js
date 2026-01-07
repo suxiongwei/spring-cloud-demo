@@ -96,6 +96,23 @@ const app = createApp({
                     github: 'https://github.com/alibaba/higress',
                     website: 'https://higress.io'
                 },
+                gateway: {
+                    title: 'Spring Cloud Gateway',
+                    name: 'Spring Cloud Gateway',
+                    subtitle: 'API 网关',
+                    description: '基于 Spring 5.0、Spring Boot 2.0 和 Project Reactor 等技术开发的 API 网关，提供统一的路由转发和过滤器机制。',
+                    icon: 'spring-cloud.png',
+                    features: [
+                        { name: '动态路由', description: '基于 Predicate 匹配的动态路由配置' },
+                        { name: '过滤器', description: '前置和后置过滤器，支持请求修改' },
+                        { name: '负载均衡', description: '集成 Ribbon 实现客户端负载均衡' },
+                        { name: '限流熔断', description: '集成 Sentinel 实现限流和熔断' }
+                    ],
+                    actions: ['路由测试', '认证测试', '限流测试', '过滤器测试'],
+                    docs: 'https://spring.io/projects/spring-cloud-gateway',
+                    github: 'https://github.com/spring-cloud/spring-cloud-gateway',
+                    website: 'https://spring.io/projects/spring-cloud-gateway'
+                },
                 sca: {
                     title: 'Spring Cloud',
                     name: 'Spring Cloud',
@@ -231,6 +248,23 @@ const app = createApp({
                     docs: 'https://opentelemetry.io',
                     github: 'https://github.com/open-telemetry',
                     website: 'https://opentelemetry.io'
+                },
+                redis: {
+                    title: 'Redis',
+                    name: 'Redis',
+                    subtitle: '内存数据库',
+                    description: '开源的内存数据结构存储,可用作数据库、缓存和消息中间件。',
+                    icon: 'redis.png',
+                    features: [
+                        { name: '高性能', description: '基于内存操作,读写速度极快' },
+                        { name: '数据结构', description: '支持 String、Hash、List、Set 等多种数据结构' },
+                        { name: '持久化', description: '支持 RDB 和 AOF 两种持久化方式' },
+                        { name: '主从复制', description: '支持主从复制和哨兵模式' }
+                    ],
+                    actions: ['缓存读写', '分布式锁', '消息队列', '限流计数'],
+                    docs: 'https://redis.io',
+                    github: 'https://github.com/redis/redis',
+                    website: 'https://redis.io'
                 }
             },
 
@@ -254,6 +288,14 @@ const app = createApp({
             dubboVersionGroupName: 'World',
             dubboVersionGroupType: 'v1-default',
             compareTimes: 5,
+            loadBalanceRequestCount: 20,
+            loadBalanceStrategy: 'random',
+            loadBalanceParam: 1,
+            loadBalanceResult: null,
+
+            // 负载均衡策略详情弹窗
+            showStrategyModal: false,
+            currentStrategyDetails: null,
 
             // System
             history: [],
@@ -268,20 +310,17 @@ const app = createApp({
             isDarkMode: localStorage.getItem('theme-mode') === 'dark' || 
                         (!localStorage.getItem('theme-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches),
 
-            // 侧边栏菜单展开状态
-            expandedMenus: {
-                control: false,
-                governance: false,
-                communication: false,
-                gateway: false,
-                data: false
-            },
+            // 下拉菜单状态
+            openDropdown: null,
 
-            // 侧边栏宽度
-            sidebarWidth: localStorage.getItem('sidebar-width') || 240,
+            // 移动端菜单状态
+            mobileMenuOpen: false,
+            mobileDropdown: null,
 
             // Individual result displays for each test scenario
-            resultDisplays: {}
+            resultDisplays: {},
+            // Loading states for each test
+            loadingStates: {}
         }
     },
     watch: {
@@ -299,6 +338,10 @@ const app = createApp({
         selectComponent(id) {
             this.activeComponent = id
             this.updateActivePanoramaTab(id)
+            if (this.mobileMenuOpen) {
+                this.mobileMenuOpen = false
+                this.mobileDropdown = null
+            }
         },
         updateActivePanoramaTab(componentId) {
             const componentMap = {
@@ -321,49 +364,28 @@ const app = createApp({
             }
             const menuKey = componentMap[componentId] || 'communication'
             this.activePanoramaTab = menuKey
-            this.expandedMenus[menuKey] = true
         },
-        toggleMenu(menuKey) {
-            this.expandedMenus[menuKey] = !this.expandedMenus[menuKey]
-        },
-        startResize(e) {
-            e.preventDefault()
-            const startX = e.clientX
-            const startWidth = this.sidebarWidth
-            const resizer = e.target
-            resizer.classList.add('resizing')
-            
-            const onMouseMove = (moveEvent) => {
-                const deltaX = moveEvent.clientX - startX
-                const newWidth = Math.max(180, Math.min(400, startWidth + deltaX))
-                this.sidebarWidth = newWidth
-                this.updateSidebarWidth()
+        toggleDropdown(index) {
+            if (this.openDropdown === index) {
+                this.openDropdown = null
+            } else {
+                this.openDropdown = index
             }
-            
-            const onMouseUp = () => {
-                document.removeEventListener('mousemove', onMouseMove)
-                document.removeEventListener('mouseup', onMouseUp)
-                resizer.classList.remove('resizing')
-                localStorage.setItem('sidebar-width', this.sidebarWidth)
-            }
-            
-            document.addEventListener('mousemove', onMouseMove)
-            document.addEventListener('mouseup', onMouseUp)
         },
-        updateSidebarWidth() {
-            const sidebar = document.querySelector('.sidebar')
-            const mainContent = document.querySelector('.main-content')
-            
-            if (sidebar && mainContent) {
-                const isMobile = window.innerWidth <= 768
-                
-                if (isMobile) {
-                    sidebar.style.width = ''
-                    mainContent.style.marginLeft = ''
-                } else {
-                    sidebar.style.width = this.sidebarWidth + 'px'
-                    mainContent.style.marginLeft = this.sidebarWidth + 'px'
-                }
+        closeDropdown() {
+            this.openDropdown = null
+        },
+        toggleMobileMenu() {
+            this.mobileMenuOpen = !this.mobileMenuOpen
+            if (!this.mobileMenuOpen) {
+                this.mobileDropdown = null
+            }
+        },
+        toggleMobileDropdown(index) {
+            if (this.mobileDropdown === index) {
+                this.mobileDropdown = null
+            } else {
+                this.mobileDropdown = index
             }
         },
         formatTime(date) {
@@ -411,7 +433,11 @@ const app = createApp({
                 'feign-interceptor': '/api/order/demo/feign-interceptor',
                 'config-refresh': '/api/order/demo/config-refresh',
                 'health-check': '/api/order/demo/health-check',
-                'feign-enhanced': `/api/order/demo/feign/call-enhanced?productId=${this.feignProductId}`
+                'feign-enhanced': `/api/order/demo/feign/call-enhanced?productId=${this.feignProductId}`,
+                'protocol-compare': '/api/order/dubbo/protocol/compare',
+                'protocol-dubbo': '/api/order/dubbo/protocol/dubbo',
+                'protocol-triple': '/api/order/dubbo/protocol/triple',
+                'protocol-rest': '/api/order/dubbo/protocol/rest'
             }
             return map[t] || '/'
         },
@@ -741,6 +767,51 @@ const app = createApp({
             }
             await this.callWithResultDisplay(url, `dubbo-version-group-${this.dubboVersionGroupType}`, 'dubbo-version-group')
         },
+        async testLoadBalanceStrategy() {
+            const strategy = this.loadBalanceStrategy;
+            const strategyNames = {
+                'random': '随机策略',
+                'roundrobin': '轮询策略',
+                'consistenthash': '一致性哈希策略',
+                'leastactive': '最小活跃数策略',
+                'shortestresponse': '最短响应时间策略'
+            };
+            
+            let url;
+            if (strategy === 'consistenthash') {
+                const param = this.loadBalanceParam || 'test-001';
+                url = `/api/order/dubbo/loadbalance/${strategy}?requestCount=${this.loadBalanceRequestCount || 20}&param=${param}`;
+            } else {
+                url = `/api/order/dubbo/loadbalance/${strategy}?requestCount=${this.loadBalanceRequestCount || 20}`;
+            }
+            
+            const startTime = Date.now();
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const endTime = Date.now();
+                
+                this.loadBalanceResult = {
+                    status: data.code === 200 ? 'success' : 'error',
+                    title: `${strategyNames[strategy]}测试结果`,
+                    message: data.message || (data.data ? JSON.stringify(data.data).substring(0, 200) + '...' : '无返回信息'),
+                    timestamp: new Date().toLocaleTimeString(),
+                    responseTime: endTime - startTime,
+                    code: response.status,
+                    data: data
+                };
+            } catch (error) {
+                const endTime = Date.now();
+                this.loadBalanceResult = {
+                    status: 'error',
+                    title: `${strategyNames[strategy]}测试结果`,
+                    message: `请求失败: ${error.message}`,
+                    timestamp: new Date().toLocaleTimeString(),
+                    responseTime: endTime - startTime,
+                    code: null
+                };
+            }
+        },
         async testFeign() {
             await this.callWithResultDisplay(this.endpoint('feign'), 'feign', 'sca-feign')
         },
@@ -791,6 +862,31 @@ const app = createApp({
                 ])
             }
         },
+        async testProtocolCompare() {
+            const url = this.endpoint('protocol-compare') + `?productId=${this.dubboProductId}&requestCount=${this.compareTimes}`;
+            await this.callWithResultDisplay(url, 'protocol-compare', 'protocol-compare')
+        },
+        async testProtocolDubbo() {
+            if (this.loadingStates['protocol-dubbo']) return
+            this.loadingStates['protocol-dubbo'] = true
+            const url = this.endpoint('protocol-dubbo') + `?productId=${this.dubboProductId}`;
+            await this.callWithResultDisplay(url, 'protocol-dubbo', 'protocol-dubbo')
+            this.loadingStates['protocol-dubbo'] = false
+        },
+        async testProtocolTriple() {
+            if (this.loadingStates['protocol-triple']) return
+            this.loadingStates['protocol-triple'] = true
+            const url = this.endpoint('protocol-triple') + `?productId=${this.dubboProductId}`;
+            await this.callWithResultDisplay(url, 'protocol-triple', 'protocol-triple')
+            this.loadingStates['protocol-triple'] = false
+        },
+        async testProtocolRest() {
+            if (this.loadingStates['protocol-rest']) return
+            this.loadingStates['protocol-rest'] = true
+            const url = this.endpoint('protocol-rest') + `?productId=${this.dubboProductId}`;
+            await this.callWithResultDisplay(url, 'protocol-rest', 'protocol-rest')
+            this.loadingStates['protocol-rest'] = false
+        },
         async call(url, type) {
             try {
                 const s = performance.now()
@@ -835,6 +931,33 @@ const app = createApp({
             })
         },
         showResultDetail(testId) {
+            if (testId === 'loadbalance') {
+                const result = this.loadBalanceResult
+                if (result && result.data) {
+                    this.detailView = JSON.stringify(result.data, null, 2)
+                    this.showDetailModal = true
+                    this.$nextTick(() => {
+                        this.highlightCode()
+                    })
+                } else if (result) {
+                    const detailInfo = {
+                        testId: testId,
+                        status: result.status,
+                        title: result.title,
+                        message: result.message,
+                        timestamp: result.timestamp,
+                        responseTime: result.responseTime,
+                        code: result.code
+                    }
+                    this.detailView = JSON.stringify(detailInfo, null, 2)
+                    this.showDetailModal = true
+                    this.$nextTick(() => {
+                        this.highlightCode()
+                    })
+                }
+                return
+            }
+            
             const result = this.resultDisplays[testId]
             if (result && result.data) {
                 this.detailView = JSON.stringify(result.data, null, 2)
@@ -842,16 +965,11 @@ const app = createApp({
                 this.$nextTick(() => {
                     this.highlightCode()
                 })
-            } else if (result && result.rawData) {
-                this.detailView = JSON.stringify(result.rawData, null, 2)
-                this.showDetailModal = true
-                this.$nextTick(() => {
-                    this.highlightCode()
-                })
-            } else if (result && result.message) {
+            } else if (result) {
                 const detailInfo = {
                     testId: testId,
                     status: result.status,
+                    title: result.title,
                     message: result.message,
                     timestamp: result.timestamp,
                     responseTime: result.responseTime,
@@ -863,6 +981,144 @@ const app = createApp({
                     this.highlightCode()
                 })
             }
+        },
+        showStrategyDetails(strategy) {
+            const strategyDetails = {
+                random: {
+                    title: 'Random（随机策略）—— Dubbo 的默认策略',
+                    sections: [
+                        {
+                            label: '工作原理',
+                            content: '随机策略根据后端服务器设定的<strong>权重（Weight）</strong>来随机选择一台进行调用。假设有三台服务器 A, B, C，权重分别为 1, 2, 3。Dubbo 会计算一个总权重（1+2+3=6），然后在 0 到 6 之间生成一个随机数。根据随机数落在哪个区间来决定调用哪台机器。'
+                        },
+                        {
+                            label: '优点',
+                            content: '• <strong>性能极高：</strong>计算量小，不需要维护额外的状态（如计数器）。<br>• <strong>自动均衡：</strong>在调用量足够大的情况下，请求分布会自动趋近于权重的比例。<br>• <strong>避免拥堵：</strong>如果某台机器瞬间变慢，随机性可以避免后续所有请求像"排队"一样死磕在某台机器上。'
+                        },
+                        {
+                            label: '缺点',
+                            content: '<strong>瞬时分布不均：</strong>在请求量较少时，可能会出现连续多次抽中同一台机器的情况。'
+                        }
+                    ]
+                },
+                roundrobin: {
+                    title: 'RoundRobin（轮询策略）',
+                    sections: [
+                        {
+                            label: '工作原理',
+                            content: '轮询策略按顺序循环调用后端服务器，并同样支持权重。Dubbo 采用的是<strong>加权轮询（Weighted Round Robin）</strong>。它会维护一个调用计数。如果三台机器 A, B, C 权重一致，请求顺序就是 A -> B -> C -> A...。如果权重不同，它会确保在一个循环周期内，高权重的机器分配到更多的请求，且分发尽量平滑。'
+                        },
+                        {
+                            label: '优点',
+                            content: '<strong>绝对均匀：</strong>请求分发非常死板且精准，能够严格保证每台机器接收到的请求数符合比例。'
+                        },
+                        {
+                            label: '缺点',
+                            content: '• <strong>维护成本：</strong>需要维护请求计数状态。<br>• <strong>慢连接堆积：</strong>这是轮询最大的弊端。如果服务器 A 反应极慢，由于轮询是强迫性的，请求依然会按计划发给 A，导致 A 上的请求越积越多，最终可能拖垮整个链路（随机策略则可以通过概率规避部分影响）。'
+                        }
+                    ]
+                },
+                consistenthash: {
+                    title: 'ConsistentHash（一致性哈希策略）',
+                    sections: [
+                        {
+                            label: '核心特性',
+                            content: '在 Dubbo 的负载均衡体系中，ConsistentHash（一致性哈希）是一种非常特殊且强大的策略。它与 Random 或 RoundRobin 不同，它不追求"绝对的平均"，而是追求<strong>"请求的确定性"</strong>。简单来说，一致性哈希能保证：相同的请求参数，总是发往同一台提供者。'
+                        },
+                        {
+                            label: '核心原理：哈希环',
+                            content: '一致性哈希将整个哈希值空间组织成一个虚拟的圆环（范围是 0 到 2<sup>32</sup>-1）：<br>• <strong>节点映射：</strong>将每台服务器（Provider）的 IP 或 ID 进行哈希计算，映射到环上的某个位置。<br>• <strong>请求映射：</strong>当请求进来时，根据指定的请求参数进行哈希计算，映射到环上的一个点。<br>• <strong>顺时针寻址：</strong>从请求映射的点开始，在环上顺时针行走，遇到的第一台服务器就是该请求的处理者。'
+                        },
+                        {
+                            label: 'Dubbo 引入的关键特性：虚拟节点（Virtual Nodes）',
+                            content: '为了解决"哈希倾斜"（即服务器在环上分布不均，导致某台机器压力过大）的问题，Dubbo 默认引入了虚拟节点：它会对每台物理服务器模拟出多个"影子"节点（默认 160 份）。这样服务器在环上的分布就会非常均匀，即便某一台机器下线，请求也会平摊给剩余的所有机器，而不是全部挤向下一台。'
+                        },
+                        {
+                            label: '使用场景：为什么需要它？',
+                            content: '• <strong>服务端本地缓存：</strong>如果 Provider 会在本地缓存某些昂贵的数据（如复杂的视频版权规则、用户信息），一致性哈希能确保相同用户的请求一直打到同一台机器，从而极大地提高缓存命中率。<br>• <strong>有状态服务：</strong>某些操作需要连续性（比如分片上传视频），确保同一个任务的后续请求都能找到之前的处理者。<br>• <strong>降低抖动风险：</strong>当集群扩容或缩容（增加/减少机器）时，一致性哈希只会导致局部请求失效（重新路由），而不会像普通的 hash(key) % N 策略那样导致全网缓存失效。'
+                        },
+                        {
+                            label: '关键配置参数',
+                            content: '在 Dubbo 中使用一致性哈希，需要关注几个关键配置：<br>• <strong>loadbalance="consistenthash"</strong>：开启一致性哈希负载均衡。<br>• <strong>hash.arguments</strong>：最重要配置。指定用第几个参数做哈希（如 0 表示第一个参数）。相同的参数值会被路由到同一台机器。<br>• <strong>hash.nodes</strong>：虚拟节点数，默认 160，通常不需要改动。'
+                        }
+                    ]
+                },
+                leastactive: {
+                    title: 'LeastActive（最小活跃数策略）',
+                    sections: [
+                        {
+                            label: '工作原理',
+                            content: '最小活跃数策略的核心思想是"能者多劳"。它优先选择当前活跃请求数最少的服务器。活跃请求数是指服务器当前正在处理的请求数量。如果活跃数相同，则采用加权随机策略选择。'
+                        },
+                        {
+                            label: '优点',
+                            content: '• <strong>智能调度：</strong>自动将请求分配给负载较轻的服务器，避免某些服务器过载。<br>• <strong>自适应能力：</strong>能够根据服务器的实际处理能力动态调整请求分配。<br>• <strong>提高整体性能：</strong>充分利用高性能服务器的处理能力。'
+                        },
+                        {
+                            label: '缺点',
+                            content: '<strong>需要维护状态：</strong>需要实时跟踪每台服务器的活跃请求数，增加了复杂度。'
+                        }
+                    ]
+                },
+                shortestresponse: {
+                    title: 'ShortestResponse（最短响应时间策略）',
+                    sections: [
+                        {
+                            label: '工作原理',
+                            content: '最短响应时间策略优先选择响应时间最短的服务器。它会记录每台服务器的平均响应时间，并选择响应时间最短的服务器。如果响应时间相同，则采用加权随机策略选择。'
+                        },
+                        {
+                            label: '优点',
+                            content: '• <strong>关注用户体验：</strong>优先选择响应快的服务器，提高用户体验。<br>• <strong>动态调整：</strong>根据实际响应时间动态调整请求分配。<br>• <strong>避免慢节点：</strong>自动避开响应慢的服务器，提高整体性能。'
+                        },
+                        {
+                            label: '缺点',
+                            content: '• <strong>需要历史数据：</strong>需要收集和维护每台服务器的响应时间历史。<br>• <strong>冷启动问题：</strong>新服务器可能因为没有历史数据而被冷落。'
+                        }
+                    ]
+                },
+                p2c: {
+                    title: 'P2C（Power of Two Choice）',
+                    sections: [
+                        {
+                            label: '工作原理',
+                            content: 'P2C（Power of Two Choice）算法是一种简单而有效的负载均衡策略。它随机选择两台服务器，然后比较这两台服务器的连接数，选择连接数较少的那一台。这种策略在理论上可以显著降低最大负载。'
+                        },
+                        {
+                            label: '优点',
+                            content: '• <strong>简单高效：</strong>算法简单，计算量小，性能高。<br>• <strong>负载均衡效果好：</strong>理论证明可以显著降低最大负载，比纯随机策略更均衡。<br>• <strong>无需复杂状态：</strong>只需要知道每台服务器的连接数即可。'
+                        },
+                        {
+                            label: '缺点',
+                            content: '<strong>随机性：</strong>虽然比纯随机好，但仍然有一定的随机性，无法做到绝对的均衡。'
+                        }
+                    ]
+                },
+                adaptive: {
+                    title: 'Adaptive（自适应负载均衡）',
+                    sections: [
+                        {
+                            label: '工作原理',
+                            content: '自适应负载均衡策略在 P2C 算法的基础上，进一步考虑了服务器的负载情况。它随机选择两台服务器，然后比较这两台服务器的综合负载指标（如连接数、CPU 使用率、内存使用率等），选择负载较低的那一台。这种策略能够更智能地分配请求，充分利用服务器资源。'
+                        },
+                        {
+                            label: '优点',
+                            content: '• <strong>智能调度：</strong>综合考虑多种负载指标，做出更智能的决策。<br>• <strong>动态适应：</strong>能够根据服务器的实时负载情况动态调整请求分配。<br>• <strong>资源利用率高：</strong>充分利用服务器资源，提高整体性能。'
+                        },
+                        {
+                            label: '缺点',
+                            content: '• <strong>复杂度高：</strong>需要收集和维护多种负载指标，实现复杂度较高。<br>• <strong>性能开销：</strong>需要额外的计算和存储开销来维护负载指标。'
+                        }
+                    ]
+                }
+            }
+            
+            this.currentStrategyDetails = strategyDetails[strategy]
+            this.showStrategyModal = true
+        },
+        closeStrategyModal() {
+            this.showStrategyModal = false
+            this.currentStrategyDetails = null
         },
         highlightCode() {
             const display = document.getElementById('json-display')
@@ -955,6 +1211,13 @@ const app = createApp({
                     rt
                 }
 
+                // Remove old results of the same type to avoid duplicates
+                for (let i = this.history.length - 1; i >= 0; i--) {
+                    if (this.history[i].type === type) {
+                        this.history.splice(i, 1)
+                    }
+                }
+
                 // Add to main history
                 this.history.unshift(item)
                 if (this.history.length > 100) this.history.pop()
@@ -983,6 +1246,13 @@ const app = createApp({
                     rt: 0
                 }
 
+                // Remove old results of the same type to avoid duplicates
+                for (let i = this.history.length - 1; i >= 0; i--) {
+                    if (this.history[i].type === type) {
+                        this.history.splice(i, 1)
+                    }
+                }
+
                 // Add to main history
                 this.history.unshift(errorItem)
                 if (this.history.length > 100) this.history.pop()
@@ -1007,6 +1277,7 @@ const app = createApp({
                 nacos: { method: 'GET', path: '/api/order/demo/nacos/services', params: '', description: '查询 Nacos 中注册的所有服务实例' },
                 dubbo: { method: 'GET', path: '/api/order/dubbo/call-sync?productId=1', params: 'productId', description: '使用 Dubbo 协议远程调用 Product 服务' },
                 seata: { method: 'POST', path: '/api/order/seata/tcc/commit', params: 'commodity, count', description: '执行 Seata TCC 分布式事务，涉及库存和账户的一致性保证' },
+                gateway: { method: 'GET', path: '/api/order/demo/gateway-routing', params: '', description: '验证 Spring Cloud Gateway 路由规则配置是否生效' },
                 higress: { method: 'GET', path: '/api/order/demo/gateway-routing', params: '', description: '验证网关路由规则配置是否生效' },
                 sca: { method: 'GET', path: '/api/order/feign/product/1', params: 'productId', description: '使用 OpenFeign + LoadBalancer 调用 Product 服务' },
                 opentelemetry: { method: 'GET', path: '/api/order/demo/tracing', params: '', description: '生成模拟的应用链路数据用于可观测性演示' }
@@ -1072,6 +1343,18 @@ const app = createApp({
                             <li><strong>统一鉴权</strong>：在网关层验证 JWT Token 或其他凭证</li>
                             <li><strong>限流保护</strong>：网关层限流，保护后端服务</li>
                             <li><strong>黑白名单</strong>：支持 IP、User-Agent 等维度的访问控制</li>
+                        </ul>
+                    `
+                },
+                gateway: {
+                    title: '💡 Spring Cloud Gateway',
+                    content: `
+                        <ul style="margin:0; padding-left:20px;">
+                            <li>基于 Spring WebFlux 的响应式网关</li>
+                            <li><strong>动态路由</strong>：基于 Predicate 匹配的动态路由配置</li>
+                            <li><strong>过滤器</strong>：前置和后置过滤器，支持请求修改</li>
+                            <li><strong>负载均衡</strong>：集成 Ribbon 实现客户端负载均衡</li>
+                            <li><strong>限流熔断</strong>：集成 Sentinel 实现限流和熔断</li>
                         </ul>
                     `
                 },
@@ -1188,29 +1471,16 @@ const app = createApp({
                 localStorage.setItem('theme-mode', 'light');
             }
         },
-
-        // 切换侧边栏显示（移动端）
-        toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.querySelector('.sidebar-overlay');
-            if (sidebar && overlay) {
-                sidebar.classList.toggle('open');
-                overlay.classList.toggle('open');
-            }
-        }
     },
     mounted() {
         // 初始化主题
         this.applyTheme();
         
-        // 初始化侧边栏宽度 - 延迟执行确保 DOM 完全渲染
-        this.$nextTick(() => {
-            this.updateSidebarWidth();
-        });
-        
-        // 监听窗口大小变化
-        window.addEventListener('resize', () => {
-            this.updateSidebarWidth();
+        // 点击外部关闭下拉菜单
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.menu-dropdown')) {
+                this.closeDropdown();
+            }
         });
         
         // 根据当前选中的组件展开对应的菜单组
@@ -1235,7 +1505,7 @@ const app = createApp({
         });
     },
     beforeUnmount() {
-        window.removeEventListener('resize', this.updateSidebarWidth);
+        document.removeEventListener('click', this.closeDropdown);
     }
 })
 

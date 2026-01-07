@@ -450,5 +450,216 @@ public class OrderDubboController {
         }
     }
 
-    // TODO 待测试Rest协议和Dubbo协议对比
+    /**
+     * Dubbo 随机负载均衡策略测试
+     */
+    @GetMapping("/loadbalance/random")
+    public ApiResponse<Map<String, Object>> dubboRandomLoadBalance(
+            @RequestParam(value = "requestCount", defaultValue = "20") Integer requestCount) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testRandomLoadBalance(requestCount);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 随机负载均衡策略测试");
+
+            return ApiResponse.success("Dubbo 随机负载均衡策略测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 随机负载均衡策略测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 随机负载均衡策略测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 轮询负载均衡策略测试
+     */
+    @GetMapping("/loadbalance/roundrobin")
+    public ApiResponse<Map<String, Object>> dubboRoundRobinLoadBalance(
+            @RequestParam(value = "requestCount", defaultValue = "20") Integer requestCount) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testRoundRobinLoadBalance(requestCount);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 轮询负载均衡策略测试");
+
+            return ApiResponse.success("Dubbo 轮询负载均衡策略测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 轮询负载均衡策略测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 轮询负载均衡策略测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 一致性哈希负载均衡策略测试
+     */
+    @GetMapping("/loadbalance/consistenthash")
+    public ApiResponse<Map<String, Object>> dubboConsistentHashLoadBalance(
+            @RequestParam(value = "requestCount", defaultValue = "20") Integer requestCount,
+            @RequestParam(value = "param", defaultValue = "1") Long param) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testConsistentHashLoadBalance(requestCount, param);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 一致性哈希负载均衡策略测试");
+
+            return ApiResponse.success("Dubbo 一致性哈希负载均衡策略测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 一致性哈希负载均衡策略测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 一致性哈希负载均衡策略测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 最小活跃数负载均衡策略测试
+     */
+    @GetMapping("/loadbalance/leastactive")
+    public ApiResponse<Map<String, Object>> dubboLeastActiveLoadBalance(
+            @RequestParam(value = "requestCount", defaultValue = "20") Integer requestCount) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testLeastActiveLoadBalanceStrategy(requestCount);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 最小活跃数负载均衡策略测试");
+
+            return ApiResponse.success("Dubbo 最小活跃数负载均衡策略测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 最小活跃数负载均衡策略测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 最小活跃数负载均衡策略测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo 最短响应时间负载均衡策略测试
+     */
+    @GetMapping("/loadbalance/shortestresponse")
+    public ApiResponse<Map<String, Object>> dubboShortestResponseLoadBalance(
+            @RequestParam(value = "requestCount", defaultValue = "20") Integer requestCount) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.testShortestResponseLoadBalance(requestCount);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo RPC 最短响应时间负载均衡策略测试");
+
+            return ApiResponse.success("Dubbo 最短响应时间负载均衡策略测试完成", result);
+        } catch (Exception e) {
+            log.error("Dubbo 最短响应时间负载均衡策略测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo 最短响应时间负载均衡策略测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 协议对比测试 - Dubbo vs Triple vs REST
+     */
+    @GetMapping("/protocol/compare")
+    public ApiResponse<Map<String, Object>> compareProtocols(
+            @RequestParam(value = "productId", defaultValue = "1") Long productId,
+            @RequestParam(value = "requestCount", defaultValue = "100") Integer requestCount) {
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            Map<String, Object> result = productDubboClient.compareProtocols(productId, requestCount);
+            
+            long duration = System.currentTimeMillis() - startTime;
+
+            result.put("duration", duration + "ms");
+            result.put("method", "协议对比测试 - Dubbo vs Triple vs REST");
+            result.put("timestamp", System.currentTimeMillis());
+
+            return ApiResponse.success("协议对比测试完成", result);
+        } catch (Exception e) {
+            log.error("协议对比测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "协议对比测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Dubbo协议单独测试
+     */
+    @GetMapping("/protocol/dubbo")
+    public ApiResponse<Map<String, Object>> testDubboProtocol(
+            @RequestParam(value = "productId", defaultValue = "1") Long productId) {
+        try {
+            long startTime = System.currentTimeMillis();
+            Product product = productDubboClient.getProduct(productId);
+            long duration = System.currentTimeMillis() - startTime;
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("product", product);
+            result.put("duration", duration + "ms");
+            result.put("method", "Dubbo协议测试");
+            result.put("protocol", "dubbo");
+
+            return ApiResponse.success("Dubbo协议测试成功", result);
+        } catch (Exception e) {
+            log.error("Dubbo协议测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Dubbo协议测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Triple协议单独测试
+     */
+    @GetMapping("/protocol/triple")
+    public ApiResponse<Map<String, Object>> testTripleProtocol(
+            @RequestParam(value = "productId", defaultValue = "1") Long productId) {
+        try {
+            long startTime = System.currentTimeMillis();
+            Product product = productDubboClient.getProductTriple(productId);
+            long duration = System.currentTimeMillis() - startTime;
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("product", product);
+            result.put("duration", duration + "ms");
+            result.put("method", "Triple协议测试");
+            result.put("protocol", "triple");
+
+            return ApiResponse.success("Triple协议测试成功", result);
+        } catch (Exception e) {
+            log.error("Triple协议测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "Triple协议测试失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * REST协议单独测试
+     */
+    @GetMapping("/protocol/rest")
+    public ApiResponse<Map<String, Object>> testRestProtocol(
+            @RequestParam(value = "productId", defaultValue = "1") Long productId) {
+        try {
+            long startTime = System.currentTimeMillis();
+            Product product = productDubboClient.getProductRest(productId);
+            long duration = System.currentTimeMillis() - startTime;
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("product", product);
+            result.put("duration", duration + "ms");
+            result.put("method", "REST协议测试");
+            result.put("protocol", "rest");
+
+            return ApiResponse.success("REST协议测试成功", result);
+        } catch (Exception e) {
+            log.error("REST协议测试失败", e);
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "REST协议测试失败: " + e.getMessage());
+        }
+    }
 }

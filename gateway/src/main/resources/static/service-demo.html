@@ -1,4 +1,4 @@
-﻿﻿﻿<html lang="zh-CN" xmlns="http://www.w3.org/1999/html">
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<html lang="zh-CN" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="utf-8"/>
@@ -25,90 +25,44 @@
 
         body {
             zoom: 1.2;
+            margin: 0;
+            padding: 0;
         }
 
         .control-label {
             font-size: 14px !important;
         }
 
-        /* 侧边栏样式 */
+        /* 顶部导航栏样式 */
         .app-layout {
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
         }
 
-        .sidebar {
-            width: 240px;
-            min-width: 180px;
-            max-width: 400px;
-            background: linear-gradient(180deg, var(--card) 0%, color-mix(in srgb, var(--card) 98%, var(--background)) 100%);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
+        .top-navbar {
             position: fixed;
+            top: 0;
             left: 0;
-            top: 0;
-            bottom: 0;
-            z-index: 100;
-            box-shadow: 4px 0 24px color-mix(in srgb, var(--foreground) 8%, transparent);
-        }
-
-        .sidebar-resizer {
-            position: absolute;
             right: 0;
-            top: 0;
-            bottom: 0;
-            width: 5px;
-            cursor: col-resize;
-            background: transparent;
-            transition: background 0.2s ease;
-            z-index: 101;
-        }
-
-        .sidebar-resizer:hover,
-        .sidebar-resizer.resizing {
-            background: var(--primary);
-        }
-
-        .sidebar-resizer::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 3px;
-            height: 40px;
-            background: var(--border);
-            border-radius: 2px;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .sidebar-resizer:hover::after,
-        .sidebar-resizer.resizing::after {
-            opacity: 1;
-        }
-
-        .sidebar-header {
-            padding: 16px 12px;
+            height: 64px;
+            background: var(--card);
             border-bottom: 1px solid var(--border);
-            background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 3%, transparent) 0%, transparent 100%);
             display: flex;
-            justify-content: center;
             align-items: center;
-            flex-shrink: 0;
+            padding: 0 24px;
+            z-index: 1000;
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 5%, transparent);
         }
 
-        .sidebar-header .brand {
+        .navbar-brand {
             display: flex;
-            flex-direction: row;
             align-items: baseline;
-            gap: 6px;
-            flex: 1;
-            min-width: 0;
+            gap: 8px;
+            min-width: 200px;
         }
 
-        .sidebar-header .brand-title {
+        .navbar-brand-title {
             font-size: 18px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, black) 100%);
@@ -116,122 +70,379 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .sidebar-header .brand-subtitle {
-            font-size: 11px;
+        .navbar-brand-subtitle {
+            font-size: 12px;
             color: var(--muted-foreground);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            white-space: nowrap;
         }
 
-        .sidebar-menu {
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             flex: 1;
-            overflow-y: auto;
-            padding: 20px 12px;
+            margin: 0 24px;
         }
 
-        .sidebar-menu::-webkit-scrollbar {
-            width: 4px;
+        .menu-dropdown {
+            position: relative;
         }
 
-        .sidebar-menu::-webkit-scrollbar-track {
+        .menu-dropdown-btn {
+            padding: 10px 18px;
+            border-radius: 10px;
             background: transparent;
+            border: none;
+            color: var(--foreground);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
-        .sidebar-menu::-webkit-scrollbar-thumb {
-            background: var(--border);
+        .menu-dropdown-btn::after {
+            content: none;
+        }
+
+        .menu-dropdown.open .menu-dropdown-btn::after {
+            content: none;
+        }
+
+        .menu-dropdown-btn:hover {
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .menu-dropdown-btn:active {
+            transform: translateY(0);
+        }
+
+        .menu-dropdown-btn.active {
+            background: color-mix(in srgb, var(--primary) 12%, transparent);
+            color: var(--primary);
+        }
+
+        .menu-dropdown.open .menu-dropdown-btn {
+            background: color-mix(in srgb, var(--primary) 12%, transparent);
+            color: var(--primary);
+        }
+
+        .menu-dropdown-content {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            min-width: 200px;
+            background: var(--card);
+            border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px color-mix(in srgb, var(--foreground) 8%, transparent), 0 0 0 1px color-mix(in srgb, var(--foreground) 3%, transparent);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-12px) scale(0.98);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        .menu-dropdown.open .menu-dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--foreground);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: color-mix(in srgb, var(--primary) 8%, transparent);
+            color: var(--primary);
+            padding-left: 24px;
+        }
+
+        .dropdown-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .dropdown-item.active {
+            background: color-mix(in srgb, var(--primary) 12%, transparent);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .dropdown-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .dropdown-item:not(:last-child) {
+            border-bottom: 1px solid color-mix(in srgb, var(--foreground) 5%, transparent);
+        }
+
+        .dropdown-item-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            filter: brightness(1);
+        }
+
+        .dropdown-item:hover .dropdown-item-icon {
+            filter: brightness(1.1);
+            transform: scale(1.1);
+        }
+
+        .dropdown-item.active .dropdown-item-icon {
+            filter: brightness(1.15);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--foreground) 5%, transparent);
+            border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-btn span {
+            width: 20px;
+            height: 2px;
+            background: var(--foreground);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+            border-color: var(--primary);
+        }
+
+        .mobile-menu-btn:hover span {
+            background: var(--primary);
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: color-mix(in srgb, var(--background) 95%, transparent);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+        }
+
+        .mobile-menu-content {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px;
+            z-index: 1000;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-content.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-menu-dropdown {
+            margin-bottom: 12px;
+        }
+
+        .mobile-menu-dropdown:last-child {
+            margin-bottom: 0;
+        }
+
+        .mobile-menu-dropdown-btn {
+            width: 100%;
+            padding: 14px 16px;
+            background: color-mix(in srgb, var(--foreground) 3%, transparent);
+            border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+            border-radius: 10px;
+            color: var(--foreground);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-dropdown-btn:hover {
+            background: color-mix(in srgb, var(--primary) 8%, transparent);
+            color: var(--primary);
+            border-color: color-mix(in srgb, var(--primary) 20%, transparent);
+        }
+
+        .mobile-menu-dropdown-btn::after {
+            content: none;
+        }
+
+        .mobile-menu-dropdown.open .mobile-menu-dropdown-btn::after {
+            content: none;
+        }
+
+        .mobile-menu-dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-left: 16px;
+        }
+
+        .mobile-menu-dropdown.open .mobile-menu-dropdown-content {
+            max-height: 500px;
+            margin-top: 8px;
+        }
+
+        .mobile-menu-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--foreground);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        .mobile-menu-item:hover {
+            background: color-mix(in srgb, var(--primary) 8%, transparent);
+            color: var(--primary);
+        }
+
+        .mobile-menu-item.active {
+            background: color-mix(in srgb, var(--primary) 12%, transparent);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .mobile-menu-item:not(:last-child) {
+            border-bottom: 1px solid color-mix(in srgb, var(--foreground) 5%, transparent);
+        }
+
+        .mobile-menu-item-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
             border-radius: 4px;
         }
 
-        .sidebar-menu::-webkit-scrollbar-thumb:hover {
-            background: var(--muted-foreground);
-        }
-
-        .sidebar-bottom {
-            border-top: 1px solid var(--border);
-            padding: 12px;
-            background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--muted) 30%, transparent) 100%);
-            flex-shrink: 0;
-        }
-
-        .user-info {
+        .navbar-right {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--muted) 0%, color-mix(in srgb, var(--muted) 80%, transparent) 100%);
+            gap: 12px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 8px 12px 8px 36px;
             border: 1px solid var(--border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .user-info-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-info:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 8%, transparent);
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
             border-radius: 8px;
-            background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 80%, black) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: white;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 30%, transparent);
-        }
-
-        .user-details {
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-        }
-
-        .user-name {
-            font-weight: 700;
-            font-size: 13px;
+            background: var(--muted);
             color: var(--foreground);
-            margin-bottom: 2px;
-            letter-spacing: -0.2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 13px;
+            width: 200px;
+            transition: all 0.2s ease;
         }
 
-        .user-role {
-            font-size: 10px;
-            color: var(--muted-foreground);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--card);
+            width: 240px;
         }
 
-        .sidebar-theme-toggle {
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
-            padding: 0;
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.5;
+        }
+
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
             background: color-mix(in srgb, var(--foreground) 5%, transparent);
             border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
@@ -239,256 +450,969 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             color: var(--foreground);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            flex-shrink: 0;
+            transition: all 0.2s ease;
         }
 
-        .sidebar-theme-toggle:hover {
+        .theme-toggle:hover {
             background: var(--primary);
             border-color: var(--primary);
             color: white;
-            transform: scale(1.1);
         }
 
-        .sidebar-theme-toggle span {
+        .user-info {
             display: flex;
             align-items: center;
-            justify-content: center;
-        }
-
-        .menu-group {
-            margin-bottom: 4px;
-        }
-
-        .menu-group-title {
-            padding: 10px 14px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--muted-foreground);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
+            gap: 8px;
+            padding: 6px 12px;
             border-radius: 8px;
+            background: color-mix(in srgb, var(--foreground) 5%, transparent);
+            border: 1px solid var(--border);
         }
 
-        .menu-group-title:hover {
-            color: var(--primary);
-            background: color-mix(in srgb, var(--primary) 8%, transparent);
-        }
-
-        .menu-group-title .arrow {
-            width: 16px;
-            height: 16px;
-            display: inline-flex;
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 80%, black) 100%);
+            display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
         }
 
-        .menu-group-title .arrow::before,
-        .menu-group-title .arrow::after {
-            content: '';
-            position: absolute;
-            background: var(--foreground);
-            border-radius: 1px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .menu-group-title .arrow::before {
-            width: 8px;
-            height: 2px;
-        }
-
-        .menu-group-title .arrow::after {
-            width: 2px;
-            height: 8px;
-        }
-
-        .menu-group.expanded .menu-group-title .arrow::after {
-            transform: rotate(90deg);
-            opacity: 0;
-        }
-
-        .menu-group.expanded .menu-group-title .arrow {
-            transform: rotate(180deg);
-        }
-
-        .menu-items {
-            max-height: 0;
-            overflow: hidden;
-            padding-left: 8px;
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .menu-group.expanded .menu-items {
-            max-height: 500px;
-        }
-
-        .menu-item {
-            padding: 10px 16px 10px 20px;
+        .user-name {
+            font-weight: 600;
             font-size: 13px;
             color: var(--foreground);
-            cursor: pointer;
-            border-radius: 0;
-            margin: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: block;
-            width: 100%;
-            font-weight: 500;
-            position: relative;
-            overflow: hidden;
         }
 
-        .menu-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 0;
-            background: var(--primary);
-            border-radius: 2px;
-            transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .menu-item:hover {
-            background: color-mix(in srgb, var(--primary) 8%, transparent);
-            color: var(--primary);
-        }
-
-        .menu-item:hover::before {
-            height: 60%;
-        }
-
-        .menu-item.active {
-            background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 12%, transparent) 0%, color-mix(in srgb, var(--primary) 5%, transparent) 100%);
-            color: var(--primary);
-            font-weight: 600;
-            box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 15%, transparent);
-        }
-
-        .menu-item.active::before {
-            height: 70%;
-        }
-
+        /* 主内容区 */
         .main-content {
+            margin-top: 64px;
             flex: 1;
-            margin-left: 240px;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            transition: margin-left 0.3s ease;
-        }
-
-        .main-header {
-            padding: 16px 24px;
-            background: var(--card);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .main-header .brand {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-
-        .main-header .brand-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--foreground);
-        }
-
-        .main-header .brand-subtitle {
-            font-size: 14px;
-            color: var(--muted-foreground);
-            font-weight: 500;
-        }
-
-        .main-header .status-badge {
-            padding: 6px 12px;
-            border-radius: var(--radius-md, 8px);
-            background: color-mix(in srgb, var(--chart-3) 20%, transparent);
-            color: var(--chart-3);
-            font-size: 12px;
-            font-weight: 600;
+            min-height: calc(100vh - 64px);
         }
 
         .main-body {
             flex: 1;
-            padding: 12px;
+            padding: 24px;
             overflow-y: auto;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
         }
 
-        .dark .sidebar {
-            background: var(--card);
-            border-right-color: var(--border);
+        /* 快速访问区域 */
+        .quick-access-section {
+            margin-bottom: 24px;
         }
 
-        .dark .sidebar-bottom {
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .quick-access-grid {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: thin;
+        }
+
+        .quick-access-grid::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .quick-access-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .quick-access-grid::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .quick-access-card {
+            flex-shrink: 0;
+            width: 140px;
+            padding: 20px 16px;
             background: var(--card);
-            border-top-color: var(--border);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+        }
+
+        .quick-access-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: color-mix(in srgb, var(--primary) 5%, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quick-access-card:hover::before {
+            opacity: 1;
+        }
+
+        .quick-access-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px color-mix(in srgb, var(--foreground) 10%, transparent);
+        }
+
+        .quick-access-card:hover .quick-access-name {
+            color: var(--primary);
+        }
+
+        .quick-access-card.active {
+            background: color-mix(in srgb, var(--primary) 8%, transparent);
+            box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 20%, transparent);
+        }
+
+        .quick-access-card.active::before {
+            opacity: 1;
+        }
+
+        .quick-access-card.active .quick-access-name {
+            color: var(--primary);
+        }
+
+        .quick-access-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 5%, transparent);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-access-icon img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .quick-access-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--foreground);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-access-card:hover .quick-access-icon {
+            transform: scale(1.08);
+            box-shadow: 0 6px 16px color-mix(in srgb, var(--primary) 15%, transparent);
+        }
+
+        .quick-access-card:hover .quick-access-icon img {
+            transform: scale(1.05);
+        }
+
+        .quick-access-card.active .quick-access-icon {
+            background: color-mix(in srgb, var(--primary) 15%, transparent);
+            box-shadow: 0 4px 16px color-mix(in srgb, var(--primary) 25%, transparent);
+        }
+
+        /* 组件详情卡片 */
+        .component-detail {
+            background: var(--card);
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .component-detail:hover {
+            box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 10%, transparent);
+            transform: translateY(-2px);
+        }
+
+        .component-detail-header {
+            padding: 20px 24px;
+            background: color-mix(in srgb, var(--foreground) 2%, transparent);
+            border-bottom: none;
+        }
+
+        .component-detail-header .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .component-detail-header .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 5%, transparent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .component-detail:hover .component-detail-header .card-icon {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--foreground) 8%, transparent);
+        }
+
+        .component-detail-header .card-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .component-detail:hover .component-detail-header .card-icon img {
+            transform: scale(1.08);
+        }
+
+        .component-detail-header .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 4px;
+        }
+
+        .component-detail-header .card-subtitle {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            font-weight: 500;
+        }
+
+        .component-detail-desc {
+            padding: 16px 24px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--foreground);
+        }
+
+        .component-detail-section {
+            padding: 16px 24px;
+            border-top: none;
+        }
+
+        .component-detail-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .component-detail-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .component-detail-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 0;
+        }
+
+        .component-detail-features li::before {
+            content: '●';
+            color: var(--primary);
+            font-size: 8px;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .component-detail-feature-name {
+            font-weight: 600;
+            color: var(--foreground);
+            min-width: 80px;
+            font-size: 13px;
+        }
+
+        .component-detail-feature-desc {
+            color: var(--muted-foreground);
+            font-size: 13px;
+        }
+
+        .component-detail-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .component-detail-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: transparent;
+        }
+
+        .component-detail-link:hover {
+            color: color-mix(in srgb, var(--primary) 80%, black);
+            background: color-mix(in srgb, var(--primary) 8%, transparent);
+            transform: translateY(-1px);
+        }
+
+        /* 控制台面板 */
+        .console-layout-single {
+            margin-top: 0;
+        }
+
+        .console-panel-full {
+            width: 100%;
+        }
+
+        .panel {
+            background: var(--card);
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .panel:hover {
+            box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 10%, transparent);
+        }
+
+        .panel-header {
+            padding: 16px 20px;
+            background: color-mix(in srgb, var(--foreground) 2%, transparent);
+            border-bottom: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .panel:hover .panel-header {
+            background: color-mix(in srgb, var(--foreground) 3%, transparent);
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--foreground);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-body {
+            padding: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 24px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-separator {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .control-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--foreground);
+            white-space: nowrap;
+        }
+
+        .test-description {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .input {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--muted);
+            color: var(--foreground);
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px color-mix(in srgb, var(--foreground) 4%, transparent);
+            height: 36px;
+            line-height: 36px;
+        }
+
+        .input:focus {
+            outline: none;
+            background: var(--card);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent), 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 10px;
+            background: var(--muted);
+            color: var(--foreground);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 1px 3px color-mix(in srgb, var(--foreground) 4%, transparent);
+            height: 36px;
+            line-height: 36px;
+        }
+
+        .btn:hover {
+            background: color-mix(in srgb, var(--foreground) 8%, transparent);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px color-mix(in srgb, var(--foreground) 4%, transparent);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 20%, transparent);
+        }
+
+        .btn-primary:hover {
+            background: color-mix(in srgb, var(--primary) 85%, black);
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 30%, transparent);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .config-panel {
+            background: color-mix(in srgb, var(--foreground) 2%, transparent);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 1px 4px color-mix(in srgb, var(--foreground) 4%, transparent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .config-panel:hover {
+            background: color-mix(in srgb, var(--foreground) 3%, transparent);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 6px 0;
+            font-size: 13px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            align-items: flex-start;
+        }
+
+        .config-item:hover {
+        }
+
+        .config-label {
+            color: var(--primary);
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .config-item:hover .config-label {
+            color: color-mix(in srgb, var(--primary) 80%, black);
+        }
+
+        .config-value {
+            color: var(--foreground);
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .result-display {
+            background: color-mix(in srgb, var(--foreground) 2%, transparent);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            box-shadow: 0 1px 4px color-mix(in srgb, var(--foreground) 4%, transparent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .result-display.success {
+            background: color-mix(in srgb, var(--chart-3) 10%, transparent);
+        }
+
+        .result-display.error {
+            border-color: var(--chart-1);
+            background: color-mix(in srgb, var(--chart-1) 10%, transparent);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .result-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--foreground);
+        }
+
+        .result-status {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .result-status.success {
+            color: var(--chart-3);
+        }
+
+        .result-status.error {
+            color: var(--chart-1);
+        }
+
+        .result-content {
+            font-size: 13px;
+            color: var(--foreground);
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: var(--muted-foreground);
+        }
+
+        .loadbalance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        .loadbalance-table th,
+        .loadbalance-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .loadbalance-table th {
+            font-weight: 600;
+            color: var(--primary);
+            background: color-mix(in srgb, var(--primary) 5%, transparent);
+        }
+
+        .loadbalance-table tr:hover {
+            background: color-mix(in srgb, var(--foreground) 2%, transparent);
+        }
+
+        .loadbalance-table td code {
+            background: color-mix(in srgb, var(--foreground) 10%, transparent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+        }
+
+        .detail-toggle-btn {
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+            color: var(--primary);
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .detail-toggle-btn:hover {
+            background: color-mix(in srgb, var(--primary) 20%, transparent);
+        }
+
+        .detail-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .detail-content.expanded {
+            max-height: 1000px;
+            transition: max-height 0.6s ease-in;
+        }
+
+        .table-detail-btn {
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+            color: var(--primary);
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .table-detail-btn:hover {
+            background: color-mix(in srgb, var(--primary) 20%, transparent);
+        }
+
+        /* 深色模式 */
+        .dark .top-navbar {
+            background: var(--card);
+            border-bottom-color: var(--border);
+        }
+
+        .dark .menu-dropdown-content {
+            background: var(--card);
+            border-color: var(--border);
+        }
+
+        .dark .search-box input {
+            background: color-mix(in srgb, var(--foreground) 5%, transparent);
+        }
+
+        .dark .search-box input:focus {
+            background: var(--card);
         }
 
         .dark .user-info {
             background: color-mix(in srgb, var(--foreground) 5%, transparent);
         }
 
-        .dark .sidebar-theme-toggle {
+        .dark .quick-access-card {
+            background: var(--card);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent);
+        }
+
+        .dark .quick-access-card:hover {
+            box-shadow: 0 8px 24px color-mix(in srgb, var(--foreground) 12%, transparent);
+        }
+
+        .dark .quick-access-card.active {
+            box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 25%, transparent);
+        }
+
+        .dark .component-detail {
+            background: var(--card);
+            border: none;
+        }
+
+        .dark .component-detail:hover {
+            box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 12%, transparent);
+        }
+
+        .dark .component-detail-header .card-icon {
+            background: color-mix(in srgb, var(--foreground) 8%, transparent);
+        }
+
+        .dark .component-detail:hover .component-detail-header .card-icon {
             background: color-mix(in srgb, var(--foreground) 10%, transparent);
-            border-color: color-mix(in srgb, var(--foreground) 20%, transparent);
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--foreground) 10%, transparent);
         }
 
-        .dark .sidebar-theme-toggle:hover {
-            background: color-mix(in srgb, var(--foreground) 15%, transparent);
+        .dark .panel {
+            background: var(--card);
+            border: none;
         }
 
-        .dark .menu-group-title {
-            color: var(--muted-foreground);
+        .dark .panel:hover {
+            box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 12%, transparent);
         }
 
-        .dark .menu-group-title:hover {
-            color: var(--foreground);
+        .dark .panel:hover .panel-header {
+            background: color-mix(in srgb, var(--foreground) 4%, transparent);
+        }
+
+        .dark .config-panel {
             background: color-mix(in srgb, var(--foreground) 5%, transparent);
         }
 
-        .dark .menu-item {
-            color: var(--foreground);
+        .dark .config-panel:hover {
+            background: color-mix(in srgb, var(--foreground) 6%, transparent);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent);
         }
 
-        .dark .menu-item:hover {
-            background: color-mix(in srgb, var(--primary) 20%, transparent);
+        .dark .config-item:hover .config-label {
+            color: color-mix(in srgb, var(--primary) 90%, white);
         }
 
-        .dark .menu-item.active {
-            background: color-mix(in srgb, var(--primary) 25%, transparent);
+        .dark .result-display {
+            background: color-mix(in srgb, var(--foreground) 5%, transparent);
         }
 
-        .dark .main-header {
+        .dark .input {
+            background: color-mix(in srgb, var(--foreground) 8%, transparent);
+        }
+
+        .dark .input:focus {
             background: var(--card);
-            border-bottom-color: var(--border);
         }
 
-        .dark .main-header .brand-title {
-            color: var(--foreground);
+        .dark .btn {
+            background: color-mix(in srgb, var(--foreground) 8%, transparent);
         }
 
-        .dark .main-header .brand-subtitle {
-            color: var(--muted-foreground);
+        .dark .btn:hover {
+            background: color-mix(in srgb, var(--foreground) 12%, transparent);
         }
 
-        .dark .main-header .status-badge {
-            background: color-mix(in srgb, var(--chart-3) 30%, transparent);
+        .dark .btn-primary {
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 25%, transparent);
+        }
+
+        .dark .btn-primary:hover {
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent);
+        }
+
+        .dark .component-detail-link:hover {
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .quick-access-grid {
+                gap: 8px;
+            }
+
+            .quick-access-card {
+                width: 120px;
+                padding: 16px 12px;
+            }
+
+            .quick-access-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .quick-access-icon img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .quick-access-name {
+                font-size: 12px;
+            }
+
+            .component-detail-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-navbar {
+                padding: 0 16px;
+            }
+
+            .navbar-brand {
+                min-width: auto;
+            }
+
+            .navbar-brand-title {
+                font-size: 16px;
+            }
+
+            .navbar-brand-subtitle {
+                display: none;
+            }
+
+            .navbar-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .mobile-menu-overlay {
+                display: block;
+            }
+
+            .mobile-menu-content {
+                display: block;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .main-body {
+                padding: 16px;
+            }
+
+            .quick-access-card {
+                width: 100px;
+                padding: 12px 8px;
+            }
+
+            .quick-access-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .quick-access-icon img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .quick-access-name {
+                font-size: 11px;
+            }
+
+            .component-detail-header {
+                padding: 16px;
+            }
+
+            .component-detail-header .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .component-detail-desc {
+                padding: 12px 16px;
+            }
+
+            .component-detail-section {
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-navbar {
+                height: 56px;
+                padding: 0 12px;
+            }
+
+            .main-content {
+                margin-top: 56px;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .theme-toggle {
+                width: 32px;
+                height: 32px;
+            }
+
+            .main-body {
+                padding: 12px;
+            }
+
+            .quick-access-card {
+                width: 90px;
+                padding: 10px 6px;
+            }
+
+            .quick-access-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .quick-access-icon img {
+                width: 24px;
+                height: 24px;
+            }
+
+            .quick-access-name {
+                font-size: 10px;
+            }
+
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .panel-body {
+                padding: 16px;
+            }
         }
 
 
@@ -562,20 +1486,27 @@
 
         .component-detail {
             background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
+            border: none;
+            border-radius: 16px;
             overflow: hidden;
             width: 100%;
             margin: 0 auto 16px auto;
             display: flex;
             flex-direction: column;
             gap: 0;
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .component-detail:hover {
+            box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 10%, transparent);
+            transform: translateY(-2px);
         }
 
         .component-detail-header {
             padding: 12px 16px;
-            background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 5%, transparent) 0%, transparent 100%);
-            border-bottom: 1px solid var(--border);
+            background: color-mix(in srgb, var(--foreground) 2%, transparent);
+            border-bottom: none;
         }
 
         .component-detail-header .card-header {
@@ -716,12 +1647,12 @@
 
         .dark .component-detail {
             background: var(--card);
-            border-color: var(--border);
+            border: none;
         }
 
         .dark .component-detail-header {
-            background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 100%);
-            border-bottom-color: var(--border);
+            background: color-mix(in srgb, var(--foreground) 2%, transparent);
+            border-bottom: none;
         }
 
         .dark .component-detail-header .card-title {
@@ -758,6 +1689,77 @@
             background: color-mix(in srgb, var(--primary) 20%, transparent);
             border-color: var(--primary);
             color: var(--primary);
+        }
+
+        .dark .menu-dropdown-btn {
+            background: color-mix(in srgb, var(--foreground) 5%, transparent);
+            border-color: color-mix(in srgb, var(--foreground) 12%, transparent);
+        }
+
+        .dark .menu-dropdown-btn:hover {
+            background: color-mix(in srgb, var(--primary) 15%, transparent);
+            border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+        }
+
+        .dark .menu-dropdown-btn.active {
+            background: color-mix(in srgb, var(--primary) 18%, transparent);
+            border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+        }
+
+        .dark .menu-dropdown.open .menu-dropdown-btn {
+            background: color-mix(in srgb, var(--primary) 18%, transparent);
+            border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+        }
+
+        .dark .menu-dropdown-content {
+            background: color-mix(in srgb, var(--card) 95%, transparent);
+            border-color: color-mix(in srgb, var(--foreground) 15%, transparent);
+            box-shadow: 0 4px 20px color-mix(in srgb, var(--foreground) 12%, transparent), 0 0 0 1px color-mix(in srgb, var(--foreground) 5%, transparent);
+        }
+
+        .dark .dropdown-item:hover {
+            background: color-mix(in srgb, var(--primary) 12%, transparent);
+        }
+
+        .dark .dropdown-item.active {
+            background: color-mix(in srgb, var(--primary) 16%, transparent);
+        }
+
+        .dark .mobile-menu-btn {
+            background: color-mix(in srgb, var(--foreground) 5%, transparent);
+            border-color: color-mix(in srgb, var(--foreground) 12%, transparent);
+        }
+
+        .dark .mobile-menu-btn:hover {
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+            border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+        }
+
+        .dark .mobile-menu-overlay {
+            background: color-mix(in srgb, var(--background) 90%, transparent);
+        }
+
+        .dark .mobile-menu-content {
+            background: color-mix(in srgb, var(--card) 95%, transparent);
+            border-color: color-mix(in srgb, var(--foreground) 15%, transparent);
+        }
+
+        .dark .mobile-menu-dropdown-btn {
+            background: color-mix(in srgb, var(--foreground) 5%, transparent);
+            border-color: color-mix(in srgb, var(--foreground) 12%, transparent);
+        }
+
+        .dark .mobile-menu-dropdown-btn:hover {
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+            border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+        }
+
+        .dark .mobile-menu-item:hover {
+            background: color-mix(in srgb, var(--primary) 12%, transparent);
+        }
+
+        .dark .mobile-menu-item.active {
+            background: color-mix(in srgb, var(--primary) 16%, transparent);
         }
 
         /* 响应式布局优化 */
@@ -928,117 +1930,237 @@
 <body>
 <div id="app">
     <div class="app-layout">
-        <!-- 侧边栏 -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="brand">
-                    <span class="brand-title">Cloud</span>
-                    <span class="brand-subtitle">DevConsole</span>
+        <!-- 顶部导航栏 -->
+        <nav class="top-navbar">
+            <div class="navbar-brand">
+                <span class="navbar-brand-title">Spring Cloud</span>
+                <span class="navbar-brand-subtitle">DevConsole</span>
+            </div>
+            <button class="mobile-menu-btn" :class="{ active: mobileMenuOpen }" @click="toggleMobileMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="navbar-menu">
+                <div class="menu-dropdown" :class="{ open: openDropdown === 0 }" @click="toggleDropdown(0)">
+                    <button class="menu-dropdown-btn">控制面</button>
+                    <div class="menu-dropdown-content">
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'nacos' }" @click.stop="selectComponent('nacos')">
+                            <img src="https://img.alicdn.com/imgextra/i3/O1CN01Mi9RDw1wFphKfvLxV_!!6000000006279-55-tps-29-14.svg" class="dropdown-item-icon" alt="Nacos">
+                            <span>Nacos</span>
+                        </a>
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'opensergo' }" @click.stop="selectComponent('opensergo')">
+                            <img src="images/logos/opensergo.png" class="dropdown-item-icon" alt="OpenSergo">
+                            <span>OpenSergo</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="menu-dropdown" :class="{ open: openDropdown === 1 }" @click="toggleDropdown(1)">
+                    <button class="menu-dropdown-btn">治理面</button>
+                    <div class="menu-dropdown-content">
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'sentinel' }" @click.stop="selectComponent('sentinel')">
+                            <img src="https://img.alicdn.com/imgextra/i3/O1CN01Z19f2d1X38JuBVfLX_!!6000000002867-55-tps-22-33.svg" class="dropdown-item-icon" alt="Sentinel">
+                            <span>Sentinel</span>
+                        </a>
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'chaosblade' }" @click.stop="selectComponent('chaosblade')">
+                            <img src="images/logos/ChaosBlade.png" class="dropdown-item-icon" alt="ChaosBlade">
+                            <span>ChaosBlade</span>
+                        </a>
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'appactive' }" @click.stop="selectComponent('appactive')">
+                            <img src="images/logos/appactive.svg" class="dropdown-item-icon" alt="AppActive">
+                            <span>AppActive</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="menu-dropdown" :class="{ open: openDropdown === 2 }" @click="toggleDropdown(2)">
+                    <button class="menu-dropdown-btn">通信层</button>
+                    <div class="menu-dropdown-content">
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'dubbo' }" @click.stop="selectComponent('dubbo')">
+                            <img src="https://img.alicdn.com/imgextra/i1/O1CN01Bgku601IaMpCoTO7l_!!6000000000909-55-tps-23-27.svg" class="dropdown-item-icon" alt="Dubbo">
+                            <span>Dubbo</span>
+                        </a>
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'sca' }" @click.stop="selectComponent('sca')">
+                            <img src="https://img.alicdn.com/imgextra/i2/O1CN014OFGKB1PjFoyRkUVK_!!6000000001876-55-tps-28-28.svg" class="dropdown-item-icon" alt="Spring Cloud">
+                            <span>Spring Cloud</span>
+                        </a>
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'rocketmq' }" @click.stop="selectComponent('rocketmq')">
+                            <img src="https://img.alicdn.com/imgextra/i3/O1CN015oej0c1DwHiK9gS2H_!!6000000000280-55-tps-26-36.svg" class="dropdown-item-icon" alt="RocketMQ">
+                            <span>RocketMQ</span>
+                        </a>
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'seata' }" @click.stop="selectComponent('seata')">
+                            <img src="https://img.alicdn.com/imgextra/i2/O1CN01gTVczm23JDwHnxg2U_!!6000000007234-55-tps-20-30.svg" class="dropdown-item-icon" alt="Seata">
+                            <span>Seata</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="menu-dropdown" :class="{ open: openDropdown === 3 }" @click="toggleDropdown(3)">
+                    <button class="menu-dropdown-btn">网关与调度</button>
+                    <div class="menu-dropdown-content">
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'gateway' }" @click.stop="selectComponent('gateway')">
+                            <img src="https://img.alicdn.com/imgextra/i2/O1CN014OFGKB1PjFoyRkUVK_!!6000000001876-55-tps-28-28.svg" class="dropdown-item-icon" alt="Spring Cloud Gateway">
+                            <span>Spring Cloud Gateway</span>
+                        </a>
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'schedulerx' }" @click.stop="selectComponent('schedulerx')">
+                            <img src="images/logos/schedulerx.png" class="dropdown-item-icon" alt="SchedulerX">
+                            <span>SchedulerX</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="menu-dropdown" :class="{ open: openDropdown === 4 }" @click="toggleDropdown(4)">
+                    <button class="menu-dropdown-btn">数据与运维</button>
+                    <div class="menu-dropdown-content">
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'arctic' }" @click.stop="selectComponent('arctic')">Arctic</a>
+                        <a class="dropdown-item" :class="{ active: activeComponent === 'redis' }" @click.stop="selectComponent('redis')">Redis</a>
+                    </div>
                 </div>
             </div>
-            <div class="sidebar-menu">
-                <!-- 控制面 -->
-                <div class="menu-group" :class="{ expanded: expandedMenus.control }" @click="toggleMenu('control')">
-                    <div class="menu-group-title">
-                        <span class="arrow"></span>
-                        <span>控制面</span>
-                    </div>
-                    <div class="menu-items">
-                        <a class="menu-item" :class="{ active: activeComponent === 'nacos' }" @click.stop="selectComponent('nacos')">Nacos</a>
-                        <a class="menu-item" :class="{ active: activeComponent === 'opensergo' }" @click.stop="selectComponent('opensergo')">OpenSergo</a>
-                    </div>
+            <div class="navbar-right">
+                <div class="search-box">
+                    <input type="text" placeholder="搜索组件...">
                 </div>
-
-                <!-- 治理面 -->
-                <div class="menu-group" :class="{ expanded: expandedMenus.governance }" @click="toggleMenu('governance')">
-                    <div class="menu-group-title">
-                        <span class="arrow"></span>
-                        <span>治理面</span>
-                    </div>
-                    <div class="menu-items">
-                        <a class="menu-item" :class="{ active: activeComponent === 'sentinel' }" @click.stop="selectComponent('sentinel')">Sentinel</a>
-                        <a class="menu-item" :class="{ active: activeComponent === 'chaosblade' }" @click.stop="selectComponent('chaosblade')">ChaosBlade</a>
-                        <a class="menu-item" :class="{ active: activeComponent === 'appactive' }" @click.stop="selectComponent('appactive')">AppActive</a>
-                    </div>
-                </div>
-
-                <!-- 通信层 -->
-                <div class="menu-group" :class="{ expanded: expandedMenus.communication }" @click="toggleMenu('communication')">
-                    <div class="menu-group-title">
-                        <span class="arrow"></span>
-                        <span>通信层</span>
-                    </div>
-                    <div class="menu-items">
-                        <a class="menu-item" :class="{ active: activeComponent === 'dubbo' }" @click.stop="selectComponent('dubbo')">Dubbo</a>
-                        <a class="menu-item" :class="{ active: activeComponent === 'sca' }" @click.stop="selectComponent('sca')">Spring Cloud</a>
-                        <a class="menu-item" :class="{ active: activeComponent === 'rocketmq' }" @click.stop="selectComponent('rocketmq')">RocketMQ</a>
-                        <a class="menu-item" :class="{ active: activeComponent === 'seata' }" @click.stop="selectComponent('seata')">Seata</a>
-                    </div>
-                </div>
-
-                <!-- 网关与调度 -->
-                <div class="menu-group" :class="{ expanded: expandedMenus.gateway }" @click="toggleMenu('gateway')">
-                    <div class="menu-group-title">
-                        <span class="arrow"></span>
-                        <span>网关与调度</span>
-                    </div>
-                    <div class="menu-items">
-                        <a class="menu-item" :class="{ active: activeComponent === 'gateway' }" @click.stop="selectComponent('gateway')">Spring Cloud Gateway</a>
-                        <a class="menu-item" :class="{ active: activeComponent === 'schedulerx' }" @click.stop="selectComponent('schedulerx')">SchedulerX</a>
-                    </div>
-                </div>
-
-                <!-- 数据与运维 -->
-                <div class="menu-group" :class="{ expanded: expandedMenus.data }" @click="toggleMenu('data')">
-                    <div class="menu-group-title">
-                        <span class="arrow"></span>
-                        <span>数据与运维</span>
-                    </div>
-                    <div class="menu-items">
-                        <a class="menu-item" :class="{ active: activeComponent === 'arctic' }" @click.stop="selectComponent('arctic')">Arctic</a>
-                        <a class="menu-item" :class="{ active: activeComponent === 'redis' }" @click.stop="selectComponent('redis')">Redis</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="sidebar-bottom">
+                <button class="theme-toggle" @click="toggleTheme" title="切换主题">
+                    <span v-if="isDarkMode">🌙</span>
+                    <span v-else>☀️</span>
+                </button>
                 <div class="user-info">
-                    <div class="user-info-left">
-                        <div class="user-avatar">👤</div>
-                        <div class="user-details">
-                            <div class="user-name">Developer</div>
-                            <div class="user-role">SUXIONGWEI</div>
-                        </div>
-                    </div>
-                    <button class="sidebar-theme-toggle" @click="toggleTheme" title="切换主题">
-                        <span v-if="isDarkMode">🌙</span>
-                        <span v-else>☀️</span>
-                    </button>
+                    <div class="user-avatar">👤</div>
+                    <span class="user-name">Developer</span>
                 </div>
             </div>
-            <div class="sidebar-resizer" @mousedown="startResize"></div>
-        </aside>
+        </nav>
+
+        <!-- 移动端菜单 -->
+        <div class="mobile-menu-overlay" :class="{ active: mobileMenuOpen }" @click="toggleMobileMenu"></div>
+        <div class="mobile-menu-content" :class="{ active: mobileMenuOpen }">
+            <div class="mobile-menu-dropdown" :class="{ open: mobileDropdown === 0 }">
+                <button class="mobile-menu-dropdown-btn" @click="toggleMobileDropdown(0)">控制面</button>
+                <div class="mobile-menu-dropdown-content">
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'nacos' }" @click="selectComponent('nacos')">
+                        <img src="https://img.alicdn.com/imgextra/i3/O1CN01Mi9RDw1wFphKfvLxV_!!6000000006279-55-tps-29-14.svg" class="mobile-menu-item-icon" alt="Nacos">
+                        <span>Nacos</span>
+                    </a>
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'opensergo' }" @click="selectComponent('opensergo')">
+                        <img src="images/logos/opensergo.png" class="mobile-menu-item-icon" alt="OpenSergo">
+                        <span>OpenSergo</span>
+                    </a>
+                </div>
+            </div>
+            <div class="mobile-menu-dropdown" :class="{ open: mobileDropdown === 1 }">
+                <button class="mobile-menu-dropdown-btn" @click="toggleMobileDropdown(1)">治理面</button>
+                <div class="mobile-menu-dropdown-content">
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'sentinel' }" @click="selectComponent('sentinel')">
+                        <img src="https://img.alicdn.com/imgextra/i3/O1CN01Z19f2d1X38JuBVfLX_!!6000000002867-55-tps-22-33.svg" class="mobile-menu-item-icon" alt="Sentinel">
+                        <span>Sentinel</span>
+                    </a>
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'chaosblade' }" @click="selectComponent('chaosblade')">
+                        <img src="images/logos/ChaosBlade.png" class="mobile-menu-item-icon" alt="ChaosBlade">
+                        <span>ChaosBlade</span>
+                    </a>
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'appactive' }" @click="selectComponent('appactive')">
+                        <img src="images/logos/appactive.svg" class="mobile-menu-item-icon" alt="AppActive">
+                        <span>AppActive</span>
+                    </a>
+                </div>
+            </div>
+            <div class="mobile-menu-dropdown" :class="{ open: mobileDropdown === 2 }">
+                <button class="mobile-menu-dropdown-btn" @click="toggleMobileDropdown(2)">通信层</button>
+                <div class="mobile-menu-dropdown-content">
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'dubbo' }" @click="selectComponent('dubbo')">
+                        <img src="https://img.alicdn.com/imgextra/i1/O1CN01Bgku601IaMpCoTO7l_!!6000000000909-55-tps-23-27.svg" class="mobile-menu-item-icon" alt="Dubbo">
+                        <span>Dubbo</span>
+                    </a>
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'sca' }" @click="selectComponent('sca')">
+                        <img src="https://img.alicdn.com/imgextra/i2/O1CN014OFGKB1PjFoyRkUVK_!!6000000001876-55-tps-28-28.svg" class="mobile-menu-item-icon" alt="Spring Cloud">
+                        <span>Spring Cloud</span>
+                    </a>
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'rocketmq' }" @click="selectComponent('rocketmq')">
+                        <img src="https://img.alicdn.com/imgextra/i3/O1CN015oej0c1DwHiK9gS2H_!!6000000000280-55-tps-26-36.svg" class="mobile-menu-item-icon" alt="RocketMQ">
+                        <span>RocketMQ</span>
+                    </a>
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'seata' }" @click="selectComponent('seata')">
+                        <img src="https://img.alicdn.com/imgextra/i2/O1CN01gTVczm23JDwHnxg2U_!!6000000007234-55-tps-20-30.svg" class="mobile-menu-item-icon" alt="Seata">
+                        <span>Seata</span>
+                    </a>
+                </div>
+            </div>
+            <div class="mobile-menu-dropdown" :class="{ open: mobileDropdown === 3 }">
+                <button class="mobile-menu-dropdown-btn" @click="toggleMobileDropdown(3)">网关与调度</button>
+                <div class="mobile-menu-dropdown-content">
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'gateway' }" @click="selectComponent('gateway')">
+                        <img src="https://img.alicdn.com/imgextra/i2/O1CN014OFGKB1PjFoyRkUVK_!!6000000001876-55-tps-28-28.svg" class="mobile-menu-item-icon" alt="Spring Cloud Gateway">
+                        <span>Spring Cloud Gateway</span>
+                    </a>
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'schedulerx' }" @click="selectComponent('schedulerx')">
+                        <img src="images/logos/schedulerx.png" class="mobile-menu-item-icon" alt="SchedulerX">
+                        <span>SchedulerX</span>
+                    </a>
+                </div>
+            </div>
+            <div class="mobile-menu-dropdown" :class="{ open: mobileDropdown === 4 }">
+                <button class="mobile-menu-dropdown-btn" @click="toggleMobileDropdown(4)">可观测性</button>
+                <div class="mobile-menu-dropdown-content">
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'opentelemetry' }" @click="selectComponent('opentelemetry')">
+                        <img src="images/logos/opentelemetry.png" class="mobile-menu-item-icon" alt="OpenTelemetry">
+                        <span>OpenTelemetry</span>
+                    </a>
+                    <a class="mobile-menu-item" :class="{ active: activeComponent === 'redis' }" @click="selectComponent('redis')">
+                        <img src="images/logos/redis.png" class="mobile-menu-item-icon" alt="Redis">
+                        <span>Redis</span>
+                    </a>
+                </div>
+            </div>
+        </div>
 
         <!-- 主内容区 -->
-        <main class="main-content">
-            <header class="main-header">
-                <button class="mobile-menu-btn" @click="toggleSidebar" aria-label="Toggle menu">
-                    ☰
-                </button>
-                <div class="brand">
-                    <span class="brand-title">Spring Cloud</span>
-                    <span class="brand-subtitle">开发者控制台</span>
-                </div>
-                <div class="status-badge">
-                    ENV: DEVELOPMENT
-                </div>
-            </header>
-            <div class="sidebar-overlay" @click="toggleSidebar"></div>
+        <div class="main-content">
             <div class="main-body">
+        <!-- 快速访问区域 -->
+        <section class="quick-access-section">
+            <div class="section-title">快速访问</div>
+            <div class="quick-access-grid">
+                <div class="quick-access-card" :class="{ active: activeComponent === 'sentinel' }" @click="selectComponent('sentinel')">
+                    <div class="quick-access-icon">
+                        <img src="https://img.alicdn.com/imgextra/i3/O1CN01Z19f2d1X38JuBVfLX_!!6000000002867-55-tps-22-33.svg" alt="Sentinel" />
+                    </div>
+                    <div class="quick-access-name">Sentinel</div>
+                </div>
+                <div class="quick-access-card" :class="{ active: activeComponent === 'nacos' }" @click="selectComponent('nacos')">
+                    <div class="quick-access-icon">
+                        <img src="https://img.alicdn.com/imgextra/i3/O1CN01Mi9RDw1wFphKfvLxV_!!6000000006279-55-tps-29-14.svg" alt="Nacos" />
+                    </div>
+                    <div class="quick-access-name">Nacos</div>
+                </div>
+                <div class="quick-access-card" :class="{ active: activeComponent === 'dubbo' }" @click="selectComponent('dubbo')">
+                    <div class="quick-access-icon">
+                        <img src="https://img.alicdn.com/imgextra/i1/O1CN01Bgku601IaMpCoTO7l_!!6000000000909-55-tps-23-27.svg" alt="Dubbo" />
+                    </div>
+                    <div class="quick-access-name">Dubbo</div>
+                </div>
+                <div class="quick-access-card" :class="{ active: activeComponent === 'seata' }" @click="selectComponent('seata')">
+                    <div class="quick-access-icon">
+                        <img src="https://img.alicdn.com/imgextra/i2/O1CN01gTVczm23JDwHnxg2U_!!6000000007234-55-tps-20-30.svg" alt="Seata" />
+                    </div>
+                    <div class="quick-access-name">Seata</div>
+                </div>
+                <div class="quick-access-card" :class="{ active: activeComponent === 'rocketmq' }" @click="selectComponent('rocketmq')">
+                    <div class="quick-access-icon">
+                        <img src="https://img.alicdn.com/imgextra/i3/O1CN015oej0c1DwHiK9gS2H_!!6000000000280-55-tps-26-36.svg" alt="RocketMQ" />
+                    </div>
+                    <div class="quick-access-name">RocketMQ</div>
+                </div>
+                <div class="quick-access-card" :class="{ active: activeComponent === 'gateway' }" @click="selectComponent('gateway')">
+                    <div class="quick-access-icon">
+                        <img src="https://img.alicdn.com/imgextra/i2/O1CN014OFGKB1PjFoyRkUVK_!!6000000001876-55-tps-28-28.svg" alt="Gateway" />
+                    </div>
+                    <div class="quick-access-name">Gateway</div>
+                </div>
+            </div>
+        </section>
+
         <!-- 1. Microservice Panorama -->
         <section>
             <div>
-                <div class="component-detail" v-if="activeComponent">
+                <div class="component-detail" v-if="activeComponent && componentData[activeComponent]">
                     <div class="component-detail-header">
                         <div class="card-header">
                             <div class="card-icon"><img :src="'images/logos/' + componentData[activeComponent].icon" :alt="componentData[activeComponent].name"></div>
@@ -1058,7 +2180,7 @@
                 </div>
                 <div v-else style="text-align: center; padding: 40px; color: var(--muted-foreground);">
                     <div style="font-size: 36px; margin-bottom: 12px;">👈</div>
-                    <div>请从左侧菜单选择一个组件查看详情</div>
+                    <div>请从顶部菜单选择一个组件查看详情</div>
                 </div>
             </div>
         </section>
@@ -1087,15 +2209,6 @@
                             <div class="test-description">🔹 向服务发送 N 个并发请求，观察 Sentinel
                                 是否正确限流。QPS限流基于滑动时间窗口算法，超过阈值的请求会被直接拒绝。
                             </div>
-                            <div class="input-row">
-                                <input class="input" type="number" min="1" v-model.number="qpsTimes"
-                                       placeholder="次数">
-                                <button class="btn btn-primary" @click="trigger('qps', qpsTimes)"><span>▶</span>
-                                    发送请求
-                                </button>
-                            </div>
-
-
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">限流阈值:</span>
@@ -1105,6 +2218,14 @@
                                     <span class="config-label">当前状态:</span>
                                     <span class="config-value">✓ 正常运行</span>
                                 </div>
+                            </div>
+
+                            <div class="input-row">
+                                <input class="input" type="number" min="1" v-model.number="qpsTimes"
+                                       placeholder="次数">
+                                <button class="btn btn-primary" @click="trigger('qps', qpsTimes)"><span>▶</span>
+                                    发送请求
+                                </button>
                             </div>
 
                             <!-- Result Display for QPS Test -->
@@ -1135,15 +2256,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">并发控制 (Thread)</div>
                             <div class="test-description">🔹
                                 通过线程隔离限制最多同时执行的线程数。当线程数达到阈值，新请求进入等待队列。
-                            </div>
-                            <div class="input-row">
-                                <input class="input" type="number" min="1" v-model.number="threadTimes"
-                                       placeholder="线程数">
-                                <button class="btn btn-primary" @click="testThread()"><span>▶</span> 并发测试</button>
                             </div>
 
                             <!-- Result Display for Thread Test -->
@@ -1182,17 +2298,17 @@
                                     <span class="config-value">100</span>
                                 </div>
                             </div>
+
+                            <div class="input-row">
+                                <input class="input" type="number" min="1" v-model.number="threadTimes"
+                                       placeholder="线程数">
+                                <button class="btn btn-primary" @click="testThread()"><span>▶</span> 并发测试</button>
+                            </div>
                         </div>
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">热点参数限流</div>
                             <div class="test-description">🔹
                                 对特定的参数值（如用户ID）单独限流。常用于防护热点数据被恶意访问。
-                            </div>
-                            <div class="input-row">
-                                <input class="input" v-model="hotUserId" placeholder="User ID">
-                                <button class="btn btn-primary" @click="trigger('hot', hotTimes)"><span>▶</span>
-                                    热点测试
-                                </button>
                             </div>
 
                             <!-- Result Display for Hotspot -->
@@ -1281,7 +2397,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">配置管理</div>
                             <div class="test-description">🔹 加载 Nacos 的配置，动态刷新。</div>
                             <div class="config-panel api-address-panel">
@@ -1355,7 +2471,7 @@
                         </div>
 
                         <!-- 1. Batch Call -->
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">批量调用</div>
                             <div class="test-description">🔹 批量调用 Dubbo 服务接口，验证高性能场景下的处理能力。</div>
                             <div class="config-panel api-address-panel">
@@ -1396,7 +2512,7 @@
                         </div>
 
                         <!-- 2. Query All -->
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">查询所有</div>
                             <div class="test-description">🔹 查询所有产品信息，验证 Dubbo 服务的数据返回能力。</div>
                             <div class="config-panel api-address-panel">
@@ -1438,7 +2554,7 @@
                         </div>
 
                         <!-- 3. Timeout Call -->
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">超时调用</div>
                             <div class="test-description">🔹 为 RPC
                                 调用设置超时时间可以提升集群整体稳定性，避免无限等待响应结果导致的资源占用（比如大量长期无响应的请求占用线程池等）。在调用没有响应的情况下，比如
@@ -1520,7 +2636,7 @@ public class DemoServiceImpl implements DemoService{}
                         </div>
 
                         <!-- 4. Exception Call -->
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">异常调用</div>
                             <div class="test-description">🔹 模拟服务调用异常，验证 Dubbo 的异常处理和容错机制。</div>
                             <div class="config-panel api-address-panel">
@@ -1566,7 +2682,7 @@ public class DemoServiceImpl implements DemoService{}
                         </div>
 
                         <!-- 5. Async Call -->
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">异步调用</div>
                             <div class="test-description">🔹 使用 CompletableFuture 实现异步调用，验证非阻塞通信能力。
                             </div>
@@ -1609,7 +2725,7 @@ public class DemoServiceImpl implements DemoService{}
 
 
                         <!-- 6. Region Priority Call -->
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">同机房/区域优先</div>
                             <div class="test-description">🔹 验证 Dubbo 的同区域优先路由策略。当服务在多个区域部署时，优先调用同区域的服务实例，减少网络延迟。
                             </div>
@@ -1677,7 +2793,7 @@ public class DemoServiceImpl implements DemoService{}
                         </div>
 
                         <!-- 7. Concurrency Control - Rate Limiting -->
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">限流降级 - 并发控制</div>
                             <div class="test-description">🔹
                                 Dubbo框架内置的并发控制策略，通过限制从同一客户端到同一服务的并发请求数，防止恶意请求使服务器过载，确保服务的稳定性，并防止使用过多资源。
@@ -1896,8 +3012,160 @@ private DemoService demoService;
                                 </div>
                             </div>
 
-                        <!-- 8. Filter Interceptor Test -->
-                        <div class="control-group">
+                        <!-- 8. Load Balance Strategy Test -->
+                        <div class="control-group section-separator">
+                            <div class="control-label">负载均衡策略测试</div>
+                            <div class="test-description">🔹 验证 Dubbo 负载均衡策略。Dubbo 提供多种负载均衡算法，包括随机、轮询、一致性哈希、最小活跃数、最短响应时间等，可根据业务场景选择合适的策略。</div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label" style="font-weight: 700;">负载均衡策略对比</span>
+                                </div>
+                                <table class="loadbalance-table">
+                                    <thead>
+                                        <tr>
+                                            <th>算法</th>
+                                            <th>特性</th>
+                                            <th>备注</th>
+                                            <th>配置值</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Weighted Random LoadBalance</td>
+                                            <td>加权随机</td>
+                                            <td>默认算法，默认权重相同</td>
+                                            <td><code>random</code> (默认)</td>
+                                            <td>
+                                                <button class="table-detail-btn" @click="showStrategyDetails('random')">
+                                                    查看详情
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>RoundRobin LoadBalance</td>
+                                            <td>加权轮询</td>
+                                            <td>借鉴于 Nginx 的平滑加权轮询算法，默认权重相同</td>
+                                            <td><code>roundrobin</code></td>
+                                            <td>
+                                                <button class="table-detail-btn" @click="showStrategyDetails('roundrobin')">
+                                                    查看详情
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>LeastActive LoadBalance</td>
+                                            <td>最少活跃优先 + 加权随机</td>
+                                            <td>背后是能者多劳的思想</td>
+                                            <td><code>leastactive</code></td>
+                                            <td>
+                                                <button class="table-detail-btn" @click="showStrategyDetails('leastactive')">
+                                                    查看详情
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shortest-Response LoadBalance</td>
+                                            <td>最短响应优先 + 加权随机</td>
+                                            <td>更加关注响应速度</td>
+                                            <td><code>shortestresponse</code></td>
+                                            <td>
+                                                <button class="table-detail-btn" @click="showStrategyDetails('shortestresponse')">
+                                                    查看详情
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>ConsistentHash LoadBalance</td>
+                                            <td>一致性哈希</td>
+                                            <td>确定的入参，确定的提供者，适用于有状态请求</td>
+                                            <td><code>consistenthash</code></td>
+                                            <td>
+                                                <button class="table-detail-btn" @click="showStrategyDetails('consistenthash')">
+                                                    查看详情
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>P2C LoadBalance</td>
+                                            <td>Power of Two Choice</td>
+                                            <td>随机选择两个节点后，继续选择"连接数"较小的那个节点</td>
+                                            <td><code>p2c</code></td>
+                                            <td>
+                                                <button class="table-detail-btn" @click="showStrategyDetails('p2c')">
+                                                    查看详情
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Adaptive LoadBalance</td>
+                                            <td>自适应负载均衡</td>
+                                            <td>在 P2C 算法基础上，选择二者中 load 最小的那个节点</td>
+                                            <td><code>adaptive</code></td>
+                                            <td>
+                                                <button class="table-detail-btn" @click="showStrategyDetails('adaptive')">
+                                                    查看详情
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="input-row" style="align-items: center; margin-top: 20px;">
+                                <label class="input-label">请求次数:</label>
+                                <input class="input" v-model="loadBalanceRequestCount" type="number" min="1" max="100"
+                                       placeholder="默认20" style="width:120px">
+                                <label class="input-label" style="margin-left: 20px;">负载均衡策略:</label>
+                                <select class="input" v-model="loadBalanceStrategy" style="flex: 1; max-width: 350px;">
+                                    <option value="random">random（随机）- 按权重随机选择服务器</option>
+                                    <option value="roundrobin">roundrobin（轮询）- 按权重轮询选择服务器</option>
+                                    <option value="consistenthash">consistenthash（一致性哈希）- 相同参数的请求总是发送到同一台服务器</option>
+                                    <option value="leastactive">leastactive（最小活跃数）- 选择活跃请求数最少的服务器</option>
+                                    <option value="shortestresponse">shortestresponse（最短响应时间）- 选择响应时间最短的服务器</option>
+                                </select>
+                                <button class="btn btn-primary" @click="testLoadBalanceStrategy()" style="margin-left: 12px; flex-shrink: 0;"><span>▶</span>执行测试</button>
+                            </div>
+
+                            <div class="input-row" style="align-items: center;" v-show="loadBalanceStrategy === 'consistenthash'">
+                                <label class="input-label">产品ID:</label>
+                                <input class="input" v-model="loadBalanceParam" type="number"
+                                       placeholder="输入产品ID" style="flex: 1; max-width: 100px;">
+                                <span class="test-description" style="margin-left: 10px;">💡 一致性哈希策略测试时，使用此固定ID验证相同ID是否路由到同一服务器</span>
+                            </div>
+
+                            <!-- Result Display -->
+                            <div class="result-display" :class="loadBalanceResult?.status"
+                                 v-if="loadBalanceResult"
+                                 @click="showResultDetail('loadbalance')"
+                                 style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">{{ loadBalanceResult?.title || '负载均衡策略测试结果' }}</span>
+                                    <span class="result-status" :class="loadBalanceResult?.status">
+                                            {{ loadBalanceResult?.status === 'success' ? '✔ 成功' :
+                                            loadBalanceResult?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ loadBalanceResult?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ loadBalanceResult?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            loadBalanceResult?.responseTime }}ms</span>
+                                    <span v-if="loadBalanceResult?.code">HTTP {{
+                                            loadBalanceResult?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Filter Interceptor Test -->
+                        <div class="control-group section-separator">
                             <div class="control-label">Filter 拦截器</div>
                             <div class="test-description">🔹 验证 Dubbo Filter 对请求和响应的动态拦截功能。Filter 可以在服务调用前后执行自定义逻辑，如日志记录、权限验证、参数校验等。</div>
                             <div class="config-panel api-address-panel">
@@ -2007,7 +3275,7 @@ public class DemoFilter implements Filter {
                         </div>
 
                         <!-- 9. Version and Group Test -->
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">版本与分组</div>
                             <div class="test-description">🔹 验证 Dubbo 版本与分组功能。通过版本号和分组可以实现服务的灰度发布、多版本共存、环境隔离等功能。</div>
                             
@@ -2095,6 +3363,146 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                                             getResultDisplay('dubbo-version-group')?.responseTime }}ms</span>
                                     <span v-if="getResultDisplay('dubbo-version-group')?.code">HTTP {{
                                             getResultDisplay('dubbo-version-group')?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Protocol Comparison -->
+                        <div class="control-group section-separator">
+                            <div class="control-label">协议对比测试</div>
+                            <div class="test-description">🔹 对比 Dubbo、Triple 和 REST 三种协议的性能表现，包括成功率和响应时间。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 地址:</span>
+                                    <span class="config-value api-address-value">GET
+                                            /api/order/dubbo/protocol/compare</span>
+                                </div>
+                            </div>
+                            <div class="input-row">
+                                <input class="input" v-model.number="dubboProductId" placeholder="产品ID" style="width:100px">
+                                <input class="input" v-model.number="compareTimes" placeholder="请求次数" style="width:100px">
+                            </div>
+                            <button class="btn btn-primary" @click="testProtocolCompare()"><span>▶</span> 协议对比</button>
+                            <!-- Result Display -->
+                            <div class="result-display" :class="getResultDisplay('protocol-compare')?.status"
+                                 v-if="getResultDisplay('protocol-compare')"
+                                 @click="showResultDetail('protocol-compare')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">协议对比结果</span>
+                                    <span class="result-status" :class="getResultDisplay('protocol-compare')?.status">
+                                            {{ getResultDisplay('protocol-compare')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('protocol-compare')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('protocol-compare')?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('protocol-compare')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('protocol-compare')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('protocol-compare')?.code">HTTP {{
+                                            getResultDisplay('protocol-compare')?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Individual Protocol Tests -->
+                        <div class="control-group section-separator">
+                            <div class="control-label">单协议测试</div>
+                            <div class="test-description">🔹 单独测试每种协议的性能表现。</div>
+                            <div class="input-row">
+                                <input class="input" v-model.number="dubboProductId" placeholder="产品ID" style="width:100px">
+                            </div>
+                            <div class="input-row">
+                                <button class="btn btn-primary flex-1" @click="testProtocolDubbo()" :disabled="loadingStates['protocol-dubbo']"><span>▶</span> Dubbo协议</button>
+                                <button class="btn btn-primary flex-1" @click="testProtocolTriple()" :disabled="loadingStates['protocol-triple']"><span>▶</span> Triple协议</button>
+                                <button class="btn btn-primary flex-1" @click="testProtocolRest()" :disabled="loadingStates['protocol-rest']"><span>▶</span> REST协议</button>
+                            </div>
+                            <!-- Dubbo Protocol Result -->
+                            <div class="result-display" :class="getResultDisplay('protocol-dubbo')?.status"
+                                 v-if="getResultDisplay('protocol-dubbo')"
+                                 @click="showResultDetail('protocol-dubbo')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">Dubbo协议测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('protocol-dubbo')?.status">
+                                            {{ getResultDisplay('protocol-dubbo')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('protocol-dubbo')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('protocol-dubbo')?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('protocol-dubbo')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('protocol-dubbo')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('protocol-dubbo')?.code">HTTP {{
+                                            getResultDisplay('protocol-dubbo')?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+                            <!-- Triple Protocol Result -->
+                            <div class="result-display" :class="getResultDisplay('protocol-triple')?.status"
+                                 v-if="getResultDisplay('protocol-triple')"
+                                 @click="showResultDetail('protocol-triple')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">Triple协议测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('protocol-triple')?.status">
+                                            {{ getResultDisplay('protocol-triple')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('protocol-triple')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('protocol-triple')?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('protocol-triple')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('protocol-triple')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('protocol-triple')?.code">HTTP {{
+                                            getResultDisplay('protocol-triple')?.code }}</span>
+                                </div>
+                                <div
+                                        style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
+                                    点击查看详情
+                                </div>
+                            </div>
+                            <!-- REST Protocol Result -->
+                            <div class="result-display" :class="getResultDisplay('protocol-rest')?.status"
+                                 v-if="getResultDisplay('protocol-rest')"
+                                 @click="showResultDetail('protocol-rest')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">REST协议测试结果</span>
+                                    <span class="result-status" :class="getResultDisplay('protocol-rest')?.status">
+                                            {{ getResultDisplay('protocol-rest')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('protocol-rest')?.status === 'error' ? '✘ 失败' : '⏳ 执行中' }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('protocol-rest')?.message || '无返回信息'
+                                    }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('protocol-rest')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('protocol-rest')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('protocol-rest')?.code">HTTP {{
+                                            getResultDisplay('protocol-rest')?.code }}</span>
                                 </div>
                                 <div
                                         style="text-align: center; margin-top: 8px; font-size: 10px; color: var(--text-secondary); opacity: 0.7;">
@@ -2199,6 +3607,130 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                         </div>
                     </div>
 
+                    <!-- Gateway Controls -->
+                    <div v-if="activeComponent === 'gateway'">
+                        <div class="control-group">
+                            <div class="control-label">网关路由</div>
+                            <div class="test-description">🔹
+                                检查 Spring Cloud Gateway 路由规则配置，验证路由是否正常工作。包含动态路由、负载均衡等配置。
+                            </div>
+                            <button class="btn btn-primary mb-2" @click="testGatewayRouting()"><span>▶</span>
+                                检查路由规则
+                            </button>
+
+                            <!-- Result Display for Gateway Routing Test -->
+                            <div class="result-display" :class="getResultDisplay('gateway-routing')?.status"
+                                 v-if="getResultDisplay('gateway-routing')"
+                                 @click="showResultDetail('gateway-routing')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">路由测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('gateway-routing')?.status">
+                                            {{ getResultDisplay('gateway-routing')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('gateway-routing')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
+                                            }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('gateway-routing')?.message ||
+                                    '无返回信息' }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{ getResultDisplay('gateway-routing')?.timestamp
+                                            }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('gateway-routing')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('gateway-routing')?.code">HTTP {{
+                                            getResultDisplay('gateway-routing')?.code }}</span>
+                                </div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">网关类型:</span>
+                                    <span class="config-value">Spring Cloud Gateway</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">路由模式:</span>
+                                    <span class="config-value">Predicate 匹配、Filter 过滤</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group section-separator">
+                            <div class="control-label">过滤器测试</div>
+                            <div class="test-description">🔹
+                                测试 Gateway 过滤器功能，包括请求头修改、路径重写等。
+                            </div>
+                            <div class="input-row">
+                                <button class="btn btn-primary flex-1"
+                                        @click="callWithResultDisplay(endpoint('gateway-auth-pass'),'gateway-auth', 'gateway-auth-pass')">
+                                    <span>▶</span>
+                                    认证通过
+                                </button>
+                                <button class="btn btn-danger flex-1"
+                                        @click="callWithResultDisplay(endpoint('gateway-auth-fail'),'gateway-auth', 'gateway-auth-fail')">
+                                    <span>▶</span>
+                                    认证拒绝
+                                </button>
+                            </div>
+
+                            <!-- Result Display for Auth Tests -->
+                            <div class="result-display" :class="getResultDisplay('gateway-auth-pass')?.status"
+                                 v-if="getResultDisplay('gateway-auth-pass') && !getResultDisplay('gateway-auth-fail')"
+                                 @click="showResultDetail('gateway-auth-pass')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">认证测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('gateway-auth-pass')?.status">
+                                            {{ getResultDisplay('gateway-auth-pass')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('gateway-auth-pass')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
+                                            }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('gateway-auth-pass')?.message ||
+                                    '无返回信息' }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{
+                                            getResultDisplay('gateway-auth-pass')?.timestamp }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('gateway-auth-pass')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('gateway-auth-pass')?.code">HTTP {{
+                                            getResultDisplay('gateway-auth-pass')?.code }}</span>
+                                </div>
+                            </div>
+
+                            <div class="result-display" :class="getResultDisplay('gateway-auth-fail')?.status"
+                                 v-if="getResultDisplay('gateway-auth-fail')"
+                                 @click="showResultDetail('gateway-auth-fail')" style="cursor: pointer;">
+                                <div class="result-header">
+                                    <span class="result-title">认证测试结果</span>
+                                    <span class="result-status"
+                                          :class="getResultDisplay('gateway-auth-fail')?.status">
+                                            {{ getResultDisplay('gateway-auth-fail')?.status === 'success' ? '✔ 成功' :
+                                            getResultDisplay('gateway-auth-fail')?.status === 'error' ? '✘ 失败' : '⏳ 执行中'
+                                            }}
+                                        </span>
+                                </div>
+                                <div class="result-content">{{ getResultDisplay('gateway-auth-fail')?.message ||
+                                    '无返回信息' }}
+                                </div>
+                                <div class="result-meta">
+                                        <span class="result-timestamp">{{
+                                            getResultDisplay('gateway-auth-fail')?.timestamp }}</span>
+                                    <span class="result-response-time">{{
+                                            getResultDisplay('gateway-auth-fail')?.responseTime }}ms</span>
+                                    <span v-if="getResultDisplay('gateway-auth-fail')?.code">HTTP {{
+                                            getResultDisplay('gateway-auth-fail')?.code }}</span>
+                                </div>
+                            </div>
+                            <div class="config-panel">
+                                <div class="config-item">
+                                    <span class="config-label">鉴权方式:</span>
+                                    <span class="config-value">Header Authorization</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Higress Controls -->
                     <div v-if="activeComponent === 'higress'">
                         <div class="control-group">
@@ -2246,7 +3778,7 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">安全鉴权</div>
                             <div class="test-description">🔹
                                 测试鉴权一行，模拟认可的请求与不认可的请求。验证模型是否正常工作。
@@ -2402,7 +3934,7 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">LoadBalancer 负载均衡</div>
                             <div class="test-description">
                                 🔹 Spring Cloud LoadBalancer 是一个轻量级、响应式友好的客户端负载均衡器，用于在调用远程服务时，从服务注册中心（如
@@ -2459,7 +3991,7 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">超时与重试机制</div>
                             <div class="test-description">
                                 🔹 配置连接超时和读取超时,防止服务调用长时间阻塞。支持自定义重试策略,但需注意幂等性问题。
@@ -2546,7 +4078,7 @@ public class ProductServiceConfig {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">请求拦截器</div>
                             <div class="test-description">
                                 🔹 Feign 拦截器可统一处理请求头、认证信息、日志记录、性能监控等横切关注点,实现 AOP 功能。
@@ -2636,7 +4168,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                             </div>
                         </div>
 
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">配置动态刷新</div>
                             <div class="test-description">
                                 🔹 通过 Nacos 配置中心和 @RefreshScope 注解,实现配置的动态刷新,无需重启应用即可生效。
@@ -2699,7 +4231,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                             </div>
                         </div>
 
-                        <div class="control-group">
+                        <div class="control-group section-separator">
                             <div class="control-label">服务健康检查</div>
                             <div class="test-description">
                                 🔹 通过 Spring Boot Actuator 和 Nacos 健康检查机制,实时监控服务实例状态,自动剔除不健康实例。
@@ -2931,6 +4463,24 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
             </div>
             <div class="modal-body">
                 <pre class="code-block" id="json-display"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- 负载均衡策略详情模态框 -->
+    <div class="modal-overlay" v-cloak v-if="showStrategyModal" @click.self="closeStrategyModal()">
+        <div class="modal strategy-modal">
+            <div class="modal-header">
+                <h3 style="margin:0; font-size:18px;">{{ currentStrategyDetails?.title }}</h3>
+                <button class="btn btn-sm" @click="closeStrategyModal()">关闭</button>
+            </div>
+            <div class="modal-body">
+                <div v-if="currentStrategyDetails" class="strategy-details">
+                    <div v-for="(section, index) in currentStrategyDetails.sections" :key="index" class="strategy-section">
+                        <h4 class="strategy-section-title">{{ section.label }}：</h4>
+                        <div class="strategy-section-content" v-html="section.content"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

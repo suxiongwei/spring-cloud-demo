@@ -53,25 +53,29 @@ dubbo:
       prefer-ip-address: true
 #      region: hangzhou
   # 协议配置
-  protocol:
-    name: dubbo
-    port: 20881
-    host: 127.0.0.1
+  protocols:
+    dubbo:
+      name: dubbo
+      port: 20881
+    tri:
+      name: tri
+      port: 50051
   # 服务暴露配置
-#  provider:
-#    tag: hangzhou
-#    # 调用超时（窗口时间），单位：ms
-##    timeout: 3000
-#    # 失败重试次数
-##    retries: 1
-#    # 最大欢迎选抩数（failover模式）
-#    loadbalance: random
-#    # 需要管理的线程数
-#    threads: 200
-#    # 线程池队列次数（积压池）
-#    queues: 0
-#    # 集群模式：failover、failfast、failsafe、failback、forking，默认为failover
-#    cluster: failover
+  provider:
+    # 负载均衡权重（默认100）
+    weight: 100
+    # 调用超时（窗口时间），单位：ms
+    timeout: 3000
+    # 失败重试次数
+    retries: 1
+    # 最大欢迎选抩数（failover模式）
+    loadbalance: random
+    # 需要管理的线程数
+    threads: 200
+    # 线程池队列次数（积压池）
+    queues: 0
+    # 集群模式：failover、failfast、failsafe、failback、forking，默认为failover
+    cluster: failover
 
 ---
 spring:
@@ -84,33 +88,49 @@ spring:
 ---
 spring:
   config:
+    import:
+      - nacos:common.yaml?group=product
     activate:
       on-profile: beijing
 server:
   port: 8012
 dubbo:
+  application:
+    qos-port: 22223
   registry:
     # 用于业务逻辑显示（在代码中获取区域名称）和服务元数据注册
     parameters:
       region: beijing
   provider:
-    # 用于控制路由
-    tag: beijing
-  protocol:
-    port: 20882
+    # 权重配置：北京节点权重较高
+#    tag: beijing
+    weight: 150
+  protocols:
+    dubbo:
+      port: 20882
+    tri:
+      port: 50052
 
 ---
 spring:
   config:
+    import:
+      - nacos:common.yaml?group=product
     activate:
       on-profile: shanghai
 server:
   port: 8013
 dubbo:
+  application:
+    qos-port: 22224
   registry:
     parameters:
       region: shanghai
   provider:
-    tag: shanghai
-  protocol:
-    port: 20883
+    # 权重配置：上海节点权重较低
+    weight: 50
+  protocols:
+    dubbo:
+      port: 20883
+    tri:
+      port: 50053

@@ -24,17 +24,13 @@ import java.util.stream.Collectors;
  * @date 2025/3/23
  */
 @Slf4j
-@DubboService(
-    version = "1.0.0", 
-    group = "product", 
-    retries = 2,
-    // 服务端并发控制：限制整个服务的最大并发执行数为10
-//    executes = 3,
-    methods = {
-        // 方法级别的并发控制
-        @Method(name = "testConcurrencyControlV2", executes = 5)
-    }
-)
+@DubboService(version = "1.0.0", group = "product", retries = 2, protocol = { "dubbo", "tri" },
+        // 服务端并发控制：限制整个服务的最大并发执行数为10
+        // executes = 3,
+        methods = {
+                // 方法级别的并发控制
+                @Method(name = "testConcurrencyControlV2", executes = 5)
+        })
 public class ProductDubboServiceImpl implements IProductDubboService {
 
     /**
@@ -113,7 +109,7 @@ public class ProductDubboServiceImpl implements IProductDubboService {
     @Override
     public Map<String, Object> testConcurrencyControlV1(Long sleepTime) {
         log.info("Dubbo Service: 开始Consumer并发控制测试, 休眠时间: {}ms", sleepTime);
-        
+
         Map<String, Object> result = new HashMap<>();
         List<String> messages = new ArrayList<>();
         List<Long> executionTimes = new ArrayList<>();
@@ -125,22 +121,22 @@ public class ProductDubboServiceImpl implements IProductDubboService {
             Thread.sleep(sleepTime);
 
             log.info("Dubbo Service: 请求完成, 请求结束时间: {}", System.currentTimeMillis());
-            
+
             result.put("success", true);
             result.put("message", "Consumer端并发控制测试成功");
             result.put("sleepTime", sleepTime + "ms");
-            
+
         } catch (Exception e) {
             log.error("Consumer端并发控制测试异常", e);
-            
+
             result.put("success", false);
             result.put("message", "Consumer端并发控制测试异常: " + e.getMessage());
             result.put("error", e.getClass().getName());
         }
-        
+
         result.put("messages", messages);
         result.put("executionTimes", executionTimes);
-        
+
         return result;
     }
 
@@ -181,9 +177,9 @@ public class ProductDubboServiceImpl implements IProductDubboService {
     @Override
     public Map<String, Object> testLeastActiveLoadBalance() {
         log.info("Dubbo Service: 开始最小并发数负载均衡测试");
-        
+
         Map<String, Object> result = new HashMap<>();
-        
+
         try {
             // 记录当前活跃请求数
             int current = activeRequests.incrementAndGet();
@@ -197,7 +193,7 @@ public class ProductDubboServiceImpl implements IProductDubboService {
 
             // 获取当前服务实例信息
             String serverInfo = String.format("Server[%s][Region:%s][Active:%d]",
-                System.getProperty("server.port", "8080"), region, current);
+                    System.getProperty("server.port", "8080"), region, current);
 
             result.put("success", true);
             result.put("message", "最小并发数负载均衡测试成功");
@@ -208,39 +204,39 @@ public class ProductDubboServiceImpl implements IProductDubboService {
         } catch (Exception e) {
             activeRequests.decrementAndGet();
             log.error("最小并发数负载均衡测试异常", e);
-            
+
             result.put("success", false);
             result.put("message", "最小并发数负载均衡测试异常: " + e.getMessage());
             result.put("error", e.getClass().getName());
         }
-        
+
         return result;
     }
 
     @Override
     public Map<String, Object> testFilter(String message) {
         log.info("Dubbo Service: 开始Filter拦截测试, 消息: {}", message);
-        
+
         Map<String, Object> result = new HashMap<>();
-        
+
         try {
             // 模拟业务处理
             Thread.sleep(100);
-            
+
             result.put("success", true);
             result.put("message", "Filter拦截测试成功");
             result.put("originalMessage", message);
             result.put("processedMessage", "处理后的消息: " + message);
             result.put("timestamp", System.currentTimeMillis());
-            
+
         } catch (Exception e) {
             log.error("Filter拦截测试异常", e);
-            
+
             result.put("success", false);
             result.put("message", "Filter拦截测试异常: " + e.getMessage());
             result.put("error", e.getClass().getName());
         }
-        
+
         return result;
     }
 }
