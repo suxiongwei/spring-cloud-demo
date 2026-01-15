@@ -1,0 +1,1303 @@
+[v-cloak] {
+    display: none !important;
+}
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+  .control-label {
+    font-size: 14px;
+}
+  .icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    vertical-align: middle;
+    display: inline-block;
+    flex-shrink: 0;
+}
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    vertical-align: middle;
+    display: inline-block;
+    flex-shrink: 0;
+}
+  /* 顶部导航栏样式 */
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+  .top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+  .navbar-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 200px;
+}
+  .navbar-brand-title {
+    font-size: 18px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, black) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+}
+  .navbar-brand-subtitle {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+  .navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    margin: 0 24px;
+}
+  .menu-dropdown {
+    position: relative;
+}
+  .menu-dropdown-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: var(--foreground);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+  .menu-dropdown-btn::after {
+    content: none;
+}
+  .menu-dropdown.open .menu-dropdown-btn::after {
+    content: none;
+}
+  .menu-dropdown-btn:hover {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+  .menu-dropdown-btn:active {
+    transform: translateY(0);
+}
+  .menu-dropdown-btn.active {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    color: var(--primary);
+}
+  .menu-dropdown.open .menu-dropdown-btn {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    color: var(--primary);
+}
+  .menu-dropdown-content {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 200px;
+    background: var(--card);
+    border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--foreground) 8%, transparent), 0 0 0 1px color-mix(in srgb, var(--foreground) 3%, transparent);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px) scale(0.98);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+}
+  .menu-dropdown.open .menu-dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+  .dropdown-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--foreground);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+}
+  .dropdown-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--primary);
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+}
+  .dropdown-item:hover {
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    color: var(--primary);
+    padding-left: 24px;
+}
+  .dropdown-item:hover::before {
+    transform: scaleY(1);
+}
+  .dropdown-item.active {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    color: var(--primary);
+    font-weight: 600;
+}
+  .dropdown-item.active::before {
+    transform: scaleY(1);
+}
+  .dropdown-item:not(:last-child) {
+    border-bottom: 1px solid color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+  .dropdown-item-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    filter: brightness(1);
+}
+  .dropdown-item:hover .dropdown-item-icon {
+    filter: brightness(1.1);
+    transform: scale(1.1);
+}
+  .dropdown-item.active .dropdown-item-icon {
+    filter: brightness(1.15);
+}
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+  .search-box {
+    position: relative;
+}
+  .search-box input {
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: 13px;
+    width: 200px;
+    transition: all 0.2s ease;
+}
+  .search-box input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: var(--card);
+    width: 240px;
+}
+  .search-box::before {
+    content: '🔍';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    opacity: 0.5;
+}
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--foreground);
+    transition: all 0.2s ease;
+}
+  .theme-toggle:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+    border: 1px solid var(--border);
+}
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 80%, black) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+  .user-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--foreground);
+}
+  /* 主内容区 */
+.main-content {
+    margin-top: 64px;
+    margin-left: 240px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 64px);
+}
+  .main-body {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+}
+  /* 快速访问区域 */
+.quick-access-section {
+    margin-bottom: 24px;
+}
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+  .quick-access-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+}
+  .quick-access-grid::-webkit-scrollbar {
+    height: 4px;
+}
+  .quick-access-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+  .quick-access-grid::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+  .quick-access-card {
+    flex-shrink: 0;
+    width: 140px;
+    padding: 20px 16px;
+    background: var(--card);
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+  .quick-access-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: color-mix(in srgb, var(--primary) 5%, transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+  .quick-access-card:hover::before {
+    opacity: 1;
+}
+  .quick-access-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+  .quick-access-card:hover .quick-access-name {
+    color: var(--primary);
+}
+  .quick-access-card.active {
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+  .quick-access-card.active::before {
+    opacity: 1;
+}
+  .quick-access-card.active .quick-access-name {
+    color: var(--primary);
+}
+  .quick-access-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 5%, transparent);
+    position: relative;
+    z-index: 1;
+}
+  .quick-access-icon img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .quick-access-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--foreground);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+  .quick-access-card:hover .quick-access-icon {
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+  .quick-access-card:hover .quick-access-icon img {
+    transform: scale(1.05);
+}
+  .quick-access-card.active .quick-access-icon {
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+  /* 组件详情卡片 */
+.component-detail {
+    background: var(--card);
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .component-detail:hover {
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 10%, transparent);
+    transform: translateY(-2px);
+}
+  .component-detail-header {
+    padding: 20px 24px;
+    background: color-mix(in srgb, var(--foreground) 2%, transparent);
+    border-bottom: none;
+}
+  .component-detail-header .card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+  .component-detail-header .card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 5%, transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .component-detail:hover .component-detail-header .card-icon {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+  .component-detail-header .card-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .component-detail:hover .component-detail-header .card-icon img {
+    transform: scale(1.08);
+}
+  .component-detail-header .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 4px;
+}
+  .component-detail-header .card-subtitle {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+  .component-detail-desc {
+    padding: 16px 24px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--foreground);
+}
+  .component-detail-section {
+    padding: 16px 24px;
+    border-top: none;
+}
+  .component-detail-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+  .component-detail-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+  .component-detail-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 0;
+}
+  .component-detail-features li::before {
+    content: '●';
+    color: var(--primary);
+    font-size: 8px;
+    margin-top: 6px;
+    flex-shrink: 0;
+}
+  .component-detail-feature-name {
+    font-weight: 600;
+    color: var(--foreground);
+    min-width: 80px;
+    font-size: 13px;
+}
+  .component-detail-feature-desc {
+    color: var(--muted-foreground);
+    font-size: 13px;
+}
+  .component-detail-links {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+  .component-detail-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: transparent;
+}
+  .component-detail-link:hover {
+    color: color-mix(in srgb, var(--primary) 80%, black);
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    transform: translateY(-1px);
+}
+  /* 控制台面板 */
+.console-layout-single {
+    margin-top: 0;
+}
+  .console-panel-full {
+    width: 100%;
+}
+  .panel {
+    background: var(--card);
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .panel:hover {
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+  .panel-header {
+    padding: 16px 20px;
+    background: color-mix(in srgb, var(--foreground) 2%, transparent);
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .panel:hover .panel-header {
+    background: color-mix(in srgb, var(--foreground) 3%, transparent);
+}
+  .panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+  .panel-body {
+    padding: 20px;
+}
+  .control-group {
+    margin-bottom: 24px;
+}
+  .control-group:last-child {
+    margin-bottom: 0;
+}
+  .section-separator {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+  .control-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 8px;
+}
+  .input-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--foreground);
+    white-space: nowrap;
+}
+  .test-description {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+  .input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+  .input {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--foreground) 4%, transparent);
+    height: 36px;
+    line-height: 36px;
+}
+  .input:focus {
+    outline: none;
+    background: var(--card);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent), 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+  .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--foreground) 4%, transparent);
+    height: auto;
+    min-height: 36px;
+    line-height: 1.4;
+    max-width: 100%;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  .btn:hover {
+    background: color-mix(in srgb, var(--foreground) 8%, transparent);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--foreground) 4%, transparent);
+}
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+  .btn-primary:hover {
+    background: color-mix(in srgb, var(--primary) 85%, black);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+  .config-panel {
+    background: color-mix(in srgb, var(--foreground) 2%, transparent);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--foreground) 4%, transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .config-panel:hover {
+    background: color-mix(in srgb, var(--foreground) 3%, transparent);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+  .config-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 0;
+    font-size: 13px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: flex-start;
+}
+  .config-item:hover {
+}
+  .config-label {
+    color: var(--primary);
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .config-item:hover .config-label {
+    color: color-mix(in srgb, var(--primary) 80%, black);
+}
+  .config-value {
+    color: var(--foreground);
+    font-weight: 500;
+    flex: 1;
+}
+  .result-display {
+    background: color-mix(in srgb, var(--foreground) 2%, transparent);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--foreground) 4%, transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .result-display.success {
+    background: color-mix(in srgb, var(--chart-3) 10%, transparent);
+}
+  .result-display.error {
+    border-color: var(--chart-1);
+    background: color-mix(in srgb, var(--chart-1) 10%, transparent);
+}
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+  .result-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--foreground);
+}
+  .result-status {
+    font-size: 12px;
+    font-weight: 600;
+}
+  .result-status.success {
+    color: var(--chart-3);
+}
+  .result-status.error {
+    color: var(--chart-1);
+}
+  .result-content {
+    font-size: 13px;
+    color: var(--foreground);
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+  .result-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--muted-foreground);
+}
+  .loadbalance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+}
+  .loadbalance-table th,
+.loadbalance-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+  .loadbalance-table th {
+    font-weight: 600;
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 5%, transparent);
+}
+  .loadbalance-table tr:hover {
+    background: color-mix(in srgb, var(--foreground) 2%, transparent);
+}
+  .loadbalance-table td code {
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 12px;
+}
+  .detail-toggle-btn {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+  .detail-toggle-btn:hover {
+    background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+  .detail-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+  .detail-content.expanded {
+    max-height: 1000px;
+    transition: max-height 0.6s ease-in;
+}
+  .table-detail-btn {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+  .table-detail-btn:hover {
+    background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+  /* 深色模式 */
+.dark .top-navbar {
+    background: var(--card);
+    border-bottom-color: var(--border);
+}
+  .dark .menu-dropdown-content {
+    background: var(--card);
+    border-color: var(--border);
+}
+  .dark .search-box input {
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+  .dark .search-box input:focus {
+    background: var(--card);
+}
+  .dark .user-info {
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+  .dark .quick-access-card {
+    background: var(--card);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+  .dark .quick-access-card:hover {
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+  .dark .quick-access-card.active {
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+  .dark .component-detail {
+    background: var(--card);
+    border: none;
+}
+  .dark .component-detail:hover {
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+  .dark .component-detail-header .card-icon {
+    background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+  .dark .component-detail:hover .component-detail-header .card-icon {
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+  .dark .panel {
+    background: var(--card);
+    border: none;
+}
+  .dark .panel:hover {
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+  .dark .panel:hover .panel-header {
+    background: color-mix(in srgb, var(--foreground) 4%, transparent);
+}
+  .dark .config-panel {
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+  .dark .config-panel:hover {
+    background: color-mix(in srgb, var(--foreground) 6%, transparent);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+  .dark .config-item:hover .config-label {
+    color: color-mix(in srgb, var(--primary) 90%, white);
+}
+  .dark .result-display {
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+  .dark .input {
+    background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+  .dark .input:focus {
+    background: var(--card);
+}
+  .dark .btn {
+    background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+  .dark .btn:hover {
+    background: color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+  .dark .btn-primary {
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+  .dark .btn-primary:hover {
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+  .dark .component-detail-link:hover {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+      /* Collapsible Code Block Styles */
+.code-block.collapsible {
+    position: relative;
+    transition: max-height 0.3s ease;
+}
+  .code-block.collapsible.collapsed {
+    max-height: 150px;
+    overflow: hidden;
+}
+  .code-block.collapsible.collapsed::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--background) 0%, transparent), color-mix(in srgb, var(--background) 95%, transparent) 40%, var(--background) 100%);
+    pointer-events: none;
+}
+  /* 深色模式下的折叠渐变效果 */
+.dark .code-block.collapsible.collapsed::after {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--background) 0%, transparent), color-mix(in srgb, var(--background) 95%, transparent) 40%, var(--background) 100%);
+}
+  .collapse-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    padding: 4px 16px;
+    font-size: 12px;
+    border-radius: 15px;
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+    color: var(--muted-foreground);
+    border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+  .collapse-btn:hover {
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+    color: var(--foreground);
+}
+  /* 深色模式下的collapse-btn样式 */
+.dark .collapse-btn {
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+    color: var(--muted-foreground);
+    border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+}
+  .dark .collapse-btn:hover {
+    background: color-mix(in srgb, var(--foreground) 20%, transparent);
+    color: var(--foreground);
+}
+  .code-block.collapsible.expanded {
+    padding-bottom: 40px;
+}
+  .component-detail {
+    background: var(--card);
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto 16px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 6%, transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  .component-detail:hover {
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 10%, transparent);
+    transform: translateY(-2px);
+}
+  .component-detail-header {
+    padding: 12px 16px;
+    background: color-mix(in srgb, var(--foreground) 2%, transparent);
+    border-bottom: none;
+}
+  .component-detail-header .card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0;
+}
+  .component-detail-header .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+  .component-detail-header .card-icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+  .component-detail-header .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 2px;
+}
+  .component-detail-header .card-subtitle {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+  .component-detail-desc {
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--foreground);
+}
+  .component-detail-section {
+    padding: 12px 16px;
+}
+  .component-detail-section:last-child {
+    border-bottom: none;
+}
+  .component-detail-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+  .component-detail-section-title::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--primary);
+    margin-top: 4px;
+    border-radius: 1px;
+}
+  .component-detail-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--foreground);
+}
+  .component-detail-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+  .component-detail-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 0;
+    border-bottom: none;
+}
+  .component-detail-features li::before {
+    content: '●';
+    color: var(--primary);
+    font-size: 8px;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+  .component-detail-feature-name {
+    font-weight: 600;
+    color: var(--foreground);
+    min-width: 80px;
+    font-size: 13px;
+}
+  .component-detail-feature-desc {
+    color: var(--muted-foreground);
+    font-size: 13px;
+}
+  .component-detail-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+  .component-detail-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+  .component-detail-link:hover {
+    color: color-mix(in srgb, var(--primary) 80%, black);
+    text-decoration: underline;
+}
+  .dark .component-detail {
+    background: var(--card);
+    border: none;
+}
+  .dark .component-detail-header {
+    background: color-mix(in srgb, var(--foreground) 2%, transparent);
+    border-bottom: none;
+}
+  .dark .component-detail-header .card-title {
+    color: var(--foreground);
+}
+  .dark .component-detail-header .card-subtitle {
+    color: var(--muted-foreground);
+}
+  .dark .component-detail-section {
+    border-bottom-color: var(--border);
+}
+  .dark .component-detail-features li {
+    border-bottom-color: var(--border);
+}
+  .dark .component-detail-feature-name {
+    color: var(--foreground);
+}
+  .dark .component-detail-feature-desc {
+    color: var(--muted-foreground);
+}
+  .dark .component-detail-action-btn {
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+    border-color: color-mix(in srgb, var(--foreground) 20%, transparent);
+    color: var(--foreground);
+}
+  .dark .component-detail-action-btn:hover {
+    background: color-mix(in srgb, var(--primary) 20%, transparent);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+  .dark .menu-dropdown-btn {
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+    border-color: color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+  .dark .menu-dropdown-btn:hover {
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+}
+  .dark .menu-dropdown-btn.active {
+    background: color-mix(in srgb, var(--primary) 18%, transparent);
+    border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+}
+  .dark .menu-dropdown.open .menu-dropdown-btn {
+    background: color-mix(in srgb, var(--primary) 18%, transparent);
+    border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+}
+  .dark .menu-dropdown-content {
+    background: color-mix(in srgb, var(--card) 95%, transparent);
+    border-color: color-mix(in srgb, var(--foreground) 15%, transparent);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--foreground) 12%, transparent), 0 0 0 1px color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+  .dark .dropdown-item:hover {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+  .dark .dropdown-item.active {
+    background: color-mix(in srgb, var(--primary) 16%, transparent);
+}
+  .dark .icon,
+.dark .nav-icon {
+    filter: brightness(1.3);
+}
+  .dark .icon:hover,
+.dark .nav-icon:hover {
+    filter: brightness(1.5);
+}
+  .console-content-wrapper {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    width: 100%;
+  }
+  .console-content-main {
+    flex: 1;
+    min-width: 0;
+}
+  .left-nav {
+    position: sticky;
+    top: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 8px;
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--foreground) 8%, transparent);
+    z-index: 999;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    width: 200px;
+    flex-shrink: 0;
+}
+  .left-nav-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+  .left-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--foreground);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+  .left-nav-item:hover {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+}
+  .left-nav-item.active {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    color: var(--primary);
+    font-weight: 600;
+}
+  .left-nav-item .nav-icon {
+    font-size: 16px;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+  .left-nav-item:hover .nav-icon,
+.left-nav-item.active .nav-icon {
+    opacity: 1;
+}
+  .left-nav-item .nav-text {
+    flex: 1;
+}
+  .left-nav-scroll-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 4px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+  .left-nav.has-scroll .left-nav-scroll-indicator {
+    opacity: 1;
+}
+
+.back-to-top {
+    position: fixed;
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--foreground) 15%, transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+}
+
+.back-to-top:hover {
+    background: color-mix(in srgb, var(--primary) 80%, black);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--foreground) 20%, transparent);
+}
+
+.back-to-top svg {
+    width: 24px;
+    height: 24px;
+}

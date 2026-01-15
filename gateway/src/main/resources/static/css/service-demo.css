@@ -210,14 +210,20 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     margin: 0;
+    height: 100%;
+    overflow: hidden;
     font-family: var(--font-ui);
     background: var(--gradient-bg);
     color: var(--text-primary);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    scroll-behavior: smooth;
 }
 
 /* 深色模式下的body样式 */
@@ -691,6 +697,10 @@ section::after {
     box-shadow: var(--shadow-sm);
 }
 
+.panel-no-border {
+    margin-top: 24px;
+}
+
 /* 深色模式下的panel样式 */
 .dark .panel {
     background: var(--card);
@@ -828,7 +838,7 @@ section::after {
 }
 
 .btn {
-    padding: 8px 16px;
+    padding: 8px 14px;
     border: 1px solid var(--border-default);
     border-radius: var(--radius-sm);
     background: #ffffff;
@@ -841,6 +851,12 @@ section::after {
     align-items: center;
     gap: 6px;
     box-shadow: var(--shadow-sm);
+    height: auto;
+    min-height: 32px;
+    line-height: 1.4;
+    max-width: 100%;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 /* 深色模式下的btn样式 */
@@ -1049,7 +1065,7 @@ section::after {
 }
 
 .terminal-header {
-    padding: 8px 16px;
+    padding: 12px 16px;
     background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
     border-bottom: 1px solid var(--border-default);
     display: flex;
@@ -1791,21 +1807,6 @@ section::after {
     font-weight: 500;
 }
 
-/* Responsive adjustments for result displays */
-@media (max-width: 768px) {
-    .result-display {
-        max-height: 150px;
-        font-size: 11px;
-        padding: 10px;
-    }
-
-    .result-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-}
-
 /* Compact Layout Optimizations */
 
 /* Reduce section spacing */
@@ -1898,9 +1899,10 @@ section {
 }
 
 /* Compact buttons */
-.btn {
+.btn.compact {
     padding: 6px 12px;
     font-size: 12px;
+    min-height: 28px;
 }
 
 /* Compact input fields */
@@ -2078,126 +2080,6 @@ section {
     font-size: 12px;
 }
 
-/* Tablet responsive adjustments */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .panorama-grid {
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 20px;
-    }
-    
-    .console-layout {
-        grid-template-columns: 320px 1fr;
-        gap: 20px;
-    }
-    
-    .container {
-        padding: 24px;
-    }
-}
-
-/* Mobile responsive adjustments for compact layout */
-@media (max-width: 768px) {
-    .panorama-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 16px;
-    }
-    
-    .service-card {
-        padding: 20px;
-    }
-
-    .console-layout {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
-    .tabs-nav {
-        padding: 4px 8px;
-        gap: 6px;
-    }
-
-    .tab-item {
-        padding: 6px 10px;
-        font-size: 11px;
-    }
-
-    .service-card {
-        padding: 12px;
-    }
-
-    .service-card .card-icon {
-        width: 28px;
-        height: 28px;
-    }
-
-    .control-group:first-child .btn-primary.w-full {
-        max-width: 100%;
-    }
-
-    .panel-header {
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 12px 16px;
-    }
-
-    .panel-header .panel-title {
-        flex: 1;
-        min-width: 0;
-        font-size: 13px;
-    }
-
-    .panel-header .btn {
-        font-size: 11px;
-        padding: 4px 10px;
-        white-space: nowrap;
-    }
-}
-
-@media (max-width: 480px) {
-    .panorama-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .service-card .card-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .input-row {
-        flex-direction: column;
-    }
-
-    .input {
-        width: 100%;
-    }
-
-    .panel-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 10px 12px;
-    }
-
-    .panel-header .panel-title {
-        width: 100%;
-        font-size: 12px;
-    }
-
-    .panel-header .btn {
-        width: 100%;
-        text-align: center;
-        font-size: 11px;
-        padding: 6px 10px;
-    }
-
-    .panel-header div[style*="display:flex"] {
-        width: 100%;
-        display: flex !important;
-        gap: 6px !important;
-    }
-}
-
 /* Optimize flex-1 buttons to prevent excessive width */
 .input-row .btn.flex-1 {
     flex: 0 0 auto;
@@ -2205,29 +2087,6 @@ section {
     max-width: 160px;
     padding: 6px 14px;
     font-size: 12px;
-}
-
-/* Ensure buttons stay compact in mobile view */
-@media (max-width: 768px) {
-    .input-row .btn.flex-1 {
-        min-width: 80px;
-        max-width: 120px;
-        font-size: 11px;
-        padding: 5px 10px;
-    }
-}
-
-/* For very small screens, allow buttons to stack but maintain reasonable width */
-@media (max-width: 480px) {
-    .input-row .btn.flex-1 {
-        max-width: none;
-        width: 100%;
-        margin-bottom: 4px;
-    }
-
-    .input-row .btn.flex-1:last-child {
-        margin-bottom: 0;
-    }
 }
 
 /* Professional Code Block Styles */
@@ -2412,21 +2271,4 @@ section {
 
 .config-panel .code-block pre {
     padding: 6px;
-}
-
-/* Responsive code blocks */
-@media (max-width: 768px) {
-    .code-block {
-        font-size: 12px;
-        margin: 6px 0;
-    }
-
-    .code-block pre {
-        padding: 12px;
-    }
-
-    .code-block .copy-btn {
-        font-size: 10px;
-        padding: 3px 6px;
-    }
 }

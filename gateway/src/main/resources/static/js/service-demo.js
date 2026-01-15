@@ -1,15 +1,24 @@
 import AppHeader from './components/AppHeader.js'
+import ResultDisplay from './components/ResultDisplay.js'
 
 const { createApp, ref, reactive } = Vue
 
 const app = createApp({
     components: {
-        AppHeader
+        AppHeader,
+        ResultDisplay
     },
     data() {
         return {
             activePanoramaTab: localStorage.getItem('service-demo-tab') || 'communication',
             activeComponent: localStorage.getItem('service-demo-component') || 'dubbo',
+            activeSection: localStorage.getItem('service-demo-section') || null,
+            // 每个组件的默认测试场景
+            defaultSections: {
+                sentinel: 'sentinel-qps',
+                nacos: 'nacos-services',
+                dubbo: 'dubbo-batch'
+            },
             componentData: {
                 sentinel: {
                     title: 'Sentinel',
@@ -254,7 +263,7 @@ const app = createApp({
                     name: 'Redis',
                     subtitle: '内存数据库',
                     description: '开源的内存数据结构存储,可用作数据库、缓存和消息中间件。',
-                    icon: 'redis.png',
+                    icon: 'Redis.svg',
                     features: [
                         { name: '高性能', description: '基于内存操作,读写速度极快' },
                         { name: '数据结构', description: '支持 String、Hash、List、Set 等多种数据结构' },
@@ -313,19 +322,37 @@ const app = createApp({
             // 下拉菜单状态
             openDropdown: null,
 
-            // 移动端菜单状态
-            mobileMenuOpen: false,
-            mobileDropdown: null,
-
             // Individual result displays for each test scenario
             resultDisplays: {},
             // Loading states for each test
-            loadingStates: {}
+            loadingStates: {},
+
+            // 二级菜单展开状态
+            expandedMenus: {
+                dubbo: false,
+                sentinel: false,
+                nacos: false
+            },
+
+            // 回到顶部按钮状态
+            showBackToTop: false
         }
     },
     watch: {
         activePanoramaTab(val) { localStorage.setItem('service-demo-tab', val) },
-        activeComponent(val) { localStorage.setItem('service-demo-component', val) },
+        activeComponent(val) { 
+            localStorage.setItem('service-demo-component', val)
+            // 设置为该组件的默认测试场景
+            this.activeSection = this.defaultSections[val] || null
+            localStorage.setItem('service-demo-section', this.activeSection || '')
+            // 自动展开对应的二级菜单
+            if (this.expandedMenus.hasOwnProperty(val)) {
+                this.expandedMenus[val] = true
+            }
+        },
+        activeSection(val) { 
+            localStorage.setItem('service-demo-section', val || '')
+        },
         showDetailModal(val) {
             if (val) {
                 document.body.style.overflow = 'hidden'
@@ -335,13 +362,111 @@ const app = createApp({
         }
     },
     methods: {
+        scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId)
+            if (element) {
+                const elementPosition = element.getBoundingClientRect().top
+                const offsetPosition = elementPosition + window.scrollY - 120
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                })
+                this.activeSection = sectionId
+            }
+        },
+        scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            })
+        },
+        handleScroll() {
+            const componentSections = {
+                dubbo: [
+                    'dubbo-batch',
+                    'dubbo-list-all',
+                    'dubbo-timeout',
+                    'dubbo-exception',
+                    'dubbo-async',
+                    'dubbo-region',
+                    'dubbo-concurrency',
+                    'dubbo-loadbalance',
+                    'dubbo-filter',
+                    'dubbo-version-group',
+                    'protocol-compare'
+                ],
+                sentinel: [
+                    'sentinel-qps',
+                    'sentinel-thread',
+                    'sentinel-hot'
+                ],
+                nacos: [
+                    'nacos-services',
+                    'nacos-config'
+                ],
+                seata: [
+                    'seata-tcc'
+                ],
+                higress: [
+                    'higress-routing',
+                    'higress-auth'
+                ],
+                sca: [
+                    'sca-feign',
+                    'sca-loadbalance',
+                    'sca-timeout',
+                    'sca-interceptor',
+                    'sca-config',
+                    'sca-health'
+                ],
+                opentelemetry: [
+                    'opentelemetry-tracing'
+                ]
+            }
+
+            const sections = componentSections[this.activeComponent] || []
+            let currentSection = null
+            const scrollPosition = window.scrollY + 100
+
+            for (const sectionId of sections) {
+                const element = document.getElementById(sectionId)
+                if (element) {
+                    const rect = element.getBoundingClientRect()
+                    const elementTop = rect.top + window.scrollY
+                    const elementBottom = elementTop + rect.height
+
+                    if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
+                        currentSection = sectionId
+                        break
+                    }
+                }
+            }
+
+            if (currentSection) {
+                this.activeSection = currentSection
+            }
+
+            this.showBackToTop = window.scrollY > 100
+        },
         selectComponent(id) {
             this.activeComponent = id
+            this.activeSection = null
             this.updateActivePanoramaTab(id)
-            if (this.mobileMenuOpen) {
-                this.mobileMenuOpen = false
-                this.mobileDropdown = null
+            // 自动展开对应的二级菜单
+            if (this.expandedMenus.hasOwnProperty(id)) {
+                this.expandedMenus[id] = true
             }
+        },
+        toggleComponentMenu(componentId) {
+            this.expandedMenus[componentId] = !this.expandedMenus[componentId]
+        },
+        selectSection(componentId, sectionId) {
+            this.activeComponent = componentId
+            this.activeSection = sectionId
+            this.expandedMenus[componentId] = true
+            this.updateActivePanoramaTab(componentId)
+            this.scrollToSection(sectionId)
         },
         updateActivePanoramaTab(componentId) {
             const componentMap = {
@@ -374,19 +499,6 @@ const app = createApp({
         },
         closeDropdown() {
             this.openDropdown = null
-        },
-        toggleMobileMenu() {
-            this.mobileMenuOpen = !this.mobileMenuOpen
-            if (!this.mobileMenuOpen) {
-                this.mobileDropdown = null
-            }
-        },
-        toggleMobileDropdown(index) {
-            if (this.mobileDropdown === index) {
-                this.mobileDropdown = null
-            } else {
-                this.mobileDropdown = index
-            }
         },
         formatTime(date) {
             return date.toLocaleTimeString('zh-CN', { hour12: false }) + '.' +
@@ -1486,6 +1598,17 @@ const app = createApp({
         // 根据当前选中的组件展开对应的菜单组
         this.updateActivePanoramaTab(this.activeComponent);
         
+        // 根据当前选中的组件展开对应的二级菜单
+        if (this.expandedMenus.hasOwnProperty(this.activeComponent)) {
+            this.expandedMenus[this.activeComponent] = true
+        }
+        
+        // 如果activeSection为null，设置为该组件的默认测试场景
+        if (!this.activeSection && this.defaultSections[this.activeComponent]) {
+            this.activeSection = this.defaultSections[this.activeComponent]
+            localStorage.setItem('service-demo-section', this.activeSection)
+        }
+        
         // 初始化代码高亮 - 延迟执行确保 DOM 完全渲染
         setTimeout(() => {
             this.initCodeHighlighting();
@@ -1503,9 +1626,13 @@ const app = createApp({
                 }, 50);
             });
         });
+
+        // 监听滚动事件，高亮当前可见的section
+        window.addEventListener('scroll', this.handleScroll);
     },
     beforeUnmount() {
         document.removeEventListener('click', this.closeDropdown);
+        window.removeEventListener('scroll', this.handleScroll);
     }
 })
 
