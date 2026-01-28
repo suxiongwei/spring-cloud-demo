@@ -1580,7 +1580,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 测试Redis五种基本数据结构（String、Hash、List、Set、ZSet）的操作和特性，展示底层实现原理。
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisString()"><span>▶</span> String操作</button>
+                                <button class="btn btn-primary" style="margin-right: 8px; margin-bottom: 8px;" @click="testRedisString()"><span>▶</span> String操作</button>
                                 <button class="btn btn-primary" @click="testRedisHash()"><span>▶</span> Hash操作</button>
                                 <button class="btn btn-primary" @click="testRedisList()"><span>▶</span> List操作</button>
                                 <button class="btn btn-primary" @click="testRedisSet()"><span>▶</span> Set操作</button>
@@ -1604,7 +1604,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 验证Redis实现分布式锁的正确性和可靠性，包括可重入锁、锁续期和RedLock算法。
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisBasicLock()"><span>▶</span> 基础分布式锁</button>
+                                <button class="btn btn-primary" style="margin-right: 8px; margin-bottom: 8px;" @click="testRedisBasicLock()"><span>▶</span> 基础分布式锁</button>
                                 <button class="btn btn-primary" @click="testRedisReentrantLock()"><span>▶</span> 可重入锁</button>
                                 <button class="btn btn-primary" @click="testRedisLockRenewal()"><span>▶</span> 锁续期</button>
                                 <button class="btn btn-primary" @click="testRedisRedLock()"><span>▶</span> RedLock算法</button>
@@ -1627,7 +1627,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 验证Redis缓存常见问题（穿透、击穿、雪崩）的解决方案。
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisCacheWarmup()"><span>▶</span> 缓存预热</button>
+                                <button class="btn btn-primary" style="margin-right: 8px; margin-bottom: 8px;" @click="testRedisCacheWarmup()"><span>▶</span> 缓存预热</button>
                                 <button class="btn btn-primary" @click="testRedisCachePenetration()"><span>▶</span> 缓存穿透</button>
                                 <button class="btn btn-primary" @click="testRedisCacheBreakdown()"><span>▶</span> 缓存击穿</button>
                                 <button class="btn btn-primary" @click="testRedisCacheAvalanche()"><span>▶</span> 缓存雪崩</button>
@@ -1650,7 +1650,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 验证Redis实现限流算法（固定窗口、滑动窗口、令牌桶、漏桶）的准确性。
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisFixedWindow()"><span>▶</span> 固定窗口</button>
+                                <button class="btn btn-primary" style="margin-right: 8px; margin-bottom: 8px;" @click="testRedisFixedWindow()"><span>▶</span> 固定窗口</button>
                                 <button class="btn btn-primary" @click="testRedisSlidingWindow()"><span>▶</span> 滑动窗口</button>
                                 <button class="btn btn-primary" @click="testRedisTokenBucket()"><span>▶</span> 令牌桶</button>
                                 <button class="btn btn-primary" @click="testRedisLeakyBucket()"><span>▶</span> 漏桶</button>
@@ -1673,7 +1673,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 验证Pipeline对性能的提升效果，减少网络往返次数。
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisPipeline()"><span>▶</span> Pipeline性能测试</button>
+                                <button class="btn btn-primary" style="margin-right: 8px; margin-bottom: 8px;" @click="testRedisPipeline()"><span>▶</span> Pipeline性能测试</button>
                             </div>
 
                             <!-- Result Display -->
@@ -1693,7 +1693,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 验证Redis事务和Lua脚本的原子性，以及WATCH乐观锁机制。
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisTransaction()"><span>▶</span> 事务测试</button>
+                                <button class="btn btn-primary" style="margin-right: 8px; margin-bottom: 8px;" @click="testRedisTransaction()"><span>▶</span> 事务测试</button>
                                 <button class="btn btn-primary" @click="testRedisWatch()"><span>▶</span> 乐观锁</button>
                                 <button class="btn btn-primary" @click="testRedisLua()"><span>▶</span> Lua脚本</button>
                             </div>
@@ -1715,7 +1715,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 验证Redis发布订阅机制，包括基础订阅和模式订阅。
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisPubSub()"><span>▶</span> 发布订阅测试</button>
+                                <button class="btn btn-primary" style="margin-right: 8px; margin-bottom: 8px;" @click="testRedisPubSub()"><span>▶</span> 发布订阅测试</button>
                                 <button class="btn btn-primary" @click="testRedisPatternPubSub()"><span>▶</span> 模式订阅</button>
                             </div>
 
@@ -1736,7 +1736,7 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 验证Redis持久化机制（RDB、AOF）和性能监控。
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisRDB()"><span>▶</span> RDB持久化</button>
+                                <button class="btn btn-primary" style="margin-right: 8px; margin-bottom: 8px;" @click="testRedisRDB()"><span>▶</span> RDB持久化</button>
                                 <button class="btn btn-primary" @click="testRedisAOF()"><span>▶</span> AOF持久化</button>
                                 <button class="btn btn-primary" @click="testRedisMonitor()"><span>▶</span> 性能监控</button>
                             </div>
