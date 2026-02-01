@@ -1,2 +1,0 @@
-###
-GET http://localhost:21000/purchase?userId=1&commodityCode=P0001&count=2

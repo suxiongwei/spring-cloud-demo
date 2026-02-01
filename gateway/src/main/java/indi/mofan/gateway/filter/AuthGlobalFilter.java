@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * 演示用认证过滤器
- * 用于在 service-demo.html 中演示网关的拦截功能
+ * 用于在 service-demo-redesign.html 中演示网关的拦截功能
  */
 @Slf4j
 @Component
