@@ -17,7 +17,8 @@ const app = createApp({
             defaultSections: {
                 sentinel: 'sentinel-qps',
                 nacos: 'nacos-services',
-                dubbo: 'dubbo-batch'
+                dubbo: 'dubbo-batch',
+                redis: 'redis-data-structures'
             },
             componentData: {
                 sentinel: {
@@ -270,7 +271,7 @@ const app = createApp({
                         { name: '持久化', description: '支持 RDB 和 AOF 两种持久化方式' },
                         { name: '主从复制', description: '支持主从复制和哨兵模式' }
                     ],
-                    actions: ['缓存读写', '分布式锁', '消息队列', '限流计数'],
+                    actions: ['基础数据结构', '分布式锁', '缓存问题', '限流计数', '持久化监控'],
                     docs: 'https://redis.io',
                     github: 'https://github.com/redis/redis',
                     website: 'https://redis.io'
@@ -311,9 +312,6 @@ const app = createApp({
             showDetailModal: false,
             detailView: '',
             comparisonData: [],
-            successRate: 0,
-            avgResponseTime: 0,
-            testedComponents: 0,
             
             // 主题切换
             isDarkMode: localStorage.getItem('theme-mode') === 'dark' || 
@@ -331,7 +329,8 @@ const app = createApp({
             expandedMenus: {
                 dubbo: false,
                 sentinel: false,
-                nacos: false
+                nacos: false,
+                redis: false
             },
 
             // 回到顶部按钮状态
@@ -422,6 +421,16 @@ const app = createApp({
                 ],
                 opentelemetry: [
                     'opentelemetry-tracing'
+                ],
+                redis: [
+                    'redis-data-structures',
+                    'redis-distributed-lock',
+                    'redis-cache-issues',
+                    'redis-rate-limit',
+                    'redis-pipeline',
+                    'redis-transaction',
+                    'redis-pubsub',
+                    'redis-persistence'
                 ]
             }
 
@@ -551,7 +560,13 @@ const app = createApp({
                 'protocol-triple': '/api/order/dubbo/protocol/triple',
                 'protocol-rest': '/api/order/dubbo/protocol/rest'
             }
-            return map[t] || '/'
+            if (map[t]) {
+                return map[t]
+            }
+            if (t.startsWith('redis/')) {
+                return `/api/order/dubbo/${t}`
+            }
+            return '/'
         },
         async trigger(t, times = 1) {
             const url = this.endpoint(t)
@@ -571,7 +586,8 @@ const app = createApp({
                 this.setResultDisplay(testId, {
                     status: 'loading',
                     message: `正在发送 ${times} 个请求...`,
-                    timestamp: this.formatTime(new Date())
+                    timestamp: this.formatTime(new Date()),
+                    endpoint: url
                 })
 
                 try {
@@ -585,6 +601,7 @@ const app = createApp({
                         code: 200,
                         msg: `成功发送 ${times} 个请求`,
                         data: { successCount: times, results: results },
+                        endpoint: url,
                         rt: '批量'
                     }
 
@@ -594,6 +611,7 @@ const app = createApp({
                         message: `成功发送 ${times} 个请求`,
                         timestamp: this.formatTime(new Date()),
                         responseTime: '批量',
+                        endpoint: url,
                         rawData: batchItem
                     })
                 } catch (error) {
@@ -606,6 +624,7 @@ const app = createApp({
                         code: 0,
                         msg: `批量请求失败: ${error.message}`,
                         data: null,
+                        endpoint: url,
                         rt: 0
                     }
 
@@ -613,6 +632,7 @@ const app = createApp({
                         status: 'error',
                         message: `批量请求失败: ${error.message}`,
                         timestamp: this.formatTime(new Date()),
+                        endpoint: url,
                         rawData: errorBatchItem
                     })
                 }
@@ -626,7 +646,8 @@ const app = createApp({
             this.setResultDisplay(testId, {
                 status: 'loading',
                 message: `正在执行 ${this.threadTimes} 个并发线程测试...`,
-                timestamp: this.formatTime(new Date())
+                timestamp: this.formatTime(new Date()),
+                endpoint: url
             })
 
             try {
@@ -647,6 +668,7 @@ const app = createApp({
                     code: 200,
                     msg: `成功完成 ${this.threadTimes} 个并发线程测试`,
                     data: { successCount: this.threadTimes, results: results },
+                    endpoint: url,
                     rt: '并发'
                 }
 
@@ -656,6 +678,7 @@ const app = createApp({
                     message: `成功完成 ${this.threadTimes} 个并发线程测试`,
                     timestamp: this.formatTime(new Date()),
                     responseTime: '并发',
+                    endpoint: url,
                     rawData: concurrentItem
                 })
             } catch (error) {
@@ -668,6 +691,7 @@ const app = createApp({
                     code: 0,
                     msg: `并发测试失败: ${error.message}`,
                     data: null,
+                    endpoint: url,
                     rt: 0
                 }
 
@@ -675,6 +699,7 @@ const app = createApp({
                     status: 'error',
                     message: `并发测试失败: ${error.message}`,
                     timestamp: this.formatTime(new Date()),
+                    endpoint: url,
                     rawData: errorConcurrentItem
                 })
             }
@@ -704,7 +729,8 @@ const app = createApp({
             this.setResultDisplay('dubbo-concurrency', {
                 status: 'loading',
                 message: `正在通过后端多线程发送 ${this.dubboConcurrentCount} 个并发请求...`,
-                timestamp: this.formatTime(new Date())
+                timestamp: this.formatTime(new Date()),
+                endpoint: url
             });
             
             const startTime = performance.now();
@@ -723,7 +749,8 @@ const app = createApp({
                     timestamp: this.formatTime(new Date()),
                     responseTime: Math.round(endTime - startTime),
                     code: response.status,
-                    data: result
+                    data: result,
+                    endpoint: url
                 });
                 
                 // 添加到历史记录
@@ -735,6 +762,7 @@ const app = createApp({
                     code: response.status,
                     msg: `并发数:${this.dubboConcurrentCount}, 成功:${result.successCount}, 失败:${result.failCount}, 限流:${result.limitedCount}`,
                     data: result,
+                    endpoint: url,
                     rt: Math.round(endTime - startTime)
                 };
                 
@@ -750,7 +778,8 @@ const app = createApp({
                     message: `后端多线程并发测试失败: ${error.response?.data?.message || error.message}`,
                     timestamp: this.formatTime(new Date()),
                     responseTime: Math.round(endTime - startTime),
-                    code: error.response?.status || 500
+                    code: error.response?.status || 500,
+                    endpoint: url
                 });
                 
                 // 添加到历史记录
@@ -761,6 +790,7 @@ const app = createApp({
                     status: '失败',
                     code: error.response?.status || 500,
                     msg: error.response?.data?.message || error.message,
+                    endpoint: url,
                     rt: Math.round(endTime - startTime)
                 };
                 
@@ -832,14 +862,16 @@ const app = createApp({
                         hasRateLimiting: hasRateLimiting,
                         responses: responses.map(res => res.data)
                     },
-                    timestamp: this.formatTime(new Date())
+                    timestamp: this.formatTime(new Date()),
+                    endpoint: url
                 });
             } catch (error) {
                 // 处理错误
                 this.setResultDisplay('dubbo-actives', {
                     status: 'error',
                     message: `消费端并发控制测试失败: ${error.message}`,
-                    timestamp: this.formatTime(new Date())
+                    timestamp: this.formatTime(new Date()),
+                    endpoint: url
                 });
             }
         },
@@ -910,7 +942,8 @@ const app = createApp({
                     timestamp: new Date().toLocaleTimeString(),
                     responseTime: endTime - startTime,
                     code: response.status,
-                    data: data
+                    data: data,
+                    endpoint: url
                 };
             } catch (error) {
                 const endTime = Date.now();
@@ -920,7 +953,8 @@ const app = createApp({
                     message: `请求失败: ${error.message}`,
                     timestamp: new Date().toLocaleTimeString(),
                     responseTime: endTime - startTime,
-                    code: null
+                    code: null,
+                    endpoint: url
                 };
             }
         },
@@ -1095,6 +1129,7 @@ const app = createApp({
                     code: ok ? 200 : (payload.code || res.status),
                     msg: ok ? (payload.msg || 'OK') : (payload.msg || res.statusText),
                     data: payload.data || payload,
+                    endpoint: url,
                     rt
                 }
 
@@ -1109,10 +1144,10 @@ const app = createApp({
                     status: '失败',
                     code: e.response ? e.response.status : 0,
                     msg: e.message,
+                    endpoint: url,
                     rt: 0
                 })
             }
-            this.updateStatistics()
         },
         viewDetail(item) {
             this.detailView = JSON.stringify(item, null, 2)
@@ -1138,7 +1173,8 @@ const app = createApp({
                         message: result.message,
                         timestamp: result.timestamp,
                         responseTime: result.responseTime,
-                        code: result.code
+                        code: result.code,
+                        endpoint: result.endpoint
                     }
                     this.detailView = JSON.stringify(detailInfo, null, 2)
                     this.showDetailModal = true
@@ -1164,7 +1200,8 @@ const app = createApp({
                     message: result.message,
                     timestamp: result.timestamp,
                     responseTime: result.responseTime,
-                    code: result.code
+                    code: result.code,
+                    endpoint: result.endpoint
                 }
                 this.detailView = JSON.stringify(detailInfo, null, 2)
                 this.showDetailModal = true
@@ -1380,7 +1417,8 @@ const app = createApp({
             this.setResultDisplay(testId, {
                 status: 'loading',
                 message: '正在执行测试...',
-                timestamp: this.formatTime(new Date())
+                timestamp: this.formatTime(new Date()),
+                endpoint: url
             })
 
             try {
@@ -1399,6 +1437,7 @@ const app = createApp({
                     code: ok ? 200 : (payload.code || res.status),
                     msg: ok ? (payload.msg || 'OK') : (payload.msg || res.statusText),
                     data: payload.data || payload,
+                    endpoint: url,
                     rt
                 }
 
@@ -1422,6 +1461,7 @@ const app = createApp({
                     responseTime: rt,
                     timestamp: t,
                     type: type,
+                    endpoint: url,
                     rawData: item  // 存储完整的数据对象，用于详情显示
                 })
 
@@ -1434,6 +1474,7 @@ const app = createApp({
                     status: '失败',
                     code: e.response ? e.response.status : 0,
                     msg: e.message,
+                    endpoint: url,
                     rt: 0
                 }
 
@@ -1456,11 +1497,11 @@ const app = createApp({
                     responseTime: 0,
                     timestamp: t,
                     type: type,
+                    endpoint: url,
                     rawData: errorItem  // 存储完整的错误数据对象，用于详情显示
                 })
             }
 
-            this.updateStatistics()
         },
         getApiInfo() {
             const apis = {
@@ -1575,15 +1616,6 @@ const app = createApp({
                 }
             }
             return concepts[this.activeComponent] || {}
-        },
-        updateStatistics() {
-            const total = this.history.length
-            const success = this.history.filter(h => h.status === '成功').length
-            this.successRate = total > 0 ? Math.round((success / total) * 100) : 0
-            const rtList = this.history.filter(h => h.rt > 0).map(h => h.rt)
-            this.avgResponseTime = rtList.length > 0 ? Math.round(rtList.reduce((a, b) => a + b, 0) / rtList.length) : 0
-            const testedSet = new Set(this.history.map(h => h.type))
-            this.testedComponents = testedSet.size
         },
         async testAll() {
             const comp = this.activeComponent

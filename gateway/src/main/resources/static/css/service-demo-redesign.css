@@ -21,6 +21,10 @@
   --font-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
 }
 
+[v-cloak] {
+  display: none !important;
+}
+
 .dark {
   color-scheme: dark;
   --bg: #0d1216;
@@ -592,7 +596,7 @@ body::after {
   background: transparent;
   box-shadow: none;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
 }
 
@@ -745,6 +749,72 @@ body::after {
 .control-group .input-row,
 .control-group .test-actions {
   margin-top: 0;
+}
+
+.redis-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.redis-scenario-card {
+  border-radius: 14px;
+  border: 1px solid var(--panel-border);
+  padding: 12px 12px 14px;
+  background: linear-gradient(180deg, rgba(26, 124, 108, 0.08), rgba(255, 255, 255, 0));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dark .redis-scenario-card {
+  background: linear-gradient(180deg, rgba(87, 243, 195, 0.12), rgba(10, 16, 20, 0.6));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.scenario-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.scenario-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.scenario-chip {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(18, 21, 26, 0.08);
+  white-space: nowrap;
+}
+
+.dark .scenario-chip {
+  background: rgba(8, 14, 18, 0.85);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e3f2ef;
+}
+
+.scenario-desc {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  flex: 1 1 auto;
+}
+
+.scenario-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: auto;
 }
 
 .control-group .input-row + .input-row {
@@ -901,6 +971,36 @@ body::after {
   line-height: 1.6;
 }
 
+.result-endpoint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  margin-bottom: 8px;
+  color: var(--ink-faint);
+  flex-wrap: wrap;
+}
+
+.result-endpoint-label {
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(15, 107, 95, 0.16);
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.result-endpoint-value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(30, 79, 134, 0.12);
+  color: var(--ink);
+  border: 1px solid rgba(30, 79, 134, 0.2);
+  word-break: break-all;
+}
+
 .dark .result-content {
   color: #eaf3f3;
 }
@@ -908,6 +1008,17 @@ body::after {
 .dark .result-meta,
 .dark .result-link-hint {
   color: #9fb0b4;
+}
+
+.dark .result-endpoint-label {
+  background: rgba(87, 243, 195, 0.12);
+  color: #e7f7f2;
+}
+
+.dark .result-endpoint-value {
+  background: rgba(91, 164, 255, 0.12);
+  color: #e7f1ff;
+  border-color: rgba(91, 164, 255, 0.25);
 }
 
 .result-meta {
@@ -932,9 +1043,8 @@ body::after {
 }
 
 .forge-terminal-panel {
-  position: sticky;
-  top: 120px;
-  align-self: start;
+  position: static;
+  width: 100%;
 }
 
 .terminal {
@@ -983,7 +1093,7 @@ body::after {
 }
 
 .terminal-body {
-  max-height: 420px;
+  max-height: clamp(480px, 65vh, 760px);
   overflow: auto;
   padding: 12px;
   font-family: var(--font-mono);
@@ -1004,30 +1114,35 @@ body::after {
   cursor: pointer;
 }
 
+.log-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.log-msg {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.log-endpoint {
+  flex: 0 1 auto;
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+}
+
 .log-meta {
   margin-left: 8px;
   color: var(--ink-faint);
-}
-
-.stats-summary {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-}
-
-.stat-item {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 16px;
-  padding: 12px 14px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  box-shadow: var(--shadow-soft);
-}
-
-.stat-value {
-  font-weight: 700;
 }
 
 .code-block {
@@ -1269,6 +1384,10 @@ body::after {
   .test-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .redis-scenario-grid {
+    grid-template-columns: 1fr;
   }
 
   .input-row .btn.flex-1 {

@@ -38,6 +38,10 @@ export default {
                 </span>
             </div>
             <div class="result-content">{{ result.message || '无返回信息' }}</div>
+            <div v-if="result.endpoint" class="result-endpoint">
+                <span class="result-endpoint-label">API</span>
+                <code class="result-endpoint-value">{{ result.endpoint }}</code>
+            </div>
             <div class="result-meta">
                 <span class="result-timestamp">{{ result.timestamp }}</span>
                 <span class="result-response-time">{{ result.responseTime }}ms</span>

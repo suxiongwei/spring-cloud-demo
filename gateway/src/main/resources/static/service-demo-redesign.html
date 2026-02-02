@@ -182,22 +182,50 @@
                         <div class="nav-item-icon">📊</div>
                         <span class="nav-item-text">Arctic</span>
                     </a>
-                    <a class="nav-item" :class="{ active: activeComponent === 'redis' }" @click="selectComponent('redis')">
-                        <div class="nav-item-icon">
-                            <img src="images/icons/Redis.svg" alt="Redis">
+                    <div class="nav-group">
+                        <a class="nav-item nav-item-parent" :class="{ active: activeComponent === 'redis' }" @click="toggleComponentMenu('redis')">
+                            <div class="nav-item-icon">
+                                <img src="images/icons/Redis.svg" alt="Redis">
+                            </div>
+                            <span class="nav-item-text">Redis</span>
+                            <span class="nav-arrow" :class="{ expanded: expandedMenus.redis }">▼</span>
+                        </a>
+                        <div class="nav-submenu" v-show="expandedMenus.redis">
+                            <a class="nav-subitem" :class="{ active: activeSection === 'redis-data-structures' }" @click="selectSection('redis', 'redis-data-structures')">
+                                <span class="nav-subitem-text">基础数据结构</span>
+                            </a>
+                            <a class="nav-subitem" :class="{ active: activeSection === 'redis-distributed-lock' }" @click="selectSection('redis', 'redis-distributed-lock')">
+                                <span class="nav-subitem-text">分布式锁</span>
+                            </a>
+                            <a class="nav-subitem" :class="{ active: activeSection === 'redis-cache-issues' }" @click="selectSection('redis', 'redis-cache-issues')">
+                                <span class="nav-subitem-text">缓存问题</span>
+                            </a>
+                            <a class="nav-subitem" :class="{ active: activeSection === 'redis-rate-limit' }" @click="selectSection('redis', 'redis-rate-limit')">
+                                <span class="nav-subitem-text">限流计数</span>
+                            </a>
+                            <a class="nav-subitem" :class="{ active: activeSection === 'redis-pipeline' }" @click="selectSection('redis', 'redis-pipeline')">
+                                <span class="nav-subitem-text">Pipeline 批量</span>
+                            </a>
+                            <a class="nav-subitem" :class="{ active: activeSection === 'redis-transaction' }" @click="selectSection('redis', 'redis-transaction')">
+                                <span class="nav-subitem-text">事务与脚本</span>
+                            </a>
+                            <a class="nav-subitem" :class="{ active: activeSection === 'redis-pubsub' }" @click="selectSection('redis', 'redis-pubsub')">
+                                <span class="nav-subitem-text">发布订阅</span>
+                            </a>
+                            <a class="nav-subitem" :class="{ active: activeSection === 'redis-persistence' }" @click="selectSection('redis', 'redis-persistence')">
+                                <span class="nav-subitem-text">持久化与监控</span>
+                            </a>
                         </div>
-                        <span class="nav-item-text">Redis</span>
-                    </a>
+                    </div>
                 </div>
             </nav>
 
             <div class="sidebar-footer forge-sidebar-footer">
                 <div class="user-profile">
                     <div class="user-avatar">👤</div>
-                    <div class="user-details">
-                        <div class="user-name">Developer</div>
-                        <div class="user-role">Admin</div>
-                    </div>
+                <div class="user-details">
+                    <div class="user-name">xiongweisu</div>
+                </div>
                 </div>
                 <button class="theme-toggle-btn" @click="toggleTheme" title="切换主题">
                     <img v-if="isDarkMode" src="images/icons/moon.svg" class="toggle-icon" alt="Dark Mode">
@@ -314,7 +342,6 @@
                             </div>
 
                             <!-- Result Display for QPS Test -->
-                            <result-display :result="getResultDisplay('sentinel-qps')" title="测试结果" test-id="sentinel-qps" @show-detail="showResultDetail"></result-display>
                         </div>
                         <div class="control-group" id="sentinel-thread" v-show="activeSection === 'sentinel-thread'">
                             <div class="control-label">并发控制 (Thread)</div>
@@ -323,7 +350,6 @@
                             </div>
 
                             <!-- Result Display for Thread Test -->
-                            <result-display :result="getResultDisplay('sentinel-thread')" title="测试结果" test-id="sentinel-thread" @show-detail="showResultDetail"></result-display>
 
                             <div class="config-panel">
                                 <div class="config-item">
@@ -349,7 +375,6 @@
                             </div>
 
                             <!-- Result Display for Hotspot -->
-                            <result-display :result="getResultDisplay('sentinel-hot')" title="热点限流结果" test-id="sentinel-hot" @show-detail="showResultDetail"></result-display>
 
                             <div class="config-panel">
                                 <div class="config-item">
@@ -387,7 +412,6 @@
                             </button>
 
                             <!-- Result Display for Nacos Services -->
-                            <result-display :result="getResultDisplay('nacos-services')" title="测试结果" test-id="nacos-services" @show-detail="showResultDetail"></result-display>
                         </div>
                         <div class="control-group" id="nacos-config" v-show="activeSection === 'nacos-config'">
                             <div class="control-label">配置管理</div>
@@ -404,7 +428,6 @@
                             </button>
 
                             <!-- Result Display for Nacos Config -->
-                            <result-display :result="getResultDisplay('nacos-config')" title="测试结果" test-id="nacos-config" @show-detail="showResultDetail"></result-display>
                         </div>
                             </div>
                         </div>
@@ -448,7 +471,6 @@
                             </div>
                             <button class="btn btn-primary" @click="testDubboBatch()"><span>▶</span> 批量调用</button>
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-batch')" title="测试结果" test-id="dubbo-batch" @show-detail="showResultDetail"></result-display>
                         </div>
 
                         <!-- 2. Query All -->
@@ -464,7 +486,6 @@
                             </div>
                             <button class="btn btn-primary" @click="testDubboListAll()"><span>▶</span> 查询所有</button>
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-list-all')" title="测试结果" test-id="dubbo-list-all" @show-detail="showResultDetail"></result-display>
                         </div>
 
                         <!-- 3. Timeout Call -->
@@ -521,7 +542,6 @@ public class DemoServiceImpl implements DemoService{}
                                 </div>
                             </div>
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-timeout')" title="测试结果" test-id="dubbo-timeout" @show-detail="showResultDetail"></result-display>
                         </div>
 
                         <!-- 4. Exception Call -->
@@ -539,7 +559,6 @@ public class DemoServiceImpl implements DemoService{}
                                 异常调用
                             </button>
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-exception')" title="测试结果" test-id="dubbo-exception" @show-detail="showResultDetail"></result-display>
                         </div>
 
                         <!-- 5. Async Call -->
@@ -556,7 +575,6 @@ public class DemoServiceImpl implements DemoService{}
                             </div>
                             <button class="btn btn-primary" @click="testDubboAsync()"><span>▶</span> 异步调用</button>
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-async')" title="测试结果" test-id="dubbo-async" @show-detail="showResultDetail"></result-display>
                         </div>
 
 
@@ -584,7 +602,6 @@ public class DemoServiceImpl implements DemoService{}
                                 </button>
                             </div>
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-region')" title="测试结果" test-id="dubbo-region" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">当前服务区域:</span>
@@ -729,7 +746,6 @@ public class DemoServiceImpl implements DemoService{}
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-concurrency')" title="并发测试结果" test-id="dubbo-concurrency" @show-detail="showResultDetail"></result-display>
                         </div>
 
                         <!-- 8. Load Balance Strategy Test -->
@@ -855,7 +871,6 @@ public class DemoServiceImpl implements DemoService{}
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="loadBalanceResult" :title="loadBalanceResult?.title || '负载均衡策略测试结果'" test-id="loadbalance" @show-detail="showResultDetail"></result-display>
 
                             <div class="config-panel api-address-panel">
                                 <div class="config-item api-address-item">
@@ -893,7 +908,6 @@ private DemoService demoService;
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-leastactive')" title="最小并发数负载均衡测试结果" test-id="dubbo-leastactive" @show-detail="showResultDetail"></result-display>
                         </div>
 
                         <!-- 9. Filter Interceptor Test -->
@@ -977,7 +991,6 @@ public class DemoFilter implements Filter {
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-filter')" title="Filter拦截测试结果" test-id="dubbo-filter" @show-detail="showResultDetail"></result-display>
                         </div>
 
                         <!-- 9. Version and Group Test -->
@@ -1048,7 +1061,6 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('dubbo-version-group')" title="版本与分组测试结果" test-id="dubbo-version-group" @show-detail="showResultDetail"></result-display>
                         </div>
 
                         <!-- Protocol Comparison -->
@@ -1068,7 +1080,6 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </div>
                             <button class="btn btn-primary" @click="testProtocolCompare()"><span>▶</span> 协议对比</button>
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('protocol-compare')" title="协议对比结果" test-id="protocol-compare" @show-detail="showResultDetail"></result-display>
 
                             <!-- Individual Protocol Tests -->
                             <div class="control-label">单协议测试</div>
@@ -1082,11 +1093,8 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                                 <button class="btn btn-primary flex-1" @click="testProtocolRest()" :disabled="loadingStates['protocol-rest']"><span>▶</span> REST协议</button>
                             </div>
                             <!-- Dubbo Protocol Result -->
-                            <result-display :result="getResultDisplay('protocol-dubbo')" title="Dubbo协议测试结果" test-id="protocol-dubbo" @show-detail="showResultDetail"></result-display>
                             <!-- Triple Protocol Result -->
-                            <result-display :result="getResultDisplay('protocol-triple')" title="Triple协议测试结果" test-id="protocol-triple" @show-detail="showResultDetail"></result-display>
                             <!-- REST Protocol Result -->
-                            <result-display :result="getResultDisplay('protocol-rest')" title="REST协议测试结果" test-id="protocol-rest" @show-detail="showResultDetail"></result-display>
                         </div>
                             </div>
                         </div>
@@ -1128,9 +1136,7 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </div>
 
                             <!-- Result Display for TCC Test -->
-                            <result-display v-if="getResultDisplay('seata-tcc-ok') && !getResultDisplay('seata-tcc-fail')" :result="getResultDisplay('seata-tcc-ok')" title="事务测试结果" test-id="seata-tcc-ok" @show-detail="showResultDetail"></result-display>
 
-                            <result-display v-if="getResultDisplay('seata-tcc-fail')" :result="getResultDisplay('seata-tcc-fail')" title="事务测试结果" test-id="seata-tcc-fail" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">事务模式:</span>
@@ -1162,7 +1168,6 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </button>
 
                             <!-- Result Display for Gateway Routing Test -->
-                            <result-display :result="getResultDisplay('gateway-routing')" title="路由测试结果" test-id="gateway-routing" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">网关类型:</span>
@@ -1193,9 +1198,7 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </div>
 
                             <!-- Result Display for Auth Tests -->
-                            <result-display v-if="getResultDisplay('gateway-auth-pass') && !getResultDisplay('gateway-auth-fail')" :result="getResultDisplay('gateway-auth-pass')" title="认证测试结果" test-id="gateway-auth-pass" @show-detail="showResultDetail"></result-display>
 
-                            <result-display v-if="getResultDisplay('gateway-auth-fail')" :result="getResultDisplay('gateway-auth-fail')" title="认证测试结果" test-id="gateway-auth-fail" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">鉴权方式:</span>
@@ -1220,7 +1223,6 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </button>
 
                             <!-- Result Display for Gateway Routing Test -->
-                            <result-display :result="getResultDisplay('higress-routing')" title="路由测试结果" test-id="higress-routing" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">网关类型:</span>
@@ -1251,9 +1253,7 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </div>
 
                             <!-- Result Display for Auth Tests -->
-                            <result-display v-if="getResultDisplay('higress-auth-pass') && !getResultDisplay('higress-auth-fail')" :result="getResultDisplay('higress-auth-pass')" title="鉴权测试结果" test-id="higress-auth-pass" @show-detail="showResultDetail"></result-display>
 
-                            <result-display v-if="getResultDisplay('higress-auth-fail')" :result="getResultDisplay('higress-auth-fail')" title="鉴权测试结果" test-id="higress-auth-fail" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">身份验证:</span>
@@ -1301,7 +1301,6 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </div>
 
                             <!-- Result Display for OpenFeign Enhanced -->
-                            <result-display :result="getResultDisplay('feign-enhanced')" title="测试结果" test-id="feign-enhanced" @show-detail="showResultDetail"></result-display>
 
                             <div class="config-panel">
                                 <div class="config-item">
@@ -1340,7 +1339,6 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </button>
 
                             <!-- Result Display for Load Balance -->
-                            <result-display :result="getResultDisplay('load-balance')" title="测试结果" test-id="load-balance" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">方案:</span>
@@ -1371,7 +1369,6 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             </button>
 
                             <!-- Result Display for Timeout Retry -->
-                            <result-display :result="getResultDisplay('timeout-retry')" title="测试结果" test-id="timeout-retry" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">超时配置:</span>
@@ -1433,7 +1430,6 @@ public class ProductServiceConfig {
                             </button>
 
                             <!-- Result Display for Feign Interceptor -->
-                            <result-display :result="getResultDisplay('feign-interceptor')" title="测试结果" test-id="feign-interceptor" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">功能:</span>
@@ -1496,7 +1492,6 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                             </button>
 
                             <!-- Result Display for Config Refresh -->
-                            <result-display :result="getResultDisplay('config-refresh')" title="测试结果" test-id="config-refresh" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">配置来源:</span>
@@ -1534,7 +1529,6 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                             </button>
 
                             <!-- Result Display for Health Check -->
-                            <result-display :result="getResultDisplay('health-check')" title="测试结果" test-id="health-check" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">健康端点:</span>
@@ -1572,7 +1566,6 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                             </button>
 
                             <!-- Result Display for Tracing -->
-                            <result-display :result="getResultDisplay('tracing')" title="测试结果" test-id="tracing" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">Trace 采样率:</span>
@@ -1598,21 +1591,65 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                             <div class="console-content-main">
 
                         <!-- 1. 基础数据结构操作测试 -->
-                        <div class="control-group" id="redis-data-structures">
+                        <div class="control-group" id="redis-data-structures" v-show="activeSection === 'redis-data-structures'">
                             <div class="control-label">基础数据结构操作</div>
                             <div class="test-description">🔹
                                 测试Redis五种基本数据结构（String、Hash、List、Set、ZSet）的操作和特性，展示底层实现原理。
                             </div>
-                            <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisString()"><span>▶</span> String操作</button>
-                                <button class="btn btn-primary" @click="testRedisHash()"><span>▶</span> Hash操作</button>
-                                <button class="btn btn-primary" @click="testRedisList()"><span>▶</span> List操作</button>
-                                <button class="btn btn-primary" @click="testRedisSet()"><span>▶</span> Set操作</button>
-                                <button class="btn btn-primary" @click="testRedisZSet()"><span>▶</span> ZSet操作</button>
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">String 操作</div>
+                                        <span class="scenario-chip">基础值类型</span>
+                                    </div>
+                                    <div class="scenario-desc">适合缓存短文本与计数器场景，支持自增/自减、位图、GETSET 等原子指令。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisString()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">Hash 操作</div>
+                                        <span class="scenario-chip">对象字段</span>
+                                    </div>
+                                    <div class="scenario-desc">面向对象字段存取，适合用户资料、商品属性等小对象缓存，支持 HINCRBY 等局部更新。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisHash()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">List 操作</div>
+                                        <span class="scenario-chip">队列/栈</span>
+                                    </div>
+                                    <div class="scenario-desc">双向链表结构，适合消息队列、时间线等顺序场景，支持 LPUSH/RPOP 与阻塞弹出。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisList()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">Set 操作</div>
+                                        <span class="scenario-chip">无序去重</span>
+                                    </div>
+                                    <div class="scenario-desc">天然去重，支持交并差运算，适合标签系统、共同好友、抽奖去重等集合场景。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisSet()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">ZSet 操作</div>
+                                        <span class="scenario-chip">排序权重</span>
+                                    </div>
+                                    <div class="scenario-desc">跳表 + 哈希结构，按分数排序，适合排行榜、延迟队列与区间统计等场景。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisZSet()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('redis-data-structures')" title="测试结果" test-id="redis-data-structures" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">面试点:</span>
@@ -1622,20 +1659,55 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                         </div>
 
                         <!-- 2. 分布式锁实现测试 -->
-                        <div class="control-group" id="redis-distributed-lock">
+                        <div class="control-group" id="redis-distributed-lock" v-show="activeSection === 'redis-distributed-lock'">
                             <div class="control-label">分布式锁实现</div>
                             <div class="test-description">🔹
                                 验证Redis实现分布式锁的正确性和可靠性，包括可重入锁、锁续期和RedLock算法。
                             </div>
-                            <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisBasicLock()"><span>▶</span> 基础分布式锁</button>
-                                <button class="btn btn-primary" @click="testRedisReentrantLock()"><span>▶</span> 可重入锁</button>
-                                <button class="btn btn-primary" @click="testRedisLockRenewal()"><span>▶</span> 锁续期</button>
-                                <button class="btn btn-primary" @click="testRedisRedLock()"><span>▶</span> RedLock算法</button>
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">基础分布式锁</div>
+                                        <span class="scenario-chip">互斥保障</span>
+                                    </div>
+                                    <div class="scenario-desc">使用 SET NX PX 获取/释放锁，验证互斥与超时释放机制。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisBasicLock()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">可重入锁</div>
+                                        <span class="scenario-chip">可重入</span>
+                                    </div>
+                                    <div class="scenario-desc">同一业务标识可重复加锁，计数器保证退出对称。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisReentrantLock()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">锁续期</div>
+                                        <span class="scenario-chip">watchdog</span>
+                                    </div>
+                                    <div class="scenario-desc">任务耗时过长时自动续期，避免锁提前过期。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisLockRenewal()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">RedLock 算法</div>
+                                        <span class="scenario-chip">多节点</span>
+                                    </div>
+                                    <div class="scenario-desc">多实例多数派加锁，提高可用性与抗单点故障能力。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisRedLock()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('redis-distributed-lock')" title="测试结果" test-id="redis-distributed-lock" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">面试点:</span>
@@ -1645,20 +1717,55 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                         </div>
 
                         <!-- 3. 缓存预热与穿透/击穿/雪崩测试 -->
-                        <div class="control-group" id="redis-cache-issues">
+                        <div class="control-group" id="redis-cache-issues" v-show="activeSection === 'redis-cache-issues'">
                             <div class="control-label">缓存问题解决方案</div>
                             <div class="test-description">🔹
                                 验证Redis缓存常见问题（穿透、击穿、雪崩）的解决方案。
                             </div>
-                            <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisCacheWarmup()"><span>▶</span> 缓存预热</button>
-                                <button class="btn btn-primary" @click="testRedisCachePenetration()"><span>▶</span> 缓存穿透</button>
-                                <button class="btn btn-primary" @click="testRedisCacheBreakdown()"><span>▶</span> 缓存击穿</button>
-                                <button class="btn btn-primary" @click="testRedisCacheAvalanche()"><span>▶</span> 缓存雪崩</button>
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">缓存预热</div>
+                                        <span class="scenario-chip">热数据</span>
+                                    </div>
+                                    <div class="scenario-desc">启动时批量加载热点 key，缩短首批访问延迟。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisCacheWarmup()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">缓存穿透</div>
+                                        <span class="scenario-chip">穿透防护</span>
+                                    </div>
+                                    <div class="scenario-desc">空值缓存 + 布隆过滤器拦截不存在数据请求。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisCachePenetration()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">缓存击穿</div>
+                                        <span class="scenario-chip">击穿保护</span>
+                                    </div>
+                                    <div class="scenario-desc">互斥锁或逻辑过期，避免热点 key 同时失效。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisCacheBreakdown()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">缓存雪崩</div>
+                                        <span class="scenario-chip">雪崩缓解</span>
+                                    </div>
+                                    <div class="scenario-desc">过期时间随机化 + 限流降级，减少集中失效。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisCacheAvalanche()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('redis-cache-issues')" title="测试结果" test-id="redis-cache-issues" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">面试点:</span>
@@ -1668,20 +1775,55 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                         </div>
 
                         <!-- 4. 限流计数器测试 -->
-                        <div class="control-group" id="redis-rate-limit">
+                        <div class="control-group" id="redis-rate-limit" v-show="activeSection === 'redis-rate-limit'">
                             <div class="control-label">限流计数器</div>
                             <div class="test-description">🔹
                                 验证Redis实现限流算法（固定窗口、滑动窗口、令牌桶、漏桶）的准确性。
                             </div>
-                            <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisFixedWindow()"><span>▶</span> 固定窗口</button>
-                                <button class="btn btn-primary" @click="testRedisSlidingWindow()"><span>▶</span> 滑动窗口</button>
-                                <button class="btn btn-primary" @click="testRedisTokenBucket()"><span>▶</span> 令牌桶</button>
-                                <button class="btn btn-primary" @click="testRedisLeakyBucket()"><span>▶</span> 漏桶</button>
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">固定窗口</div>
+                                        <span class="scenario-chip">简单计数</span>
+                                    </div>
+                                    <div class="scenario-desc">固定时间窗口计数，易实现但存在临界突刺。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisFixedWindow()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">滑动窗口</div>
+                                        <span class="scenario-chip">平滑统计</span>
+                                    </div>
+                                    <div class="scenario-desc">滑动窗口滚动计数，缓解临界问题更平滑。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisSlidingWindow()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">令牌桶</div>
+                                        <span class="scenario-chip">弹性放行</span>
+                                    </div>
+                                    <div class="scenario-desc">按固定速率补充令牌，允许突发流量。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisTokenBucket()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">漏桶</div>
+                                        <span class="scenario-chip">恒定速率</span>
+                                    </div>
+                                    <div class="scenario-desc">以固定速率出队，稳定处理吞吐。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisLeakyBucket()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('redis-rate-limit')" title="测试结果" test-id="redis-rate-limit" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">面试点:</span>
@@ -1691,17 +1833,25 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                         </div>
 
                         <!-- 5. Pipeline批量操作测试 -->
-                        <div class="control-group" id="redis-pipeline">
+                        <div class="control-group" id="redis-pipeline" v-show="activeSection === 'redis-pipeline'">
                             <div class="control-label">Pipeline批量操作</div>
                             <div class="test-description">🔹
                                 验证Pipeline对性能的提升效果，减少网络往返次数。
                             </div>
-                            <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisPipeline()"><span>▶</span> Pipeline性能测试</button>
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">Pipeline 性能测试</div>
+                                        <span class="scenario-chip">批量命令</span>
+                                    </div>
+                                    <div class="scenario-desc">批量发送命令减少 RTT，观察吞吐和延迟提升。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisPipeline()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('redis-pipeline')" title="测试结果" test-id="redis-pipeline" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">面试点:</span>
@@ -1711,19 +1861,45 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                         </div>
 
                         <!-- 6. 事务与Lua脚本测试 -->
-                        <div class="control-group" id="redis-transaction">
+                        <div class="control-group" id="redis-transaction" v-show="activeSection === 'redis-transaction'">
                             <div class="control-label">事务与Lua脚本</div>
                             <div class="test-description">🔹
                                 验证Redis事务和Lua脚本的原子性，以及WATCH乐观锁机制。
                             </div>
-                            <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisTransaction()"><span>▶</span> 事务测试</button>
-                                <button class="btn btn-primary" @click="testRedisWatch()"><span>▶</span> 乐观锁</button>
-                                <button class="btn btn-primary" @click="testRedisLua()"><span>▶</span> Lua脚本</button>
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">事务测试</div>
+                                        <span class="scenario-chip">MULTI/EXEC</span>
+                                    </div>
+                                    <div class="scenario-desc">事务队列一次性提交，保障指令顺序执行。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisTransaction()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">乐观锁</div>
+                                        <span class="scenario-chip">WATCH</span>
+                                    </div>
+                                    <div class="scenario-desc">监测 key 变更，冲突时回滚重试。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisWatch()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">Lua 脚本</div>
+                                        <span class="scenario-chip">原子执行</span>
+                                    </div>
+                                    <div class="scenario-desc">脚本内多命令原子执行，减少往返调用。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisLua()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('redis-transaction')" title="测试结果" test-id="redis-transaction" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">面试点:</span>
@@ -1733,18 +1909,35 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                         </div>
 
                         <!-- 7. 发布订阅测试 -->
-                        <div class="control-group" id="redis-pubsub">
+                        <div class="control-group" id="redis-pubsub" v-show="activeSection === 'redis-pubsub'">
                             <div class="control-label">发布订阅</div>
                             <div class="test-description">🔹
                                 验证Redis发布订阅机制，包括基础订阅和模式订阅。
                             </div>
-                            <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisPubSub()"><span>▶</span> 发布订阅测试</button>
-                                <button class="btn btn-primary" @click="testRedisPatternPubSub()"><span>▶</span> 模式订阅</button>
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">发布订阅测试</div>
+                                        <span class="scenario-chip">频道</span>
+                                    </div>
+                                    <div class="scenario-desc">基础频道订阅发布，观察消息广播。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisPubSub()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">模式订阅</div>
+                                        <span class="scenario-chip">通配符</span>
+                                    </div>
+                                    <div class="scenario-desc">按模式匹配订阅，验证多频道分发。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisPatternPubSub()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('redis-pubsub')" title="测试结果" test-id="redis-pubsub" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">面试点:</span>
@@ -1754,19 +1947,45 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                         </div>
 
                         <!-- 8. 持久化与性能监控测试 -->
-                        <div class="control-group" id="redis-persistence">
+                        <div class="control-group" id="redis-persistence" v-show="activeSection === 'redis-persistence'">
                             <div class="control-label">持久化与性能监控</div>
                             <div class="test-description">🔹
                                 验证Redis持久化机制（RDB、AOF）和性能监控。
                             </div>
-                            <div class="test-actions">
-                                <button class="btn btn-primary" @click="testRedisRDB()"><span>▶</span> RDB持久化</button>
-                                <button class="btn btn-primary" @click="testRedisAOF()"><span>▶</span> AOF持久化</button>
-                                <button class="btn btn-primary" @click="testRedisMonitor()"><span>▶</span> 性能监控</button>
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">RDB 持久化</div>
+                                        <span class="scenario-chip">快照</span>
+                                    </div>
+                                    <div class="scenario-desc">定期生成快照文件，评估恢复速度与数据丢失窗口。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisRDB()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">AOF 持久化</div>
+                                        <span class="scenario-chip">日志</span>
+                                    </div>
+                                    <div class="scenario-desc">追加写日志更完整，观察文件膨胀与重写效果。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisAOF()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">性能监控</div>
+                                        <span class="scenario-chip">运行指标</span>
+                                    </div>
+                                    <div class="scenario-desc">INFO/SLOWLOG/MONITOR 指标查看性能瓶颈。</div>
+                                    <div class="scenario-actions">
+                                        <button class="btn btn-primary" @click="testRedisMonitor()"><span>▶</span> 测试</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Result Display -->
-                            <result-display :result="getResultDisplay('redis-persistence')" title="测试结果" test-id="redis-persistence" @show-detail="showResultDetail"></result-display>
                             <div class="config-panel">
                                 <div class="config-item">
                                     <span class="config-label">面试点:</span>
@@ -1809,9 +2028,12 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
                                 {{ item.status === '成功' ? '✔' : '✘' }}
                             </div>
                             <div class="log-content" @click="viewDetail(item)">
-                                {{ item.msg }}
-                                <span class="log-meta">{{ item.rt }}ms</span>
-                                <span class="log-meta">HTTP {{ item.code }}</span>
+                                <div class="log-line">
+                                    <span class="log-msg">{{ item.msg }}</span>
+                                    <span class="log-meta">{{ item.rt }}ms</span>
+                                    <span class="log-meta">HTTP {{ item.code }}</span>
+                                    <span class="log-endpoint" v-if="item.endpoint">API {{ item.endpoint }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1819,27 +2041,6 @@ public class XTokenRequestInterceptor implements RequestInterceptor {
             </div>
         </section>
 
-        <!-- 3. Best Practices & Statistics -->
-        <div class="forge-stats">
-            <div class="stats-summary">
-                <div class="stat-item">
-                    <span class="stat-label">总请求数:</span>
-                    <span class="stat-value">{{ history.length }}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">成功率:</span>
-                    <span class="stat-value">{{ successRate }}%</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">平均响应时间:</span>
-                    <span class="stat-value">{{ avgResponseTime }}ms</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">测试覆盖:</span>
-                    <span class="stat-value">{{ testedComponents }}/13</span>
-                </div>
-            </div>
-        </div>
     </main>
     </div>
 

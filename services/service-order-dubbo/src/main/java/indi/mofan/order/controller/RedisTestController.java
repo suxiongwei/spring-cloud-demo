@@ -1010,16 +1010,18 @@ public class RedisTestController {
             String key1 = "transaction:test:1";
             String key2 = "transaction:test:2";
 
-            redisTemplate.execute((org.springframework.data.redis.core.RedisCallback<Object>) connection -> {
-                connection.multi();
-                connection.set(key1.getBytes(), "value1".getBytes());
-                connection.set(key2.getBytes(), "value2".getBytes());
-                connection.exec();
+            stringRedisTemplate.execute((org.springframework.data.redis.core.RedisCallback<Object>) connection -> {
+                org.springframework.data.redis.connection.StringRedisConnection stringConnection =
+                    (org.springframework.data.redis.connection.StringRedisConnection) connection;
+                stringConnection.multi();
+                stringConnection.set(key1, "value1");
+                stringConnection.set(key2, "value2");
+                stringConnection.exec();
                 return null;
             });
 
-            Object value1 = redisTemplate.opsForValue().get(key1);
-            Object value2 = redisTemplate.opsForValue().get(key2);
+            String value1 = stringRedisTemplate.opsForValue().get(key1);
+            String value2 = stringRedisTemplate.opsForValue().get(key2);
             operations.add("事务执行结果: " + key1 + "=" + value1 + ", " + key2 + "=" + value2);
 
             operations.add("测试：事务回滚");
@@ -1027,16 +1029,18 @@ public class RedisTestController {
             String key3 = "transaction:test:3";
             String key4 = "transaction:test:4";
 
-            redisTemplate.execute((org.springframework.data.redis.core.RedisCallback<Object>) connection -> {
-                connection.multi();
-                connection.set(key3.getBytes(), "value3".getBytes());
-                connection.set(key4.getBytes(), "value4".getBytes());
-                connection.discard();
+            stringRedisTemplate.execute((org.springframework.data.redis.core.RedisCallback<Object>) connection -> {
+                org.springframework.data.redis.connection.StringRedisConnection stringConnection =
+                    (org.springframework.data.redis.connection.StringRedisConnection) connection;
+                stringConnection.multi();
+                stringConnection.set(key3, "value3");
+                stringConnection.set(key4, "value4");
+                stringConnection.discard();
                 return null;
             });
 
-            Object value3 = redisTemplate.opsForValue().get(key3);
-            Object value4 = redisTemplate.opsForValue().get(key4);
+            String value3 = stringRedisTemplate.opsForValue().get(key3);
+            String value4 = stringRedisTemplate.opsForValue().get(key4);
             operations.add("回滚后结果: " + key3 + "=" + value3 + ", " + key4 + "=" + value4);
 
             long executionTime = System.currentTimeMillis() - startTime;
@@ -1144,10 +1148,10 @@ public class RedisTestController {
                            "return new";
 
             RedisScript<Long> redisScript1 = new DefaultRedisScript<>(script1, Long.class);
-            Long result1 = redisTemplate.execute(redisScript1, Collections.singletonList(key), "10");
+            Long result1 = stringRedisTemplate.execute(redisScript1, Collections.singletonList(key), "10");
             operations.add("执行Lua脚本: INCRBY " + key + " 10 => " + result1);
 
-            Long result2 = redisTemplate.execute(redisScript1, Collections.singletonList(key), "20");
+            Long result2 = stringRedisTemplate.execute(redisScript1, Collections.singletonList(key), "20");
             operations.add("执行Lua脚本: INCRBY " + key + " 20 => " + result2);
 
             operations.add("测试：复杂逻辑 - 限流");
@@ -1167,7 +1171,7 @@ public class RedisTestController {
             RedisScript<Long> redisScript2 = new DefaultRedisScript<>(script2, Long.class);
 
             for (int i = 1; i <= 15; i++) {
-                Long allowed = redisTemplate.execute(redisScript2, Collections.singletonList(limitKey), "10");
+                Long allowed = stringRedisTemplate.execute(redisScript2, Collections.singletonList(limitKey), "10");
                 operations.add("请求" + i + ": " + (allowed == 1 ? "✓ 允许" : "✗ 拒绝"));
             }
 
