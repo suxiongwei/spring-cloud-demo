@@ -45,6 +45,11 @@ class OrderDubboControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data.product.id").value(1))
-                .andExpect(jsonPath("$.data.product.productName").value("p1"));
+                .andExpect(jsonPath("$.data.product.productName").value("p1"))
+                .andExpect(jsonPath("$.data.scenarioId").value("dubbo-call-sync"))
+                .andExpect(jsonPath("$.data.success").value(true))
+                .andExpect(jsonPath("$.data.failureInjected").value(false))
+                .andExpect(jsonPath("$.data.costMs").isNumber())
+                .andExpect(jsonPath("$.data.evidence.productId").value(1));
     }
 }

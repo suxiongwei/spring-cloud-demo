@@ -2,6 +2,7 @@ package indi.mofan.order.facade;
 
 import indi.mofan.common.ApiResponse;
 import indi.mofan.common.ResultCode;
+import indi.mofan.common.demo.ScenarioEvidenceKeys;
 import indi.mofan.order.rocketmq.RocketMqDemoMessage;
 import indi.mofan.order.rocketmq.RocketMqDemoProducer;
 import indi.mofan.order.rocketmq.RocketMqDemoProperties;
@@ -322,8 +323,20 @@ public class RocketMqDemoFacade {
             return ApiResponse.fail(ResultCode.INTERNAL_ERROR,
                     failPrefix + ": strict real mode disabled (demo.rocketmq.strict-real-mode=false)");
         }
+        long startTime = System.currentTimeMillis();
         try {
-            return ApiResponse.success(successMsg, scenario.get());
+            Map<String, Object> payload = scenario.get();
+            payload.putIfAbsent(ScenarioEvidenceKeys.SUCCESS, true);
+            payload.putIfAbsent(ScenarioEvidenceKeys.FAILURE_INJECTED, false);
+            payload.put(ScenarioEvidenceKeys.COST_MS, Math.max(System.currentTimeMillis() - startTime, 0));
+            payload.putIfAbsent(ScenarioEvidenceKeys.EVIDENCE, Map.of(
+                    "scenarioId", payload.get("scenarioId"),
+                    "topic", payload.getOrDefault("topic", "n/a"),
+                    "messageKey", payload.getOrDefault("messageKey", "n/a")));
+            payload.putIfAbsent(ScenarioEvidenceKeys.NEXT_QUESTION_HINTS, List.of(
+                    "消息重试与业务幂等如何配合？",
+                    "事务消息和 TCC 的边界如何选择？"));
+            return ApiResponse.success(successMsg, payload);
         } catch (Exception e) {
             return ApiResponse.fail(ResultCode.INTERNAL_ERROR, failPrefix + ": " + rootMessage(e));
         }

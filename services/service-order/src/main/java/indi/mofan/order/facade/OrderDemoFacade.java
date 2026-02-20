@@ -2,6 +2,7 @@ package indi.mofan.order.facade;
 
 import indi.mofan.common.ApiResponse;
 import indi.mofan.common.ResultCode;
+import indi.mofan.common.demo.ScenarioEvidenceKeys;
 import indi.mofan.order.feign.ProductFeignClient;
 import indi.mofan.order.properties.CkProperties;
 import indi.mofan.product.bean.Product;
@@ -27,6 +28,7 @@ public class OrderDemoFacade {
     private final Environment environment;
 
     public ApiResponse<Object> nacosServicesDemo() {
+        long startTime = System.currentTimeMillis();
         List<String> services = discoveryClient.getServices();
         Map<String, Object> result = new HashMap<>();
         result.put("总服务数", services.size());
@@ -46,6 +48,9 @@ public class OrderDemoFacade {
             serviceInstances.put(service, instanceInfos);
         }
         result.put("实例详情", serviceInstances);
+        attachEvidence(result, "nacos-services", startTime, false,
+                Map.of("serviceCount", services.size(), "instanceGroupCount", serviceInstances.size()),
+                List.of("Nacos 健康实例摘除策略是什么？", "配置中心和注册中心如何隔离命名空间？"));
         return ApiResponse.success("Nacos服务发现成功", result);
     }
 
@@ -68,20 +73,26 @@ public class OrderDemoFacade {
     }
 
     public ApiResponse<Object> gatewayRoutingDemo() {
+        long startTime = System.currentTimeMillis();
         Map<String, Object> result = new HashMap<>();
-        result.put("网关地址", "http://localhost:9090");
-        result.put("路由规则", new String[] {
+        String[] routes = new String[] {
                 "GET /product -> service-product",
                 "GET /api/order -> service-order",
                 "GET /api/account -> seata-account",
                 "GET /api/storage -> seata-storage"
-        });
-        result.put("过滤器", new String[] {
+        };
+        String[] filters = new String[] {
                 "OnceToken 过滤器: 防止重复提交",
                 "RtGlobalFilter: 记录请求耗时",
                 "路由过滤器: 自动添加服务前缀"
-        });
+        };
+        result.put("网关地址", "http://localhost:9090");
+        result.put("路由规则", routes);
+        result.put("过滤器", filters);
         result.put("说明", "网关作为所有请求的入口，提供统一的路由、认证、限流等功能");
+        attachEvidence(result, "gateway-routing", startTime, false,
+                Map.of("routeCount", routes.length, "filterCount", filters.length),
+                List.of("网关鉴权和业务鉴权如何分层？", "如何避免网关成为单点瓶颈？"));
 
         return ApiResponse.success("网关路由信息获取成功", result);
     }
@@ -257,6 +268,10 @@ public class OrderDemoFacade {
                     "读取超时时间", readTimeout + "ms",
                     "降级类", "ProductFeignClientFallback.class",
                     "负载均衡", "默认轮询策略"));
+            boolean degraded = product.getProductName().equals("未知商品");
+            attachEvidence(result, "feign-call-enhanced", start, degraded,
+                    Map.of("degraded", degraded, "productId", productId),
+                    List.of("Feign 降级和 Sentinel 降级职责如何划分？", "超时阈值如何按下游差异化配置？"));
 
             return ApiResponse.success("OpenFeign调用完成", result);
         } catch (Exception e) {
@@ -269,6 +284,7 @@ public class OrderDemoFacade {
 
     public ApiResponse<Object> loadBalanceEnhancedDemo(int times) {
         Map<String, Object> result = new HashMap<>();
+        long startTime = System.currentTimeMillis();
         List<ServiceInstance> instances = discoveryClient.getInstances("service-product");
         result.put("service-product实例数", instances.size());
 
@@ -299,6 +315,9 @@ public class OrderDemoFacade {
                 "自定义策略 - 实现 ReactorServiceInstanceLoadBalancer 接口"
         });
         result.put("配置方式", "在配置类中通过 @Bean 注入自定义 LoadBalancer");
+        attachEvidence(result, "load-balance", startTime, false,
+                Map.of("instanceCount", instances.size(), "distributionPorts", portCount.keySet()),
+                List.of("为何当前场景用轮询而不是最少连接？", "如何做灰度权重发布？"));
 
         return ApiResponse.success("负载均衡测试完成", result);
     }
@@ -354,5 +373,15 @@ public class OrderDemoFacade {
         result.put("totalSteps", steps.size());
         result.put("steps", steps);
         return ApiResponse.success("引导式面试流程生成成功", result);
+    }
+
+    private void attachEvidence(Map<String, Object> payload, String scenarioId, long startTime,
+            boolean failureInjected, Map<String, Object> evidence, List<String> hints) {
+        payload.put(ScenarioEvidenceKeys.SCENARIO_ID, scenarioId);
+        payload.put(ScenarioEvidenceKeys.SUCCESS, true);
+        payload.put(ScenarioEvidenceKeys.FAILURE_INJECTED, failureInjected);
+        payload.put(ScenarioEvidenceKeys.COST_MS, Math.max(System.currentTimeMillis() - startTime, 0));
+        payload.put(ScenarioEvidenceKeys.EVIDENCE, evidence);
+        payload.put(ScenarioEvidenceKeys.NEXT_QUESTION_HINTS, hints);
     }
 }

@@ -2,6 +2,7 @@ package indi.mofan.order.controller;
 
 import indi.mofan.common.ApiResponse;
 import indi.mofan.common.ResultCode;
+import indi.mofan.common.demo.ScenarioEvidenceKeys;
 import indi.mofan.order.dubbo.ProductDubboClient;
 import indi.mofan.product.bean.Product;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -44,6 +46,12 @@ public class OrderDubboController {
             result.put("product", product);
             result.put("duration", duration + "ms");
             result.put("method", "Dubbo RPC 同步调用");
+            Map<String, Object> evidence = new LinkedHashMap<>();
+            evidence.put("productId", productId);
+            evidence.put("providerPort", product == null ? null : product.getPort());
+            appendScenarioEvidence(result, "dubbo-call-sync", startTime, false,
+                    evidence,
+                    List.of("Dubbo 与 Feign 在该场景如何选型？", "RPC 超时如何防止级联故障？"));
 
             return ApiResponse.success("Dubbo 同步调用成功", result);
         } catch (Exception e) {
@@ -661,6 +669,16 @@ public class OrderDubboController {
             log.error("REST协议测试失败", e);
             return ApiResponse.fail(ResultCode.INTERNAL_ERROR, "REST协议测试失败: " + e.getMessage());
         }
+    }
+
+    private void appendScenarioEvidence(Map<String, Object> payload, String scenarioId, long startTime,
+            boolean failureInjected, Map<String, Object> evidence, List<String> hints) {
+        payload.put(ScenarioEvidenceKeys.SCENARIO_ID, scenarioId);
+        payload.put(ScenarioEvidenceKeys.SUCCESS, true);
+        payload.put(ScenarioEvidenceKeys.FAILURE_INJECTED, failureInjected);
+        payload.put(ScenarioEvidenceKeys.COST_MS, Math.max(System.currentTimeMillis() - startTime, 0));
+        payload.put(ScenarioEvidenceKeys.EVIDENCE, evidence);
+        payload.put(ScenarioEvidenceKeys.NEXT_QUESTION_HINTS, hints);
     }
 }
 
