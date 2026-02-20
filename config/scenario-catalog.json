@@ -1,0 +1,130 @@
+{
+  "version": "1.0.0",
+  "description": "Unified scenario catalog for demo endpoint contracts and maturity states.",
+  "maturityEnum": [
+    "implemented",
+    "demo-only",
+    "planned"
+  ],
+  "capabilities": [
+    {
+      "id": "sentinel",
+      "maturity": "implemented"
+    },
+    {
+      "id": "nacos",
+      "maturity": "implemented"
+    },
+    {
+      "id": "dubbo",
+      "maturity": "implemented"
+    },
+    {
+      "id": "redis",
+      "maturity": "implemented"
+    },
+    {
+      "id": "seata",
+      "maturity": "implemented"
+    },
+    {
+      "id": "gateway",
+      "maturity": "implemented"
+    },
+    {
+      "id": "sca",
+      "maturity": "implemented"
+    },
+    {
+      "id": "k8s",
+      "maturity": "planned"
+    },
+    {
+      "id": "arctic",
+      "maturity": "planned"
+    },
+    {
+      "id": "opensergo",
+      "maturity": "planned"
+    },
+    {
+      "id": "rocketmq",
+      "maturity": "implemented"
+    },
+    {
+      "id": "higress",
+      "maturity": "demo-only"
+    },
+    {
+      "id": "schedulerx",
+      "maturity": "planned"
+    },
+    {
+      "id": "opentelemetry",
+      "maturity": "demo-only"
+    },
+    {
+      "id": "chaosblade",
+      "maturity": "planned"
+    },
+    {
+      "id": "appactive",
+      "maturity": "planned"
+    }
+  ],
+  "contract": {
+    "allowedEndpointPatterns": [
+      "^/api/order/rateLimit/(qps|thread)$",
+      "^/api/order/hotspot/param$",
+      "^/api/order/degrade/rt$",
+      "^/api/order/demo/(nacos/services|nacos-config|load-balance|tracing|gateway-routing|async-parallel|timeout-retry|feign-interceptor|config-refresh|health-check)$",
+      "^/api/order/demo/rocketmq/(publish-basic|retry|dlq|idempotent|orderly|delay-close|tx/send|tx/check|tag-filter|replay-dlq)$",
+      "^/api/order/demo/feign/call-enhanced$",
+      "^/api/order/config$",
+      "^/api/order/dubbo/.+$",
+      "^/api/business/purchase/tcc$",
+      "^/api/business/purchase/tcc/verify$"
+    ],
+    "legacyAliases": [
+      {
+        "legacyPath": "/api/order/demo/flow-control",
+        "canonicalPath": "/api/order/rateLimit/qps",
+        "sunset": "2026-06-30"
+      },
+      {
+        "legacyPath": "/api/order/demo/hot-param",
+        "canonicalPath": "/api/order/hotspot/param",
+        "sunset": "2026-06-30"
+      },
+      {
+        "legacyPath": "/api/order/demo/degrade",
+        "canonicalPath": "/api/order/degrade/rt",
+        "sunset": "2026-06-30"
+      },
+      {
+        "legacyPath": "/api/order/demo/circuit-breaker",
+        "canonicalPath": "/api/order/degrade/rt",
+        "sunset": "2026-06-30"
+      },
+      {
+        "legacyPath": "/api/order/demo/nacos/nacos-config",
+        "canonicalPath": "/api/order/demo/nacos-config",
+        "sunset": "2026-06-30"
+      },
+      {
+        "legacyPath": "/api/order/seata/tcc/commit",
+        "canonicalPath": "/api/business/purchase/tcc",
+        "sunset": "2026-06-30"
+      },
+      {
+        "legacyPath": "/api/order/seata/tcc/rollback",
+        "canonicalPath": "/api/business/purchase/tcc",
+        "sunset": "2026-06-30"
+      }
+    ]
+  },
+  "verification": {
+    "contractScript": "scripts/validate-demo-contract.ps1",
+    "inventoryFile": "config/demo-endpoint-inventory.md"
+  }
+}

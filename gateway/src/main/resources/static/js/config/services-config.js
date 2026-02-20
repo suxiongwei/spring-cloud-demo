@@ -18,6 +18,12 @@ export const servicesConfig = {
             title: 'OpenSergo',
             subtitle: '治理标准',
             description: '开放通用的微服务治理标准,覆盖流量治理、服务容错等。',
+            implementationStatus: 'planned',
+            roadmap: {
+                milestone: '2026-Q2',
+                minimalDeliverable: '提供统一治理规则模型展示与规则下发示例',
+                prerequisites: ['scenario-catalog', 'contract-validator']
+            },
             logo: 'images/logos/opensergo.png',
             github: 'https://github.com/opensergo/opensergo-specification',
             website: 'https://opensergo.io'
@@ -53,6 +59,12 @@ export const servicesConfig = {
             title: 'RocketMQ',
             subtitle: '消息队列',
             description: '分布式消息中间件,支持事务消息、顺序消息、定时消息等',
+            implementationStatus: 'implemented',
+            roadmap: {
+                milestone: '2026-Q1',
+                minimalDeliverable: '订单业务链路 10 场景可演练',
+                prerequisites: ['demo endpoint contract', 'scenario cards']
+            },
             logo: 'images/logos/rocketmq.png',
             github: 'https://github.com/apache/rocketmq',
             website: 'https://rocketmq.apache.org'
@@ -75,6 +87,7 @@ export const servicesConfig = {
             title: 'Higress',
             subtitle: '云原生网关',
             description: '基于 Envoy 的云原生 API 网关,提供流量管理、安全防护等能力',
+            implementationStatus: 'demo-only',
             logo: 'images/logos/higress.png',
             github: 'https://github.com/alibaba/higress',
             website: 'https://higress.io'
@@ -84,6 +97,12 @@ export const servicesConfig = {
             title: 'SchedulerX',
             subtitle: '分布式任务调度',
             description: '阿里巴巴自研的分布式任务调度平台',
+            implementationStatus: 'planned',
+            roadmap: {
+                milestone: '2026-Q3',
+                minimalDeliverable: '完成单任务触发、分片执行与结果回执演示',
+                prerequisites: ['scheduler console', 'task execution service']
+            },
             logo: 'images/logos/schedulerx.png',
             github: 'https://github.com/alibaba/SchedulerX',
             website: 'https://www.aliyun.com/aliware/schedulerx'
@@ -106,6 +125,7 @@ export const servicesConfig = {
             title: 'OpenTelemetry',
             subtitle: '可观测性',
             description: '云原生可观测性框架,统一采集 Trace、Metric、Log',
+            implementationStatus: 'demo-only',
             logo: 'images/logos/opentelemetry.png',
             github: 'https://github.com/open-telemetry',
             website: 'https://opentelemetry.io'
@@ -122,7 +142,7 @@ export const testCasesConfig = {
             id: 'qps',
             label: 'QPS 限流',
             description: '限制每秒最多处理的请求数量',
-            endpoint: '/api/order/demo/flow-control',
+            endpoint: '/api/order/rateLimit/qps',
             inputFields: [
                 { key: 'qpsTimes', type: 'number', placeholder: '次数', default: 10 }
             ],
@@ -157,7 +177,7 @@ export const testCasesConfig = {
             id: 'config',
             label: '配置管理',
             description: '加载 Nacos 的配置,动态刷新',
-            endpoint: '/api/order/demo/nacos/nacos-config',
+            endpoint: '/api/order/demo/nacos-config',
             buttons: [
                 { label: '读取动态配置', action: 'testNacosConfig' }
             ]

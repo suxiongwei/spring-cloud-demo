@@ -79,6 +79,66 @@ spring:
           filters:
             - RewritePath=/api/business/?(?<segment>.*), /$\{segment}
           order: 2
+        # legacy compatibility aliases (temporary)
+        - id: legacy-flow-control
+          uri: lb://service-order
+          predicates:
+            - Path=/api/order/demo/flow-control
+          filters:
+            - RewritePath=/api/order/demo/flow-control, /rateLimit/qps
+          order: 4
+        - id: legacy-hot-param
+          uri: lb://service-order
+          predicates:
+            - Path=/api/order/demo/hot-param
+          filters:
+            - RewritePath=/api/order/demo/hot-param, /hotspot/param
+            - AddRequestParameter=userId, 1001
+            - AddRequestParameter=productId, 2002
+          order: 4
+        - id: legacy-degrade
+          uri: lb://service-order
+          predicates:
+            - Path=/api/order/demo/degrade
+          filters:
+            - RewritePath=/api/order/demo/degrade, /degrade/rt
+          order: 4
+        - id: legacy-circuit-breaker
+          uri: lb://service-order
+          predicates:
+            - Path=/api/order/demo/circuit-breaker
+          filters:
+            - RewritePath=/api/order/demo/circuit-breaker, /degrade/rt
+          order: 4
+        - id: legacy-nacos-config
+          uri: lb://service-order
+          predicates:
+            - Path=/api/order/demo/nacos/nacos-config
+          filters:
+            - RewritePath=/api/order/demo/nacos/nacos-config, /demo/nacos-config
+          order: 4
+        - id: legacy-seata-tcc-commit
+          uri: lb://seata-business
+          predicates:
+            - Path=/api/order/seata/tcc/commit
+          filters:
+            - RewritePath=/api/order/seata/tcc/commit, /purchase/tcc
+            - AddRequestParameter=userId, U1001
+            - AddRequestParameter=commodityCode, P0001
+            - AddRequestParameter=count, 1
+            - AddRequestParameter=fail, false
+          order: 4
+        - id: legacy-seata-tcc-rollback
+          uri: lb://seata-business
+          predicates:
+            - Path=/api/order/seata/tcc/rollback
+          filters:
+            - RewritePath=/api/order/seata/tcc/rollback, /purchase/tcc
+            - AddRequestParameter=userId, U1001
+            - AddRequestParameter=commodityCode, P0001
+            - AddRequestParameter=count, 1
+            - AddRequestParameter=fail, true
+          order: 4
         - id: order-dubbo-route
           uri: lb://service-order-dubbo
           predicates:

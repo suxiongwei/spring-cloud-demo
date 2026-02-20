@@ -5,6 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 /**
  * @author xiongweisu
  * @date 2025/5/1 16:21
@@ -21,4 +23,7 @@ public interface StorageFeignClient {
     @GetMapping("/addBack")
     String addBack(@RequestParam("commodityCode") String commodityCode,
                    @RequestParam("count") Integer count);
+
+    @GetMapping("/snapshot")
+    Map<String, Object> snapshot(@RequestParam("commodityCode") String commodityCode);
 }

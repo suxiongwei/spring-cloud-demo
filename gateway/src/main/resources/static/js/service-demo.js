@@ -18,6 +18,7 @@ const app = createApp({
                 sentinel: 'sentinel-qps',
                 nacos: 'nacos-services',
                 dubbo: 'dubbo-batch',
+                rocketmq: 'rocketmq-business-chain',
                 redis: 'redis-data-structures'
             },
             componentData: {
@@ -94,6 +95,7 @@ const app = createApp({
                     name: 'Higress',
                     subtitle: '云原生网关',
                     description: '基于 Envoy 的云原生网关,实现了流量网关、微服务网关、安全网关三合一。',
+                    implementationStatus: 'demo-only',
                     icon: 'Higress.png',
                     features: [
                         { name: '流量网关', description: '统一的流量入口管理' },
@@ -145,6 +147,12 @@ const app = createApp({
                     name: 'OpenSergo',
                     subtitle: '治理标准',
                     description: '开放通用的微服务治理标准,覆盖流量治理、服务容错等。',
+                    implementationStatus: 'planned',
+                    roadmap: {
+                        milestone: '2026-Q2',
+                        minimalDeliverable: '统一治理规则定义与示例下发链路',
+                        prerequisites: ['catalog status model', 'rule source integration']
+                    },
                     icon: 'opensergo.png',
                     features: [
                         { name: '流量治理', description: '统一的流量治理标准' },
@@ -162,6 +170,12 @@ const app = createApp({
                     name: 'ChaosBlade',
                     subtitle: '混沌工程',
                     description: '故障注入、混沌实验、系统韧性验证工具。',
+                    implementationStatus: 'planned',
+                    roadmap: {
+                        milestone: '2026-Q3',
+                        minimalDeliverable: 'CPU/网络故障注入最小实验脚本',
+                        prerequisites: ['safe sandbox', 'rollback playbook']
+                    },
                     icon: 'ChaosBlade.png',
                     features: [
                         { name: '故障注入', description: '支持多种故障场景模拟' },
@@ -179,6 +193,12 @@ const app = createApp({
                     name: 'AppActive',
                     subtitle: '多活容灾',
                     description: '应用多活架构、异地多活、容灾切换解决方案。',
+                    implementationStatus: 'planned',
+                    roadmap: {
+                        milestone: '2026-Q3',
+                        minimalDeliverable: '单业务链路的多活路由模拟',
+                        prerequisites: ['traffic tagging', 'region metadata']
+                    },
                     icon: 'appactive.svg',
                     features: [
                         { name: '应用多活', description: '跨地域的应用多活架构' },
@@ -196,6 +216,12 @@ const app = createApp({
                     name: 'RocketMQ',
                     subtitle: '消息队列',
                     description: '异步消息通信、削峰填谷、事件驱动、流式处理。',
+                    implementationStatus: 'implemented',
+                    roadmap: {
+                        milestone: '2026-Q1',
+                        minimalDeliverable: '订单链路 10 个企业场景可直接演练',
+                        prerequisites: ['demo endpoint contract', 'scenario result viewer']
+                    },
                     icon: 'rocketmq.svg',
                     features: [
                         { name: '消息队列', description: '高可靠的消息传递' },
@@ -213,6 +239,12 @@ const app = createApp({
                     name: 'SchedulerX',
                     subtitle: '任务调度',
                     description: '分布式任务调度、定时任务、工作流调度、分布式计算。',
+                    implementationStatus: 'planned',
+                    roadmap: {
+                        milestone: '2026-Q3',
+                        minimalDeliverable: '定时任务触发与执行日志回显',
+                        prerequisites: ['scheduler instance', 'task runner']
+                    },
                     icon: 'schedulerx.svg',
                     features: [
                         { name: '分布式调度', description: '分布式任务调度和执行' },
@@ -247,6 +279,7 @@ const app = createApp({
                     name: 'OpenTelemetry',
                     subtitle: '可观测性',
                     description: '云原生可观测性标准,提供 Trace、Metric、Log 的统一采集。',
+                    implementationStatus: 'demo-only',
                     icon: 'opentelemetry.svg',
                     features: [
                         { name: '链路追踪', description: '分布式链路追踪' },
@@ -330,6 +363,7 @@ const app = createApp({
                 dubbo: false,
                 sentinel: false,
                 nacos: false,
+                rocketmq: false,
                 redis: false
             },
 
@@ -431,6 +465,9 @@ const app = createApp({
                     'redis-transaction',
                     'redis-pubsub',
                     'redis-persistence'
+                ],
+                rocketmq: [
+                    'rocketmq-business-chain'
                 ]
             }
 
@@ -515,13 +552,13 @@ const app = createApp({
         },
         endpoint(t) {
             const map = {
-                'qps': '/api/order/demo/flow-control',
-                'thread': '/api/order/demo/flow-control',
-                'hot': '/api/order/demo/hot-param',
-                'degrade': '/api/order/demo/degrade',
-                'tcc-ok': '/api/order/seata/tcc/commit',
-                'tcc-fail': '/api/order/seata/tcc/rollback',
-                'feign': `/api/order/demo/feign/call?productId=${this.feignProductId}`,
+                'qps': '/api/order/rateLimit/qps',
+                'thread': '/api/order/rateLimit/thread',
+                'hot': '/api/order/hotspot/param?userId=1001&productId=2002',
+                'degrade': '/api/order/degrade/rt',
+                'tcc-ok': `/api/business/purchase/tcc/verify?userId=U1001&commodityCode=${this.tccCommodityCode}&count=${this.tccCount}&fail=false`,
+                'tcc-fail': `/api/business/purchase/tcc/verify?userId=U1001&commodityCode=${this.tccCommodityCode}&count=${this.tccCount}&fail=true`,
+                'feign': `/api/order/demo/feign/call-enhanced?productId=${this.feignProductId}`,
                 'dubbo-sync': `/api/order/dubbo/call-sync?productId=${this.dubboProductId}`,
                 'dubbo-batch': '/api/order/dubbo/call-batch',
                 'dubbo-list-all': '/api/order/dubbo/list-all',
@@ -539,7 +576,7 @@ const app = createApp({
                 'dubbo-version-group-v1-groupB': `/api/order/dubbo/version-group/v1-groupB?name=${this.dubboVersionGroupName}`,
                 'dubbo-version-group-v2-groupA': `/api/order/dubbo/version-group/v2-groupA?name=${this.dubboVersionGroupName}`,
                 'dubbo-version-group-compare': `/api/order/dubbo/version-group/compare?name=${this.dubboVersionGroupName}`,
-                'compare-feign': `/api/order/feign/product/1`,
+                'compare-feign': `/api/order/demo/feign/call-enhanced?productId=1`,
                 'compare-dubbo': `/api/order/dubbo/call-sync?productId=1`,
                 'nacos-services': '/api/order/demo/nacos/services',
                 'nacos-config': '/api/order/demo/nacos-config',
@@ -549,7 +586,7 @@ const app = createApp({
                 'gateway-auth-pass': '/api/order/config?auth-test=pass',
                 'gateway-auth-fail': '/api/order/config?auth-test=reject',
                 'async': '/api/order/demo/async-parallel',
-                'circuit-breaker': '/api/order/demo/circuit-breaker',
+                'circuit-breaker': '/api/order/degrade/rt',
                 'timeout-retry': '/api/order/demo/timeout-retry',
                 'feign-interceptor': '/api/order/demo/feign-interceptor',
                 'config-refresh': '/api/order/demo/config-refresh',
@@ -558,7 +595,17 @@ const app = createApp({
                 'protocol-compare': '/api/order/dubbo/protocol/compare',
                 'protocol-dubbo': '/api/order/dubbo/protocol/dubbo',
                 'protocol-triple': '/api/order/dubbo/protocol/triple',
-                'protocol-rest': '/api/order/dubbo/protocol/rest'
+                'protocol-rest': '/api/order/dubbo/protocol/rest',
+                'rocketmq/publish-basic': '/api/order/demo/rocketmq/publish-basic',
+                'rocketmq/retry': '/api/order/demo/rocketmq/retry',
+                'rocketmq/dlq': '/api/order/demo/rocketmq/dlq',
+                'rocketmq/idempotent': '/api/order/demo/rocketmq/idempotent',
+                'rocketmq/orderly': '/api/order/demo/rocketmq/orderly',
+                'rocketmq/delay-close': '/api/order/demo/rocketmq/delay-close',
+                'rocketmq/tx/send': '/api/order/demo/rocketmq/tx/send',
+                'rocketmq/tx/check': '/api/order/demo/rocketmq/tx/check',
+                'rocketmq/tag-filter': '/api/order/demo/rocketmq/tag-filter',
+                'rocketmq/replay-dlq': '/api/order/demo/rocketmq/replay-dlq'
             }
             if (map[t]) {
                 return map[t]
@@ -964,6 +1011,16 @@ const app = createApp({
         async testLoadBalance() { await this.callWithResultDisplay(this.endpoint('load-balance'), 'load-balance', 'load-balance') },
         async testAsync() { await this.callWithResultDisplay(this.endpoint('async'), 'async', 'async') },
         async testTracing() { await this.callWithResultDisplay(this.endpoint('tracing'), 'tracing', 'tracing') },
+        async testRocketMqPublishBasic() { await this.callWithResultDisplay(this.endpoint('rocketmq/publish-basic'), 'rocketmq-publish-basic', 'rocketmq-business-chain') },
+        async testRocketMqRetry() { await this.callWithResultDisplay(this.endpoint('rocketmq/retry'), 'rocketmq-retry', 'rocketmq-business-chain') },
+        async testRocketMqDlq() { await this.callWithResultDisplay(this.endpoint('rocketmq/dlq'), 'rocketmq-dlq', 'rocketmq-business-chain') },
+        async testRocketMqIdempotent() { await this.callWithResultDisplay(this.endpoint('rocketmq/idempotent'), 'rocketmq-idempotent', 'rocketmq-business-chain') },
+        async testRocketMqOrderly() { await this.callWithResultDisplay(this.endpoint('rocketmq/orderly'), 'rocketmq-orderly', 'rocketmq-business-chain') },
+        async testRocketMqDelayClose() { await this.callWithResultDisplay(this.endpoint('rocketmq/delay-close'), 'rocketmq-delay-close', 'rocketmq-business-chain') },
+        async testRocketMqTxSend() { await this.callWithResultDisplay(this.endpoint('rocketmq/tx/send'), 'rocketmq-tx-send', 'rocketmq-business-chain') },
+        async testRocketMqTxCheck() { await this.callWithResultDisplay(this.endpoint('rocketmq/tx/check'), 'rocketmq-tx-check', 'rocketmq-business-chain') },
+        async testRocketMqTagFilter() { await this.callWithResultDisplay(this.endpoint('rocketmq/tag-filter'), 'rocketmq-tag-filter', 'rocketmq-business-chain') },
+        async testRocketMqReplayDlq() { await this.callWithResultDisplay(this.endpoint('rocketmq/replay-dlq'), 'rocketmq-replay-dlq', 'rocketmq-business-chain') },
         
         async testRedisString() {
             await this.callWithResultDisplay(this.endpoint('redis/string'), 'Redis String操作', 'redis-data-structures')
@@ -1505,13 +1562,14 @@ const app = createApp({
         },
         getApiInfo() {
             const apis = {
-                sentinel: { method: 'GET', path: '/api/order/demo/flow-control', params: 'qps', description: '测试 Sentinel 的 QPS 限流规则，限制每秒最多 1000 个请求' },
+                sentinel: { method: 'GET', path: '/api/order/rateLimit/qps', params: '', description: '测试 Sentinel 的 QPS 限流规则，限制每秒请求数量' },
                 nacos: { method: 'GET', path: '/api/order/demo/nacos/services', params: '', description: '查询 Nacos 中注册的所有服务实例' },
                 dubbo: { method: 'GET', path: '/api/order/dubbo/call-sync?productId=1', params: 'productId', description: '使用 Dubbo 协议远程调用 Product 服务' },
-                seata: { method: 'POST', path: '/api/order/seata/tcc/commit', params: 'commodity, count', description: '执行 Seata TCC 分布式事务，涉及库存和账户的一致性保证' },
+                rocketmq: { method: 'GET', path: '/api/order/demo/rocketmq/publish-basic', params: '', description: '按订单链路演示 RocketMQ 普通消息、重试、DLQ 与事务消息' },
+                seata: { method: 'GET', path: '/api/business/purchase/tcc/verify?userId=U1001&commodityCode=P0001&count=1&fail=false', params: 'userId, commodityCode, count, fail', description: '执行 Seata TCC 分布式事务并返回前后状态证据' },
                 gateway: { method: 'GET', path: '/api/order/demo/gateway-routing', params: '', description: '验证 Spring Cloud Gateway 路由规则配置是否生效' },
                 higress: { method: 'GET', path: '/api/order/demo/gateway-routing', params: '', description: '验证网关路由规则配置是否生效' },
-                sca: { method: 'GET', path: '/api/order/feign/product/1', params: 'productId', description: '使用 OpenFeign + LoadBalancer 调用 Product 服务' },
+                sca: { method: 'GET', path: '/api/order/demo/feign/call-enhanced?productId=1', params: 'productId', description: '使用 OpenFeign + LoadBalancer 调用 Product 服务' },
                 opentelemetry: { method: 'GET', path: '/api/order/demo/tracing', params: '', description: '生成模拟的应用链路数据用于可观测性演示' }
             }
             return apis[this.activeComponent] || { method: 'GET', path: '/api/order/demo', params: '', description: '微服务 API 演示' }
@@ -1551,6 +1609,18 @@ const app = createApp({
                             <li><strong>负载均衡</strong>：支持轮询、加权轮询、随机等策略</li>
                             <li><strong>容错机制</strong>：Failover、Failfast、Failsafe 等自动降级</li>
                             <li><strong>适用场景</strong>：内部高性能、低延迟的服务调用</li>
+                        </ul>
+                    `
+                },
+                rocketmq: {
+                    title: '💡 RocketMQ 业务链路',
+                    content: `
+                        <ul style="margin:0; padding-left:20px;">
+                            <li><strong>核心价值</strong>：异步解耦、削峰填谷、失败隔离、最终一致</li>
+                            <li><strong>普通消息</strong>：下单事件异步通知库存、营销等下游系统</li>
+                            <li><strong>重试 + DLQ</strong>：消费失败自动重试，重试耗尽进入死信队列</li>
+                            <li><strong>幂等与顺序</strong>：消费端去重防止重复执行，同订单按队列保证有序</li>
+                            <li><strong>事务与回查</strong>：半消息 + 本地事务 + 回查确保最终一致性</li>
                         </ul>
                     `
                 },
@@ -1625,6 +1695,7 @@ const app = createApp({
                 dubbo: ['testDubboSync', 'testDubboBatch', 'testDubboListAll', 'testDubboTimeout', 'testDubboException', 'testDubboAsync', 'testDubboRegion', 'testDubboConcurrency', 'testDubboActives', 'testDubboLeastActive'],
                 seata: ['testTccOk', 'testTccFail'],
                 sca: ['testFeignVsDubbo', 'testLoadBalance', 'testAsync'],
+                rocketmq: ['testRocketMqPublishBasic', 'testRocketMqRetry', 'testRocketMqDlq', 'testRocketMqIdempotent', 'testRocketMqOrderly', 'testRocketMqDelayClose', 'testRocketMqTxSend', 'testRocketMqTxCheck', 'testRocketMqTagFilter', 'testRocketMqReplayDlq'],
                 higress: ['testGatewayRouting'],
                 opentelemetry: ['testTracing']
             }

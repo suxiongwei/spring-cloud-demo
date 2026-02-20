@@ -1,5 +1,6 @@
 package indi.mofan.account.service.impl;
 
+import indi.mofan.account.bean.AccountTbl;
 import indi.mofan.account.mapper.AccountTblMapper;
 import indi.mofan.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void addBack(String userId, int money) {
         accountTblMapper.addBack(userId, money);
+    }
+
+    @Override
+    public AccountTbl snapshot(String userId) {
+        return accountTblMapper.selectByUserId(userId);
     }
 }

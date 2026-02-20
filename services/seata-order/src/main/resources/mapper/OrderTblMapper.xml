@@ -25,6 +25,12 @@
         from order_tbl
         where  id = #{id,jdbcType=INTEGER} 
     </select>
+    <select id="countByUserAndCommodity" resultType="java.lang.Integer">
+        select count(1)
+        from order_tbl
+        where user_id = #{userId,jdbcType=VARCHAR}
+          and commodity_code = #{commodityCode,jdbcType=VARCHAR}
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from order_tbl

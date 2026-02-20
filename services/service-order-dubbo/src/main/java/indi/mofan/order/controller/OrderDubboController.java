@@ -1,7 +1,7 @@
 package indi.mofan.order.controller;
 
-import indi.mofan.order.common.ApiResponse;
-import indi.mofan.order.common.ResultCode;
+import indi.mofan.common.ApiResponse;
+import indi.mofan.common.ResultCode;
 import indi.mofan.order.dubbo.ProductDubboClient;
 import indi.mofan.product.bean.Product;
 import lombok.extern.slf4j.Slf4j;
@@ -663,3 +663,4 @@ public class OrderDubboController {
         }
     }
 }
+

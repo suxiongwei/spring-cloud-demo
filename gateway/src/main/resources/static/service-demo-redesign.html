@@ -146,12 +146,20 @@
                         </div>
                         <span class="nav-item-text">Spring Cloud</span>
                     </a>
-                    <a class="nav-item" :class="{ active: activeComponent === 'rocketmq' }" @click="selectComponent('rocketmq')">
-                        <div class="nav-item-icon">
-                            <img src="images/logos/rocketmq-aliyun.svg" alt="RocketMQ">
+                    <div class="nav-group">
+                        <a class="nav-item nav-item-parent" :class="{ active: activeComponent === 'rocketmq' }" @click="toggleComponentMenu('rocketmq')">
+                            <div class="nav-item-icon">
+                                <img src="images/logos/rocketmq-aliyun.svg" alt="RocketMQ">
+                            </div>
+                            <span class="nav-item-text">RocketMQ</span>
+                            <span class="nav-arrow" :class="{ expanded: expandedMenus.rocketmq }">▼</span>
+                        </a>
+                        <div class="nav-submenu" v-show="expandedMenus.rocketmq">
+                            <a class="nav-subitem" :class="{ active: activeSection === 'rocketmq-business-chain' }" @click="selectSection('rocketmq', 'rocketmq-business-chain')">
+                                <span class="nav-subitem-text">订单链路10场景</span>
+                            </a>
                         </div>
-                        <span class="nav-item-text">RocketMQ</span>
-                    </a>
+                    </div>
                     <a class="nav-item" :class="{ active: activeComponent === 'seata' }" @click="selectComponent('seata')">
                         <div class="nav-item-icon">
                             <img src="images/logos/seata-aliyun.svg" alt="Seata">
@@ -1095,6 +1103,108 @@ private IVersionGroupService versionGroupServiceV1GroupA;</code></pre>
                             <!-- Dubbo Protocol Result -->
                             <!-- Triple Protocol Result -->
                             <!-- REST Protocol Result -->
+                        </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RocketMQ Controls -->
+                    <div v-if="activeComponent === 'rocketmq'">
+                        <div class="console-content-wrapper">
+                            <div class="console-content-main">
+
+                        <div class="control-group" id="rocketmq-business-chain" v-show="activeSection === 'rocketmq-business-chain'">
+                            <div class="control-label">订单链路 10 场景演练</div>
+                            <div class="test-description">🔹 按真实企业订单链路组织：异步解耦 -> 失败重试 -> 死信治理 -> 幂等 -> 顺序 -> 延迟关单 -> 事务消息 -> 回查 -> Tag过滤 -> 死信重放。</div>
+                            <div class="config-panel api-address-panel">
+                                <div class="config-item api-address-item">
+                                    <span class="config-label">📍 API 前缀:</span>
+                                    <span class="config-value api-address-value">/api/order/demo/rocketmq/*</span>
+                                </div>
+                            </div>
+
+                            <div class="redis-scenario-grid">
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">01 普通消息</div>
+                                        <span class="scenario-chip">异步解耦</span>
+                                    </div>
+                                    <div class="scenario-desc">下单后异步通知库存和营销，模拟生产消费闭环。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqPublishBasic()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">02 消费重试</div>
+                                        <span class="scenario-chip">失败恢复</span>
+                                    </div>
+                                    <div class="scenario-desc">模拟前两次失败第三次成功，验证重试轨迹。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqRetry()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">03 死信队列</div>
+                                        <span class="scenario-chip">故障隔离</span>
+                                    </div>
+                                    <div class="scenario-desc">重试耗尽转入 DLQ，避免阻塞正常消费。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqDlq()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">04 幂等消费</div>
+                                        <span class="scenario-chip">防重复</span>
+                                    </div>
+                                    <div class="scenario-desc">同 messageKey 重复投递仅第一次生效。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqIdempotent()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">05 顺序消息</div>
+                                        <span class="scenario-chip">局部有序</span>
+                                    </div>
+                                    <div class="scenario-desc">同订单状态按 CREATED->PAID->SHIPPED 顺序消费。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqOrderly()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">06 延迟关单</div>
+                                        <span class="scenario-chip">定时触发</span>
+                                    </div>
+                                    <div class="scenario-desc">模拟未支付订单超时后自动关闭。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqDelayClose()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">07 事务发送</div>
+                                        <span class="scenario-chip">最终一致</span>
+                                    </div>
+                                    <div class="scenario-desc">本地事务成功后提交半消息。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqTxSend()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">08 事务回查</div>
+                                        <span class="scenario-chip">状态确认</span>
+                                    </div>
+                                    <div class="scenario-desc">Broker 回查生产端事务状态并给出决策。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqTxCheck()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">09 Tag过滤</div>
+                                        <span class="scenario-chip">多下游订阅</span>
+                                    </div>
+                                    <div class="scenario-desc">库存与营销消费者按 Tag 路由过滤消息。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqTagFilter()"><span>▶</span> 运行</button></div>
+                                </div>
+                                <div class="redis-scenario-card">
+                                    <div class="scenario-header">
+                                        <div class="scenario-title">10 死信重放</div>
+                                        <span class="scenario-chip">补偿恢复</span>
+                                    </div>
+                                    <div class="scenario-desc">DLQ 消息人工触发重放并记录补偿结果。</div>
+                                    <div class="scenario-actions"><button class="btn btn-primary" @click="testRocketMqReplayDlq()"><span>▶</span> 运行</button></div>
+                                </div>
+                            </div>
                         </div>
                             </div>
                         </div>

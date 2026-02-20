@@ -1,28 +1,32 @@
 server:
   port: 8011
 
+logging:
+  charset:
+    console: UTF-8
+
 spring:
   profiles:
-    active: dev
-#   active: dev,shanghai
-  #  active: dev,beijing
+    active: local
+#   active: local,shanghai
+  #  active: local,beijing
   application:
     name: service-product-dubbo
   cloud:
     nacos:
       # 配置 Nacos 地址
-      server-addr: 172.29.64.1:8848
-      username: nacos
-      password: nacos
+      server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
       discovery:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        namespace: ${NACOS_NAMESPACE:public}
         enabled: true
-        username: nacos
-        password: nacos
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
       config:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-        username: nacos
-        password: nacos
+        namespace: ${NACOS_NAMESPACE:public}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
         import-check:
           enabled: true
 
@@ -35,21 +39,21 @@ dubbo:
     qos-port: 22222
   # 配置中心（用于动态配置规则）
   config-center:
-    address: nacos://172.29.64.1:8848
-    username: nacos
-    password: nacos
+    address: nacos://${NACOS_SERVER_ADDR:127.0.0.1:8848}
+    username: ${NACOS_USERNAME:nacos}
+    password: ${NACOS_PASSWORD:nacos}
     parameters:
-      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+      namespace: ${NACOS_NAMESPACE:public}
     group: dubbo
     timeout: 3000
     # 注意：这里不需要配置 config-file，动态配置规则会自动监听 *.configurators
     # config-file: dubbo.properties  # 可选，仅用于应用启动时的静态全局配置
   registry:
-    address: nacos://172.29.64.1:8848
-    username: nacos
-    password: nacos
+    address: nacos://${NACOS_SERVER_ADDR:127.0.0.1:8848}
+    username: ${NACOS_USERNAME:nacos}
+    password: ${NACOS_PASSWORD:nacos}
     parameters:
-      namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+      namespace: ${NACOS_NAMESPACE:public}
       prefer-ip-address: true
 #      region: hangzhou
   # 协议配置
@@ -83,7 +87,7 @@ spring:
     import:
       - nacos:common.yaml?group=product
     activate:
-      on-profile: dev
+      on-profile: local
 
 ---
 spring:
@@ -134,3 +138,6 @@ dubbo:
       port: 20883
     tri:
       port: 50053
+
+
+

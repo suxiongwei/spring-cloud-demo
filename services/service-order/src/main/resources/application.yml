@@ -1,33 +1,62 @@
 server:
   port: 8000
 
+demo:
+  tracing:
+    enabled: ${DEMO_TRACING_ENABLED:false}
+  rocketmq:
+    strict-real-mode: true
+    await-timeout-ms: 15000
+    topics:
+      order-events: demo.order.events
+      retry: demo.order.retry
+      dlq-trigger: demo.order.dlq.trigger
+      idempotent: demo.order.idempotent
+      orderly: demo.order.orderly
+      delay-close: demo.order.delay.close
+      tx: demo.order.tx
+      tag: demo.order.tag
+      dlq-observe: "%DLQ%demo-order-dlq-consumer-group"
+    consumer-groups:
+      basic-inventory: demo-order-basic-inventory-group
+      basic-marketing: demo-order-basic-marketing-group
+      retry: demo-order-retry-consumer-group
+      dlq-trigger: demo-order-dlq-consumer-group
+      dlq-observer: demo-order-dlq-observer-group
+      idempotent: demo-order-idempotent-consumer-group
+      orderly: demo-order-orderly-consumer-group
+      delay-close: demo-order-delay-close-consumer-group
+      tag-inventory: demo-order-tag-inventory-consumer-group
+      tag-marketing: demo-order-tag-marketing-consumer-group
+      tx-consumer: demo-order-tx-consumer-group
+
 spring:
   profiles:
-    active: dev
+    active: local
     include: feign
   application:
     name: service-order
   cloud:
     nacos:
       # 配置 Nacos 地址
-      server-addr: 172.29.64.1:8848
-      username: nacos
-      password: nacos
+      server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
       discovery:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        namespace: ${NACOS_NAMESPACE:public}
         enabled: true
-        username: nacos
-        password: nacos
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
       config:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-        username: nacos
-        password: nacos
+        namespace: ${NACOS_NAMESPACE:public}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
         import-check:
           enabled: true
     sentinel:
       transport:
         # Sentinel Dashboard 地址
-        dashboard: localhost:8858
+        dashboard: ${SENTINEL_DASHBOARD:localhost:8858}
         # 与 Dashboard 通信的端口，默认 8719
         port: 8719
       # 使用 URL 作为入口资源名，便于链路限流（strategy=2）按路径区分
@@ -38,8 +67,8 @@ spring:
         # 流控规则
         flow:
           nacos:
-            server-addr: 172.29.64.1:8848
-            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+            namespace: ${NACOS_NAMESPACE:public}
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-flow-rules
@@ -50,8 +79,8 @@ spring:
         # 热点参数限流规则
         param-flow:
           nacos:
-            server-addr: 172.29.64.1:8848
-            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+            namespace: ${NACOS_NAMESPACE:public}
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-param-flow-rules
@@ -61,8 +90,8 @@ spring:
         # 熔断降级规则
         degrade:
           nacos:
-            server-addr: 172.29.64.1:8848
-            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+            namespace: ${NACOS_NAMESPACE:public}
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-degrade-rules
@@ -72,8 +101,8 @@ spring:
         # 系统规则
         system:
           nacos:
-            server-addr: 172.29.64.1:8848
-            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+            namespace: ${NACOS_NAMESPACE:public}
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-system-rules
@@ -83,14 +112,22 @@ spring:
         # 授权规则
         authority:
           nacos:
-            server-addr: 172.29.64.1:8848
-            namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+            server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+            namespace: ${NACOS_NAMESPACE:public}
             username: ${spring.cloud.nacos.username}
             password: ${spring.cloud.nacos.password}
             dataId: ${spring.application.name}-authority-rules
             groupId: SENTINEL_GROUP
             data-type: json
             rule-type: authority
+
+rocketmq:
+  name-server: ${ROCKETMQ_NAME_SERVER:127.0.0.1:9876}
+  producer:
+    group: order-demo-producer-group
+    send-message-timeout: 5000
+    retry-times-when-send-failed: 2
+    retry-next-server: true
 
 
 ---
@@ -101,7 +138,7 @@ spring:
       - nacos:database.yaml?group=order
       - nacos:haha.yaml?group=ORDER_GROUP
     activate:
-      on-profile: dev
+      on-profile: local
 
 ---
 spring:
@@ -122,3 +159,5 @@ spring:
       - nacos:hehe.yaml?group=order
     activate:
       on-profile: prod
+
+

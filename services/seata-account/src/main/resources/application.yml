@@ -11,13 +11,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
-      server-addr: 172.29.64.1:8848
-      username: nacos
-      password: nacos
+      server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
       discovery:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        namespace: ${NACOS_NAMESPACE:public}
       config:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        namespace: ${NACOS_NAMESPACE:public}
 server:
   port: 20000
 
@@ -25,3 +25,4 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 seata:
   application-id: seata-account
+

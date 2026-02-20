@@ -3,13 +3,13 @@ spring:
     name: seata-business
   cloud: 
     nacos: 
-      server-addr: 172.29.64.1:8848
-      username: nacos 
-      password: nacos
+      server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+      username: ${NACOS_USERNAME:nacos} 
+      password: ${NACOS_PASSWORD:nacos}
       discovery:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        namespace: ${NACOS_NAMESPACE:public}
       config:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
+        namespace: ${NACOS_NAMESPACE:public}
   config:
     import:
       - optional:nacos:common.yaml?group=SEATA_GROUP
@@ -18,3 +18,4 @@ server:
   port: 21000
 seata:
   application-id: seata-business
+

@@ -6,8 +6,8 @@ import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import indi.mofan.order.common.BlockDetailFormatter;
 
-import indi.mofan.order.common.ApiResponse;
-import indi.mofan.order.common.ResultCode;
+import indi.mofan.common.ApiResponse;
+import indi.mofan.common.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

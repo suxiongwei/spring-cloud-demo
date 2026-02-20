@@ -1,5 +1,7 @@
 package indi.mofan.storage.service;
 
+import indi.mofan.storage.bean.StorageTbl;
+
 public interface StorageService {
 
     /**
@@ -10,4 +12,5 @@ public interface StorageService {
      */
     void deduct(String commodityCode, int count);
     void addBack(String commodityCode, int count);
+    StorageTbl snapshot(String commodityCode);
 }

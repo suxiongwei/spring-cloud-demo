@@ -1,5 +1,7 @@
 package indi.mofan.account.service;
 
+import indi.mofan.account.bean.AccountTbl;
+
 public interface AccountService {
 
     /**
@@ -10,4 +12,5 @@ public interface AccountService {
      */
     void debit(String userId, int money);
     void addBack(String userId, int money);
+    AccountTbl snapshot(String userId);
 }

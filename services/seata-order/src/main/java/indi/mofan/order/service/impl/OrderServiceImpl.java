@@ -46,4 +46,10 @@ public class OrderServiceImpl implements OrderService {
     private int calculate(String commodityCode, int orderCount) {
         return 9 * orderCount;
     }
+
+    @Override
+    public int countByUserAndCommodity(String userId, String commodityCode) {
+        Integer count = orderTblMapper.countByUserAndCommodity(userId, commodityCode);
+        return count == null ? 0 : count;
+    }
 }

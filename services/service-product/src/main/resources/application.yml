@@ -4,23 +4,23 @@ spring:
   cloud:
     nacos:
       # 配置 Nacos 地址
-      server-addr: 172.29.64.1:8848
-      username: nacos
-      password: nacos
+      server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
       discovery:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-        username: nacos
-        password: nacos
+        namespace: ${NACOS_NAMESPACE:public}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
       config:
-        namespace: 8699ba10-d5ae-4183-aa94-eef36789f4d3
-        username: nacos
-        password: nacos
+        namespace: ${NACOS_NAMESPACE:public}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
         import-check:
           # 禁用 nacos 配置中心导入检查
           enabled: false
     sentinel:
       transport:
-        dashboard: localhost:8858
+        dashboard: ${SENTINEL_DASHBOARD:localhost:8858}
       eager: true
 
 
@@ -55,3 +55,4 @@ spring:
       - nacos:database.yaml?group=product
     activate:
       on-profile: prod
+

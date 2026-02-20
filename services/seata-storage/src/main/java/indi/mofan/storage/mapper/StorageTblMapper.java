@@ -11,6 +11,7 @@ public interface StorageTblMapper {
     int insertSelective(StorageTbl record);
 
     StorageTbl selectByPrimaryKey(Long id);
+    StorageTbl selectByCommodityCode(String commodityCode);
 
     int updateByPrimaryKeySelective(StorageTbl record);
 

@@ -11,6 +11,7 @@ public interface AccountTblMapper {
     int insertSelective(AccountTbl record);
 
     AccountTbl selectByPrimaryKey(Long id);
+    AccountTbl selectByUserId(String userId);
 
     int updateByPrimaryKeySelective(AccountTbl record);
 

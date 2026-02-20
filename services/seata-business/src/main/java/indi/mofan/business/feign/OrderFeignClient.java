@@ -5,6 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 /**
  * @author xiongweisu
  * @date 2025/5/1 16:24
@@ -19,4 +21,8 @@ public interface OrderFeignClient {
                   @RequestParam("commodityCode") String commodityCode,
                   @RequestParam("count") int orderCount,
                   @RequestParam(value = "fail", required = false) Boolean fail);
+
+    @GetMapping("/snapshot")
+    Map<String, Object> snapshot(@RequestParam("userId") String userId,
+                                 @RequestParam("commodityCode") String commodityCode);
 }

@@ -1,5 +1,6 @@
 package indi.mofan.storage.service.impl;
 
+import indi.mofan.storage.bean.StorageTbl;
 import indi.mofan.storage.mapper.StorageTblMapper;
 import indi.mofan.storage.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,10 @@ public class StorageServiceImpl implements StorageService {
     @Transactional
     public void addBack(String commodityCode, int count) {
         storageTblMapper.addBack(commodityCode, count);
+    }
+
+    @Override
+    public StorageTbl snapshot(String commodityCode) {
+        return storageTblMapper.selectByCommodityCode(commodityCode);
     }
 }

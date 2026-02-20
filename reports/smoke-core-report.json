@@ -1,0 +1,65 @@
+﻿{
+    "generatedAt":  "2026-02-18T10:44:01.9725776+08:00",
+    "baseUrl":  "http://localhost:9090",
+    "total":  7,
+    "passed":  0,
+    "failed":  7,
+    "results":  [
+                    {
+                        "name":  "nacos-services",
+                        "path":  "/api/order/demo/nacos/services",
+                        "url":  "http://localhost:9090/api/order/demo/nacos/services",
+                        "success":  false,
+                        "elapsedMs":  4301,
+                        "message":  "无法连接到远程服务器"
+                    },
+                    {
+                        "name":  "sentinel-qps",
+                        "path":  "/api/order/rateLimit/qps",
+                        "url":  "http://localhost:9090/api/order/rateLimit/qps",
+                        "success":  false,
+                        "elapsedMs":  4078,
+                        "message":  "无法连接到远程服务器"
+                    },
+                    {
+                        "name":  "sentinel-thread",
+                        "path":  "/api/order/rateLimit/thread",
+                        "url":  "http://localhost:9090/api/order/rateLimit/thread",
+                        "success":  false,
+                        "elapsedMs":  4083,
+                        "message":  "无法连接到远程服务器"
+                    },
+                    {
+                        "name":  "dubbo-sync",
+                        "path":  "/api/order/dubbo/call-sync?productId=1",
+                        "url":  "http://localhost:9090/api/order/dubbo/call-sync?productId=1",
+                        "success":  false,
+                        "elapsedMs":  4083,
+                        "message":  "无法连接到远程服务器"
+                    },
+                    {
+                        "name":  "feign-enhanced",
+                        "path":  "/api/order/demo/feign/call-enhanced?productId=1",
+                        "url":  "http://localhost:9090/api/order/demo/feign/call-enhanced?productId=1",
+                        "success":  false,
+                        "elapsedMs":  4080,
+                        "message":  "无法连接到远程服务器"
+                    },
+                    {
+                        "name":  "gateway-routing",
+                        "path":  "/api/order/demo/gateway-routing",
+                        "url":  "http://localhost:9090/api/order/demo/gateway-routing",
+                        "success":  false,
+                        "elapsedMs":  4050,
+                        "message":  "无法连接到远程服务器"
+                    },
+                    {
+                        "name":  "seata-tcc-commit",
+                        "path":  "/api/business/purchase/tcc?userId=U1001\u0026commodityCode=P0001\u0026count=1\u0026fail=false",
+                        "url":  "http://localhost:9090/api/business/purchase/tcc?userId=U1001\u0026commodityCode=P0001\u0026count=1\u0026fail=false",
+                        "success":  false,
+                        "elapsedMs":  4077,
+                        "message":  "无法连接到远程服务器"
+                    }
+                ]
+}

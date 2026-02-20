@@ -11,4 +11,5 @@ public interface OrderService {
      * @param orderCount    商品数量
      */
     OrderTbl create(String userId, String commodityCode, int orderCount, boolean fail);
+    int countByUserAndCommodity(String userId, String commodityCode);
 }

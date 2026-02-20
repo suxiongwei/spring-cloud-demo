@@ -1,0 +1,25 @@
+services:
+  rocketmq-namesrv:
+    image: apache/rocketmq:5.1.4
+    container_name: rocketmq-namesrv
+    command: sh mqnamesrv
+    ports:
+      - "9876:9876"
+
+  rocketmq-broker:
+    image: apache/rocketmq:5.1.4
+    container_name: rocketmq-broker
+    depends_on:
+      - rocketmq-namesrv
+    environment:
+      BROKER_IP1: ${BROKER_IP1:-127.0.0.1}
+    volumes:
+      - ./deploy/rocketmq/broker.conf:/home/rocketmq/broker.conf:ro
+    command: >
+      sh -c "sleep 8
+      && cp /home/rocketmq/broker.conf /tmp/broker.conf
+      && echo brokerIP1=$${BROKER_IP1} >> /tmp/broker.conf
+      && sh mqbroker -n rocketmq-namesrv:9876 -c /tmp/broker.conf"
+    ports:
+      - "10911:10911"
+      - "10909:10909"
