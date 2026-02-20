@@ -13,6 +13,9 @@ const app = createApp({
             activePanoramaTab: localStorage.getItem('service-demo-tab') || 'communication',
             activeComponent: localStorage.getItem('service-demo-component') || 'dubbo',
             activeSection: localStorage.getItem('service-demo-section') || null,
+            coreStageIds: ['sentinel', 'nacos', 'gateway', 'sca', 'dubbo', 'redis', 'seata', 'rocketmq'],
+            roadmapStageIds: ['higress', 'opentelemetry', 'k8s', 'opensergo', 'chaosblade', 'appactive', 'schedulerx', 'arctic'],
+            showRoadmapSection: localStorage.getItem('service-demo-roadmap-expanded') === 'true',
             // 每个组件的默认测试场景
             defaultSections: {
                 sentinel: 'sentinel-qps',
@@ -496,6 +499,9 @@ const app = createApp({
             this.showBackToTop = window.scrollY > 100
         },
         selectComponent(id) {
+            if (this.isRoadmapComponent(id) && !this.showRoadmapSection) {
+                return
+            }
             this.activeComponent = id
             this.activeSection = null
             this.updateActivePanoramaTab(id)
@@ -503,6 +509,16 @@ const app = createApp({
             if (this.expandedMenus.hasOwnProperty(id)) {
                 this.expandedMenus[id] = true
             }
+        },
+        isCoreComponent(componentId) {
+            return this.coreStageIds.includes(componentId)
+        },
+        isRoadmapComponent(componentId) {
+            return this.roadmapStageIds.includes(componentId)
+        },
+        toggleRoadmapSection() {
+            this.showRoadmapSection = !this.showRoadmapSection
+            localStorage.setItem('service-demo-roadmap-expanded', String(this.showRoadmapSection))
         },
         toggleComponentMenu(componentId) {
             this.expandedMenus[componentId] = !this.expandedMenus[componentId]
@@ -1767,6 +1783,13 @@ const app = createApp({
         },
     },
     mounted() {
+        if (!this.isCoreComponent(this.activeComponent) && !this.showRoadmapSection) {
+            this.activeComponent = 'dubbo'
+            this.activeSection = null
+            localStorage.setItem('service-demo-component', this.activeComponent)
+            localStorage.removeItem('service-demo-section')
+        }
+
         // 初始化主题
         this.applyTheme();
         

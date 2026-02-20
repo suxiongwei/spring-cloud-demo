@@ -32,6 +32,13 @@
 
             <nav class="sidebar-nav">
                 <div class="nav-section">
+                    <div class="nav-section-title">演示分层</div>
+                    <a class="nav-item" @click="toggleRoadmapSection()">
+                        <div class="nav-item-icon">🧭</div>
+                        <span class="nav-item-text">{{ showRoadmapSection ? '隐藏路线图能力' : '显示路线图能力' }}</span>
+                    </a>
+                </div>
+                <div class="nav-section">
                     <div class="nav-section-title">控制面</div>
                     <div class="nav-group">
                         <a class="nav-item nav-item-parent" :class="{ active: activeComponent === 'nacos' }" @click="toggleComponentMenu('nacos')">
@@ -50,7 +57,7 @@
                             </a>
                         </div>
                     </div>
-                    <a class="nav-item" :class="{ active: activeComponent === 'opensergo' }" @click="selectComponent('opensergo')">
+                    <a class="nav-item" v-if="showRoadmapSection" :class="{ active: activeComponent === 'opensergo' }" @click="selectComponent('opensergo')">
                         <div class="nav-item-icon">
                             <img src="images/logos/opensergo.png" alt="OpenSergo">
                         </div>
@@ -80,13 +87,13 @@
                             </a>
                         </div>
                     </div>
-                    <a class="nav-item" :class="{ active: activeComponent === 'chaosblade' }" @click="selectComponent('chaosblade')">
+                    <a class="nav-item" v-if="showRoadmapSection" :class="{ active: activeComponent === 'chaosblade' }" @click="selectComponent('chaosblade')">
                         <div class="nav-item-icon">
                             <img src="images/logos/ChaosBlade.png" alt="ChaosBlade">
                         </div>
                         <span class="nav-item-text">ChaosBlade</span>
                     </a>
-                    <a class="nav-item" :class="{ active: activeComponent === 'appactive' }" @click="selectComponent('appactive')">
+                    <a class="nav-item" v-if="showRoadmapSection" :class="{ active: activeComponent === 'appactive' }" @click="selectComponent('appactive')">
                         <div class="nav-item-icon">
                             <img src="images/logos/appactive.svg" alt="AppActive">
                         </div>
@@ -176,7 +183,7 @@
                         </div>
                         <span class="nav-item-text">Gateway</span>
                     </a>
-                    <a class="nav-item" :class="{ active: activeComponent === 'schedulerx' }" @click="selectComponent('schedulerx')">
+                    <a class="nav-item" v-if="showRoadmapSection" :class="{ active: activeComponent === 'schedulerx' }" @click="selectComponent('schedulerx')">
                         <div class="nav-item-icon">
                             <img src="images/logos/schedulerx.png" alt="SchedulerX">
                         </div>
@@ -186,7 +193,7 @@
 
                 <div class="nav-section">
                     <div class="nav-section-title">数据与运维</div>
-                    <a class="nav-item" :class="{ active: activeComponent === 'arctic' }" @click="selectComponent('aracos')">
+                    <a class="nav-item" v-if="showRoadmapSection" :class="{ active: activeComponent === 'arctic' }" @click="selectComponent('arctic')">
                         <div class="nav-item-icon">📊</div>
                         <span class="nav-item-text">Arctic</span>
                     </a>

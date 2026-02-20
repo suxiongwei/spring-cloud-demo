@@ -1,6 +1,11 @@
 /**
  * 微服务配置数据
  */
+export const demoStageConfig = {
+    mainStageIds: ['sentinel', 'nacos', 'gateway', 'sca', 'dubbo', 'redis', 'seata', 'rocketmq'],
+    roadmapStageIds: ['higress', 'opentelemetry', 'k8s', 'opensergo', 'chaosblade', 'appactive', 'schedulerx', 'arctic']
+}
+
 export const servicesConfig = {
     // 控制面
     control: [

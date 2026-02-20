@@ -72,6 +72,28 @@
       "maturity": "planned"
     }
   ],
+  "ui": {
+    "mainStageIds": [
+      "sentinel",
+      "nacos",
+      "gateway",
+      "sca",
+      "dubbo",
+      "redis",
+      "seata",
+      "rocketmq"
+    ],
+    "roadmapStageIds": [
+      "higress",
+      "opentelemetry",
+      "k8s",
+      "opensergo",
+      "chaosblade",
+      "appactive",
+      "schedulerx",
+      "arctic"
+    ]
+  },
   "contract": {
     "allowedEndpointPatterns": [
       "^/api/order/rateLimit/(qps|thread)$",
