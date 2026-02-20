@@ -52,7 +52,8 @@ $cases = @(
     @{ name = "dubbo-sync"; path = "/api/order/dubbo/call-sync?productId=1" },
     @{ name = "feign-enhanced"; path = "/api/order/demo/feign/call-enhanced?productId=1" },
     @{ name = "gateway-routing"; path = "/api/order/demo/gateway-routing" },
-    @{ name = "seata-tcc-commit"; path = "/api/business/purchase/tcc?userId=U1001&commodityCode=P0001&count=1&fail=false" }
+    @{ name = "seata-tcc-verify"; path = "/api/business/purchase/tcc/verify?userId=U1001&commodityCode=P0001&count=1&fail=false" },
+    @{ name = "rocketmq-basic"; path = "/api/order/demo/rocketmq/publish-basic" }
 )
 
 $results = @()
@@ -61,7 +62,7 @@ foreach ($case in $cases) {
 }
 
 $total = $results.Count
-$passed = ($results | Where-Object { $_.success }).Count
+$passed = @($results | Where-Object { $_.success }).Count
 $failed = $total - $passed
 
 $report = [PSCustomObject]@{
