@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -310,6 +311,7 @@ public class OrderDemoFacade {
                 "name", "Gateway 路由校验",
                 "request", Map.of("method", "GET", "url", gatewayBaseUrl + "/api/order/demo/gateway-routing"),
                 "responseSummary", "验证 gateway 是否已加载 order/business/product 路由",
+                "assertion", Map.of("rule", "response.data.evidence.routeCount >= 3", "expected", true),
                 "keyMetricOrRule", "route_count >= 3"));
 
         steps.add(Map.of(
@@ -317,6 +319,7 @@ public class OrderDemoFacade {
                 "name", "Sentinel 限流校验",
                 "request", Map.of("method", "GET", "url", gatewayBaseUrl + "/api/order/rateLimit/qps"),
                 "responseSummary", "触发/未触发限流均应返回结构化响应",
+                "assertion", Map.of("rule", "response.code in [200,429]", "expected", true),
                 "keyMetricOrRule", "result.code in [200,429]"));
 
         steps.add(Map.of(
@@ -324,6 +327,7 @@ public class OrderDemoFacade {
                 "name", "Dubbo 调用校验",
                 "request", Map.of("method", "GET", "url", gatewayBaseUrl + "/api/order/dubbo/call-sync?productId=1"),
                 "responseSummary", "验证 Dubbo 基础调用链路可用",
+                "assertion", Map.of("rule", "response.data.product.id == 1", "expected", true),
                 "keyMetricOrRule", "response.data.product.id == 1"));
 
         steps.add(Map.of(
@@ -332,6 +336,7 @@ public class OrderDemoFacade {
                 "request", Map.of("method", "GET",
                         "url", gatewayBaseUrl + "/api/business/purchase/tcc/verify?userId=U1001&commodityCode=P0001&count=1&fail=false"),
                 "responseSummary", "验证提交路径有资源变更证据",
+                "assertion", Map.of("rule", "response.verification.commitVerified == true", "expected", true),
                 "keyMetricOrRule", "verification.commitVerified == true"));
 
         steps.add(Map.of(
@@ -339,10 +344,12 @@ public class OrderDemoFacade {
                 "name", "Trace 透传验证",
                 "request", Map.of("method", "GET", "url", gatewayBaseUrl + "/api/order/config"),
                 "responseSummary", "检查响应头是否包含 traceparent（开启 tracing 时）",
+                "assertion", Map.of("rule", "response.headers.traceparent exists when demo.tracing.enabled=true", "expected", "conditional"),
                 "keyMetricOrRule", "response.headers.traceparent exists when demo.tracing.enabled=true"));
 
         Map<String, Object> result = new HashMap<>();
-        result.put("flowName", "java-senior-interview-guided-flow");
+        result.put("flowName", "java-senior-interview-guided-flow-v2");
+        result.put("runId", UUID.randomUUID().toString());
         result.put("gatewayBaseUrl", gatewayBaseUrl);
         result.put("totalSteps", steps.size());
         result.put("steps", steps);
