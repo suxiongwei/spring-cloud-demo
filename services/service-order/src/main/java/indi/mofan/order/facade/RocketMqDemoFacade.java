@@ -7,6 +7,7 @@ import indi.mofan.order.rocketmq.RocketMqDemoMessage;
 import indi.mofan.order.rocketmq.RocketMqDemoProducer;
 import indi.mofan.order.rocketmq.RocketMqDemoProperties;
 import indi.mofan.order.rocketmq.RocketMqScenarioRuntimeState;
+import indi.mofan.order.support.ScenarioControlState;
 import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,22 +39,24 @@ public class RocketMqDemoFacade {
     private final RocketMqDemoProducer producer;
     private final RocketMqScenarioRuntimeState runtimeState;
     private final RocketMqDemoProperties properties;
+    private final ScenarioControlState scenarioControlState;
     private final AtomicLong sequence = new AtomicLong(1000);
 
     @Autowired
     public RocketMqDemoFacade(RocketMqDemoProducer producer, RocketMqScenarioRuntimeState runtimeState,
-            RocketMqDemoProperties properties) {
+            RocketMqDemoProperties properties, ScenarioControlState scenarioControlState) {
         this.producer = producer;
         this.runtimeState = runtimeState;
         this.properties = properties;
+        this.scenarioControlState = scenarioControlState;
     }
 
     public RocketMqDemoFacade(RocketMqDemoProducer producer, RocketMqScenarioRuntimeState runtimeState) {
-        this(producer, runtimeState, defaultProperties());
+        this(producer, runtimeState, defaultProperties(), new ScenarioControlState());
     }
 
     public ApiResponse<Object> publishBasicDemo() {
-        return executeScenario("RocketMQ 普通消息场景失败", () -> {
+        return executeScenario(SCENARIO_BASIC, "RocketMQ 普通消息场景失败", () -> {
             String orderId = nextOrderId();
             String messageKey = nextMessageKey("BASIC");
 
@@ -77,7 +80,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> retryDemo() {
-        return executeScenario("RocketMQ 重试场景失败", () -> {
+        return executeScenario(SCENARIO_RETRY, "RocketMQ 重试场景失败", () -> {
             String messageKey = nextMessageKey("RETRY");
             RocketMqDemoMessage message = newMessage(SCENARIO_RETRY, messageKey, null, "ORDER_PAID", null,
                     "ORDER_PAID", null);
@@ -105,7 +108,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> dlqDemo() {
-        return executeScenario("RocketMQ 死信场景失败", () -> {
+        return executeScenario(SCENARIO_DLQ, "RocketMQ 死信场景失败", () -> {
             String messageKey = nextMessageKey("DLQ");
             RocketMqDemoMessage message = newMessage(SCENARIO_DLQ, messageKey, null, "ORDER_STOCK_RESERVE", null,
                     "ORDER_STOCK_RESERVE", null);
@@ -133,7 +136,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> idempotentDemo() {
-        return executeScenario("RocketMQ 幂等场景失败", () -> {
+        return executeScenario(SCENARIO_IDEMPOTENT, "RocketMQ 幂等场景失败", () -> {
             String messageKey = nextMessageKey("IDEMPOTENT");
             RocketMqDemoMessage message = newMessage(SCENARIO_IDEMPOTENT, messageKey, null, "ORDER_INVENTORY", null,
                     "ORDER_INVENTORY", null);
@@ -159,7 +162,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> orderlyDemo() {
-        return executeScenario("RocketMQ 顺序消息场景失败", () -> {
+        return executeScenario(SCENARIO_ORDERLY, "RocketMQ 顺序消息场景失败", () -> {
             String orderId = nextOrderId();
             List<String> expected = List.of("CREATED", "PAID", "SHIPPED");
             for (String event : expected) {
@@ -190,7 +193,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> delayCloseDemo() {
-        return executeScenario("RocketMQ 延迟消息场景失败", () -> {
+        return executeScenario(SCENARIO_DELAY, "RocketMQ 延迟消息场景失败", () -> {
             String orderId = nextOrderId();
             String messageKey = nextMessageKey("DELAY");
             Instant createdAt = Instant.now();
@@ -216,7 +219,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> txSendDemo() {
-        return executeScenario("RocketMQ 事务发送场景失败", () -> {
+        return executeScenario(SCENARIO_TX_SEND, "RocketMQ 事务发送场景失败", () -> {
             String txId = "TX-" + sequence.incrementAndGet();
             String messageKey = nextMessageKey("TXSEND");
             RocketMqDemoMessage message = newMessage(SCENARIO_TX_SEND, messageKey, null, "ORDER_PAY_SUCCESS", txId,
@@ -239,7 +242,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> txCheckDemo() {
-        return executeScenario("RocketMQ 事务回查场景失败", () -> {
+        return executeScenario(SCENARIO_TX_CHECK, "RocketMQ 事务回查场景失败", () -> {
             String txId = "TX-CHECK-" + sequence.incrementAndGet();
             String messageKey = nextMessageKey("TXCHECK");
             RocketMqDemoMessage message = newMessage(SCENARIO_TX_CHECK, messageKey, null, "ORDER_PAY_SUCCESS", txId,
@@ -264,7 +267,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> tagFilterDemo() {
-        return executeScenario("RocketMQ Tag 过滤场景失败", () -> {
+        return executeScenario(SCENARIO_TAG, "RocketMQ Tag 过滤场景失败", () -> {
             String inventoryKey = nextMessageKey("TAGINV");
             String marketingKey = nextMessageKey("TAGMKT");
             producer.sendTag(newMessage(SCENARIO_TAG, inventoryKey, null, "ORDER_SPLIT", null, "INVENTORY", null));
@@ -289,7 +292,7 @@ public class RocketMqDemoFacade {
     }
 
     public ApiResponse<Object> replayDlqDemo() {
-        return executeScenario("RocketMQ 死信重放场景失败", () -> {
+        return executeScenario(SCENARIO_REPLAY, "RocketMQ 死信重放场景失败", () -> {
             Map<String, Object> dlqSource = ensureDlqSeed();
             String replayMessageKey = nextMessageKey("REPLAY");
             String replaySourceKey = String.valueOf(dlqSource.get("messageKey"));
@@ -317,11 +320,14 @@ public class RocketMqDemoFacade {
         return payload;
     }
 
-    private ApiResponse<Object> executeScenario(String failPrefix, Supplier<Map<String, Object>> scenario,
+    private ApiResponse<Object> executeScenario(String scenarioId, String failPrefix, Supplier<Map<String, Object>> scenario,
             String successMsg) {
         if (!properties.isStrictRealMode()) {
             return ApiResponse.fail(ResultCode.INTERNAL_ERROR,
                     failPrefix + ": strict real mode disabled (demo.rocketmq.strict-real-mode=false)");
+        }
+        if (scenarioControlState.isFailureInjectionEnabled(scenarioId)) {
+            return ApiResponse.fail(ResultCode.INTERNAL_ERROR, failPrefix + ": failure injection enabled");
         }
         long startTime = System.currentTimeMillis();
         try {

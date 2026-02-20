@@ -6,11 +6,13 @@ import indi.mofan.business.feign.StorageFeignClient;
 import indi.mofan.business.service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
 public class PurchaseRestController {
@@ -23,6 +25,7 @@ public class PurchaseRestController {
     StorageFeignClient storageFeignClient;
     @Autowired
     OrderFeignClient orderFeignClient;
+    private final AtomicBoolean globalFailInjection = new AtomicBoolean(false);
 
     /**
      * 购买
@@ -40,7 +43,7 @@ public class PurchaseRestController {
                               @RequestParam("commodityCode") String commodityCode,
                               @RequestParam("count") int orderCount,
                               @RequestParam(value = "fail", required = false, defaultValue = "false") boolean fail) {
-        businessService.purchaseTcc(userId, commodityCode, orderCount, fail);
+        businessService.purchaseTcc(userId, commodityCode, orderCount, fail || globalFailInjection.get());
         return "business purchase tcc success";
     }
 
@@ -52,9 +55,10 @@ public class PurchaseRestController {
         Map<String, Object> before = collectSnapshot(userId, commodityCode);
         boolean success = false;
         String errorMessage = null;
+        boolean effectiveFail = fail || globalFailInjection.get();
 
         try {
-            businessService.purchaseTcc(userId, commodityCode, orderCount, fail);
+            businessService.purchaseTcc(userId, commodityCode, orderCount, effectiveFail);
             success = true;
         } catch (Exception e) {
             errorMessage = e.getMessage();
@@ -84,7 +88,8 @@ public class PurchaseRestController {
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("success", success);
-        result.put("failInjected", fail);
+        result.put("failInjected", effectiveFail);
+        result.put("globalFailInjection", globalFailInjection.get());
         result.put("errorMessage", errorMessage);
         result.put("input", Map.of(
                 "userId", userId,
@@ -100,6 +105,25 @@ public class PurchaseRestController {
                 "commitVerified", commitVerified
         ));
         return result;
+    }
+
+    @PostMapping("/purchase/tcc/control/failure-injection")
+    public Map<String, Object> setGlobalFailureInjection(
+            @RequestParam(value = "enabled", defaultValue = "true") boolean enabled) {
+        globalFailInjection.set(enabled);
+        return Map.of(
+                "updated", true,
+                "globalFailInjection", globalFailInjection.get()
+        );
+    }
+
+    @PostMapping("/purchase/tcc/control/reset")
+    public Map<String, Object> resetControlState() {
+        globalFailInjection.set(false);
+        return Map.of(
+                "resetApplied", true,
+                "globalFailInjection", false
+        );
     }
 
     private Map<String, Object> collectSnapshot(String userId, String commodityCode) {

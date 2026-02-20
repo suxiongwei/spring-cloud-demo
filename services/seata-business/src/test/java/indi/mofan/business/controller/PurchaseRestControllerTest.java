@@ -16,6 +16,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,5 +76,18 @@ class PurchaseRestControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.verification.commitVerified").value(false))
                 .andExpect(jsonPath("$.verification.rollbackVerified").value(true));
+    }
+
+    @Test
+    void shouldToggleGlobalFailureInjection() throws Exception {
+        mockMvc.perform(post("/purchase/tcc/control/failure-injection").param("enabled", "true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.updated").value(true))
+                .andExpect(jsonPath("$.globalFailInjection").value(true));
+
+        mockMvc.perform(post("/purchase/tcc/control/reset"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resetApplied").value(true))
+                .andExpect(jsonPath("$.globalFailInjection").value(false));
     }
 }

@@ -188,4 +188,21 @@ public class RocketMqScenarioRuntimeState {
         }
         return supplier.getAsBoolean();
     }
+
+    public void resetAll() {
+        basicDeliveries.clear();
+        retryAttempts.clear();
+        retrySucceededKeys.clear();
+        dlqObservedKeys.clear();
+        dlqMessages.clear();
+        dlqObservedOrder.clear();
+        idempotentReceiveCount.clear();
+        idempotentProcessedKeys.clear();
+        orderlyEvents.clear();
+        delayClosedOrders.clear();
+        txDeliveredIds.clear();
+        txCheckStates.clear();
+        txCheckCompleted.clear();
+        tagDeliveries.clear();
+    }
 }
