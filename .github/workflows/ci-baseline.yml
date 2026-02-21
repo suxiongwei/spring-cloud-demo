@@ -33,8 +33,12 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
-      - name: Run baseline module tests
-        run: mvn -q -pl model -am test
+      - name: Run interview-stage module tests
+        shell: bash
+        run: |
+          mvn -q -pl services/service-order -am "-Dtest=OrderControllerRocketMqTest,ScenarioControlControllerTest,CoreScenarioEvidenceContractTest,OrderDemoFacadeGuidedFlowTest,RocketMqDemoFacadeTest" "-Dsurefire.failIfNoSpecifiedTests=false" test
+          mvn -q -pl services/service-order-dubbo -am "-Dtest=OrderDubboControllerTest" "-Dsurefire.failIfNoSpecifiedTests=false" test
+          mvn -q -pl services/seata-business -am "-Dtest=PurchaseRestControllerTest" "-Dsurefire.failIfNoSpecifiedTests=false" test
 
   smoke:
     name: Smoke Gates
@@ -47,3 +51,4 @@ jobs:
         run: |
           ./scripts/validate-demo-contract.ps1
           ./scripts/validate-scenario-catalog.ps1
+          ./scripts/validate-core-stage.ps1
