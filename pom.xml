@@ -26,7 +26,7 @@
         <spring-cloud.version>2023.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
         <lombok.version>1.18.36</lombok.version>
-        <assertj.version>3.27.2</assertj.version>
+        <assertj.version>3.27.7</assertj.version>
         <json-unit-assertj.version>4.1.0</json-unit-assertj.version>
         <dubbo.version>3.2.15</dubbo.version>
     </properties>
